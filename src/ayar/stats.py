@@ -96,12 +96,22 @@ def windowed_completeness(times: np.ndarray, amplitudes: np.ndarray, duration: f
     """Per window: spike rate (Hz) and estimated detection completeness (1 - missing)."""
     window = duration / n_windows
     idx = np.clip((times // window).astype(int), 0, n_windows - 1)
-    rates = np.bincount(idx, minlength=n_windows) / window
+    counts = np.bincount(idx, minlength=n_windows)
+    rates = counts / window
     comp = np.full(n_windows, np.nan)
-    for k in range(n_windows):
+    usable = counts >= 30
+    if not usable.any():
+        return rates, comp
+    # the estimate is biased by sample size, so compare windows at equal spike counts
+    n_eq = int(counts[usable].min())
+    rng = np.random.default_rng(0)
+    for k in np.flatnonzero(usable):
         s = amplitudes[idx == k]
-        if s.size >= 30:
+        if s.size == n_eq:
             comp[k] = 1.0 - missing_fraction(s)
+        else:
+            reps = [missing_fraction(rng.choice(s, n_eq, replace=False)) for _ in range(5)]
+            comp[k] = 1.0 - float(np.mean(reps))
     return rates, comp
 
 

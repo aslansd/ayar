@@ -22,6 +22,7 @@ from ..flags import Flag, NotChecked, Severity
 from ..stats import windowed, windowed_completeness
 
 CODE = "DRIFT_CONFOUND"
+ACTION = "remove"
 TIER = 1
 FIX = (
     "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift "
@@ -120,7 +121,14 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
                         "r": round(float(r), 3), "p": float(p), "max_lost": round(lost, 3),
                         "range": round(span, 3), "windows": int(ok.sum()),
                     }
-                    if r >= th.drift_rho and p < th.drift_alpha and span >= th.drift_min_completeness_change:
+                    # a detection loss must also be big enough to explain the rate drop
+                    # (the estimate saturates at 50 %, so a saturated estimate always qualifies)
+                    rr = rates_c[ok]
+                    drop = float(1.0 - np.percentile(rr, 10) / max(np.percentile(rr, 90), 1e-12))
+                    consistent = lost >= 0.45 or drop <= lost + th.drift_loss_slack
+                    evidence["completeness"]["rate_drop"] = round(drop, 3)
+                    if (r >= th.drift_rho and p < th.drift_alpha and span >= th.drift_min_completeness_change
+                            and consistent):
                         reasons.append(
                             f"rate follows detection loss (r={r:.2f}; up to {lost:.0%} of spikes "
                             f"below threshold in the worst window)"

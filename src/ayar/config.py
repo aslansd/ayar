@@ -31,6 +31,23 @@ class Thresholds:
     overlap_alpha: float = 1e-3
     overlap_max_distance_um: float = 100.0
 
+    # SPLIT_UNIT
+    split_max_distance_um: float = 100.0
+    split_ratio: float = 0.3
+    """Cross-refractory (±1.5 ms) coincidences at most this share of the flank expectation."""
+    split_max_merged_contamination: float = 0.1
+    split_handoff_windows: int = 20
+    split_min_window_s: float = 20.0
+    split_active_fraction: float = 0.2
+    split_handoff_r: float = 0.5
+    split_max_ratio: float = 2.0
+    split_max_amp_ratio: float = 1.25
+
+    # CONTAMINATION
+    contam_warn: float = 0.1
+    contam_error: float = 0.2
+    contam_min_violations: int = 5
+
     # DRIFT_CONFOUND
     drift_window_s: float = 60.0
     drift_min_windows: int = 6
@@ -41,9 +58,16 @@ class Thresholds:
     drift_min_amp_change: float = 0.15
     drift_min_depth_change_um: float = 10.0
     drift_min_completeness_change: float = 0.15
+    drift_loss_slack: float = 0.25
+    """The rate drop may exceed the estimated detection loss by at most this much."""
     drift_completeness_spikes: int = 100
     """Target spikes per window for the completeness (amplitude-cutoff) test."""
     drift_confound_r: float = 0.3
+
+    # curation multiverse
+    mv_min_units: int = 5
+    mv_sign_agreement: float = 0.9
+    mv_spread: float = 0.5
 
     # finding audit
     audit_robust: float = 0.10

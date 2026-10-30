@@ -5,8 +5,11 @@ real biology that looks superficially similar and must not be flagged.
 
 Planted artifacts
     DUPLICATE_UNIT   a copy of a (task-responsive) unit sharing 80 % of its spikes
+    SPLIT_UNIT       one neuron handed from one unit to a neighbour mid-session
+                     (handoff), or divided between two units by amplitude (refractory)
     OVERLAP_HOLE     a nearby, high-rate pair where the sorter dropped 85 % of
                      the second unit's spikes that overlapped the first's
+    CONTAMINATION    a unit whose spikes are 30 % misassigned from a responsive neighbour
     DRIFT_CONFOUND   units whose amplitude decays toward the detection threshold,
                      so late spikes are lost and the rate falls
 
@@ -33,6 +36,9 @@ class SynthConfig:
     n_drifting: int = 3
     n_sync_controls: int = 2
     n_rate_controls: int = 2
+    n_splits_handoff: int = 2
+    n_splits_refractory: int = 1
+    n_contaminated: int = 2
     n_responsive: int = 10
     response_gain_hz: float = 10.0
     response_window: float = 0.5
@@ -40,6 +46,14 @@ class SynthConfig:
     design: str = "block"  # "block" (conditions ordered in time) or "interleaved"
     threshold: float = 50.0
     probe_length_um: float = 3840.0
+
+    @classmethod
+    def clean(cls, **kwargs) -> "SynthConfig":
+        """A session with no planted artifacts and no controls (override any field)."""
+        zero = dict(n_duplicates=0, n_holes=0, n_drifting=0, n_sync_controls=0, n_rate_controls=0,
+                    n_splits_handoff=0, n_splits_refractory=0, n_contaminated=0)
+        zero.update(kwargs)
+        return cls(**zero)
 
 
 def _poisson_refractory(rate: float, t0: float, t1: float, rng, refractory: float = 0.002) -> np.ndarray:
@@ -171,6 +185,42 @@ def make_session(seed: int = 0, config: SynthConfig | None = None) -> Bundle:
 
     for uid in drifting:
         truth.append({"code": "DRIFT_CONFOUND", "units": [uid]})
+
+    # ---- split units: one neuron handed from unit A to unit B as the probe drifts ----
+    for _ in range(cfg.n_splits_handoff):
+        d = rng.uniform(100, cfg.probe_length_um - 100)
+        t = _poisson_refractory(rng.uniform(8, 15), 0, T, rng)
+        t_switch = rng.uniform(0.35, 0.65) * T
+        p_b = np.clip((t - t_switch) / 60.0 + 0.5, 0, 1)
+        to_b = rng.random(t.size) < p_b
+        a0 = rng.uniform(100, 200)
+        a = add(t[~to_b], d, a0, "split_handoff")
+        b = add(t[to_b], d + 15.0, a0 * 0.95, "split_handoff")
+        truth.append({"code": "SPLIT_UNIT", "units": [a["id"], b["id"]], "mode": "handoff"})
+
+    # ---- split units: one neuron's spikes divided between two units by amplitude ----
+    for _ in range(cfg.n_splits_refractory):
+        d = rng.uniform(100, cfg.probe_length_um - 100)
+        t = _poisson_refractory(rng.uniform(15, 25), 0, T, rng)
+        to_b = rng.random(t.size) < 0.5
+        a0 = rng.uniform(120, 220)
+        a = add(t[~to_b], d, a0 * 1.1, "split_refractory")
+        b = add(t[to_b], d + 10.0, a0 * 0.9, "split_refractory")
+        truth.append({"code": "SPLIT_UNIT", "units": [a["id"], b["id"]], "mode": "refractory"})
+
+    # ---- contamination: a unit that also holds spikes misassigned from a responsive neighbour ----
+    for i in range(cfg.n_contaminated):
+        src = units[responsive[(cfg.n_duplicates + i) % len(responsive)]]
+        own = _poisson_refractory(rng.uniform(3, 8), 0, T, rng)
+        frac = 0.3  # share of the contaminated unit's spikes that belong to the source
+        n_take = min(int(own.size * frac / (1 - frac)), src["times"].size // 2)
+        take = np.zeros(src["times"].size, dtype=bool)
+        take[rng.choice(src["times"].size, n_take, replace=False)] = True
+        stolen = src["times"][take]
+        src["times"] = src["times"][~take]
+        c = add(np.sort(np.concatenate([own, stolen])), src["depth"] + 20.0, rng.uniform(90, 180),
+                "contaminated")
+        truth.append({"code": "CONTAMINATION", "units": [c["id"]], "source": src["id"]})
 
     # ---- synchrony controls ----------------------------------------------
     for _ in range(cfg.n_sync_controls):

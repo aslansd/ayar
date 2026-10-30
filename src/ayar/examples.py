@@ -31,14 +31,15 @@ def unit_condition_contrast(
         raise ValueError("condition_contrast needs events with exactly two condition labels")
     a, b = ev.label_values
     ta, tb = ev.times[ev.labels == a], ev.times[ev.labels == b]
-    out = {}
-    for u in bundle.unit_ids:
-        tr = bundle.train(u)
-        ra, rb = _trial_rates(tr, ta, *window), _trial_rates(tr, tb, *window)
-        diff = float(rb.mean() - ra.mean())
-        p = float(ttest_ind(rb, ra, equal_var=False).pvalue) if (ra.std() + rb.std()) > 0 else 1.0
-        out[int(u)] = (diff, p)
-    return out
+    units = [int(u) for u in bundle.unit_ids]
+    ra = np.array([_trial_rates(bundle.train(u), ta, *window) for u in units])
+    rb = np.array([_trial_rates(bundle.train(u), tb, *window) for u in units])
+    diff = rb.mean(axis=1) - ra.mean(axis=1)
+    flat = (ra.std(axis=1) + rb.std(axis=1)) == 0
+    with np.errstate(invalid="ignore", divide="ignore"):
+        p = ttest_ind(rb, ra, axis=1, equal_var=False).pvalue
+    p = np.where(flat | ~np.isfinite(p), 1.0, p)
+    return {u: (float(d), float(q)) for u, d, q in zip(units, diff, p)}
 
 
 def condition_contrast(bundle: Bundle, alpha: float = 0.01) -> dict[str, float]:

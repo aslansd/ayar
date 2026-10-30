@@ -63,6 +63,7 @@ class AuditRow:
     control_flip_rate: float | None
     verdict: str
     note: str = ""
+    action: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

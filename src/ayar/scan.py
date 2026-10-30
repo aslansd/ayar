@@ -12,6 +12,32 @@ from .detectors import REGISTRY
 from .flags import Flag, NotChecked, Report
 
 
+def reconcile(flags: list[Flag]) -> list[Flag]:
+    """Report each cause once when two detectors see the same underlying problem.
+
+    * A unit handed off to another (SPLIT_UNIT, handoff) fades out by construction,
+      so a DRIFT_CONFOUND flag on it is the same event seen twice.
+    * A contaminated unit shares a refractory dip with the neighbour it took spikes
+      from, so an OVERLAP_HOLE on exactly that pair is explained by the contamination.
+    """
+    handoff_units = {
+        u for f in flags if f.code == "SPLIT_UNIT" and "handoff" in str(f.evidence.get("mode", ""))
+        for u in f.units
+    }
+    contam_pairs = {
+        frozenset((f.units[0], f.evidence["likely_source"]))
+        for f in flags if f.code == "CONTAMINATION" and "likely_source" in f.evidence
+    }
+    out = []
+    for f in flags:
+        if f.code == "DRIFT_CONFOUND" and f.units[0] in handoff_units:
+            continue
+        if f.code == "OVERLAP_HOLE" and frozenset(f.units) in contam_pairs:
+            continue
+        out.append(f)
+    return out
+
+
 def scan(
     bundle: Bundle,
     finding: FindingFn | None = None,
@@ -37,6 +63,7 @@ def scan(
         f, n = REGISTRY[code].run(bundle, th)
         flags.extend(f)
         not_checked.extend(n)
+    flags = reconcile(flags)
     flags.sort(key=lambda f: (f.severity.rank, f.code, f.units))
 
     report = Report(

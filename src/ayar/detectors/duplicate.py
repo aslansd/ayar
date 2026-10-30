@@ -17,6 +17,7 @@ from ..stats import has_partner
 from ._pairs import candidate_pairs
 
 CODE = "DUPLICATE_UNIT"
+ACTION = "merge"
 TIER = 0
 FIX = "merge each pair (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis"
 

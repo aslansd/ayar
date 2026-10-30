@@ -239,6 +239,68 @@ class Bundle:
         child._index = child_index
         return child
 
+    def merge(self, pairs: Iterable[tuple[int, int]], dedupe_s: float = 0.0) -> "Bundle":
+        """A new bundle where each ``(keep, absorb)`` pair becomes one unit.
+
+        Chains are resolved (merging b into a and c into b puts all three into a).
+        Spikes of an absorbed unit that fall within ``dedupe_s`` of a spike already
+        in the merged unit are dropped, so merging a duplicate does not double-count.
+        """
+        parent: dict[int, int] = {}
+
+        def root(u: int) -> int:
+            while parent.get(u, u) != u:
+                u = parent[u]
+            return u
+
+        for keep, absorb in pairs:
+            rk, ra = root(int(keep)), root(int(absorb))
+            if rk != ra:
+                parent[ra] = rk
+        if not parent:
+            return self.without([])
+        if self._index is None:
+            self._index = self._build_index()
+        clusters = self.spike_clusters.copy()
+        keep_spk = np.ones(self.n_spikes, dtype=bool)
+        groups: dict[int, list[int]] = {}
+        for u in parent:
+            groups.setdefault(root(u), []).append(u)
+        for r, members in groups.items():
+            base = self.spike_times[self._index[r]]
+            for m in members:
+                idx = self._index[m]
+                if dedupe_s > 0 and base.size and idx.size:
+                    t = self.spike_times[idx]
+                    hi = np.searchsorted(base, t + dedupe_s, side="right")
+                    lo = np.searchsorted(base, t - dedupe_s, side="left")
+                    keep_spk[idx[hi > lo]] = False
+                clusters[idx] = r
+                base = np.sort(np.concatenate([base, self.spike_times[idx][keep_spk[idx]]]))
+        absorbed = np.asarray(sorted(parent), dtype=np.int64)
+        keep_unit = ~np.isin(self.unit_ids, absorbed)
+        child = object.__new__(Bundle)
+        child.spike_times = self.spike_times[keep_spk]
+        child.spike_clusters = clusters[keep_spk]
+        child.amplitudes = None if self.amplitudes is None else self.amplitudes[keep_spk]
+        child.spike_depths = None if self.spike_depths is None else self.spike_depths[keep_spk]
+        child.unit_ids = self.unit_ids[keep_unit]
+        child.unit_depths = None if self.unit_depths is None else self.unit_depths[keep_unit]
+        child.duration = self.duration
+        child.events = self.events
+        child.meta = self.meta
+        # derive the child's per-unit index from the parent's instead of re-sorting
+        new_pos = np.cumsum(keep_spk) - 1
+        child_index: dict[int, np.ndarray] = {}
+        for u in child.unit_ids:
+            u = int(u)
+            parts = [self._index[u]] + [self._index[m] for m in groups.get(u, [])]
+            idx = np.concatenate(parts)
+            idx = np.sort(idx[keep_spk[idx]])
+            child_index[u] = new_pos[idx]
+        child._index = child_index
+        return child
+
     def summary(self) -> dict[str, Any]:
         ev = None
         if self.events is not None:

@@ -13,13 +13,13 @@ def truth(bundle, code):
     return {frozenset(t["units"]) for t in bundle.meta["truth"] if t["code"] == code}
 
 
+CODES = ("DUPLICATE_UNIT", "SPLIT_UNIT", "OVERLAP_HOLE", "CONTAMINATION", "DRIFT_CONFOUND")
+
+
 def test_planted_artifacts_found(session0):
     rep = ayar.scan(session0)
-    for code in ("DUPLICATE_UNIT", "OVERLAP_HOLE", "DRIFT_CONFOUND"):
-        assert truth(session0, code) <= found(rep, code), code
-    planted = set().union(*(truth(session0, c) for c in ("DUPLICATE_UNIT", "OVERLAP_HOLE", "DRIFT_CONFOUND")))
-    flagged = {frozenset(f.units) for f in rep.flags}
-    assert flagged == planted  # no false alarms
+    for code in CODES:
+        assert truth(session0, code) == found(rep, code), code  # all found, no false alarms
 
 
 def test_controls_not_flagged(session0, session_interleaved):
@@ -58,7 +58,7 @@ def test_too_many_pairs_without_depths_is_reported():
 
 def test_independent_units_are_clean():
     rng = np.random.default_rng(3)
-    cfg = SynthConfig(n_duplicates=0, n_holes=0, n_drifting=0, n_sync_controls=0, n_rate_controls=0)
+    cfg = SynthConfig.clean()
     b = make_session(5, cfg)
     assert ayar.scan(b).flags == []
     del rng

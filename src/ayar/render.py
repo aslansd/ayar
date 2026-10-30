@@ -70,24 +70,27 @@ def format_text(report: Report, verbose: bool = False) -> str:
         lines.append("")
         lines.append(f"finding audit: {report.finding_name}")
         if not report.audit:
-            lines.append("  nothing to remove: no units were flagged")
+            lines.append("  nothing to repair: no units were flagged")
             for k, v in (report.finding_baseline or {}).items():
                 lines.append(f"  {k} = {_fmt(v)}")
         else:
             w_key = max(len(r.key) for r in report.audit)
-            w_abl = max(len(r.ablation) for r in report.audit)
+            w_abl = max(max(len(r.ablation) for r in report.audit), 9)
+            w_act = max(max(len(r.action) for r in report.audit), 6)
             lines.append(
-                f"  {'number':<{w_key}}  {'remove units flagged by':<{max(w_abl, 23)}}  "
-                f"{'n':>3}  {'baseline':>10}  {'after':>10}  {'change':>8}  {'random-drop q95':>15}  verdict"
+                f"  {'number':<{w_key}}  {'flags':<{w_abl}}  {'repair':<{w_act}}  "
+                f"{'baseline':>10}  {'after':>10}  {'change':>7}  {'random q95':>10}  verdict"
             )
+            noted: set[str] = set()
             for r in report.audit:
                 ch = "n/a" if r.rel_change is None or not math.isfinite(r.rel_change) else f"{r.rel_change:.0%}"
                 cq = "-" if r.control_q is None else f"{r.control_q:.0%}"
                 lines.append(
-                    f"  {r.key:<{w_key}}  {r.ablation:<{max(w_abl, 23)}}  {r.n_dropped:>3}  "
-                    f"{_fmt(r.baseline):>10}  {_fmt(r.value):>10}  {ch:>8}  {cq:>15}  {r.verdict.upper()}"
+                    f"  {r.key:<{w_key}}  {r.ablation:<{w_abl}}  {r.action:<{w_act}}  "
+                    f"{_fmt(r.baseline):>10}  {_fmt(r.value):>10}  {ch:>7}  {cq:>10}  {r.verdict.upper()}"
                 )
-                if r.note:
+                if r.note and r.ablation not in noted:
+                    noted.add(r.ablation)
                     lines.append(_wrap(r.note, "    "))
             lines.append("")
             for key, v in report.finding_verdicts.items():
@@ -99,10 +102,10 @@ def format_text(report: Report, verbose: bool = False) -> str:
 
 
 _VERDICT_TEXT = {
-    "robust": "ROBUST - changes by less than the robust threshold when flagged units are removed",
-    "nonspecific": "NONSPECIFIC - changes, but no more than removing the same number of random units",
-    "shifted": "SHIFTED - moves more than random removals do, but stays below the sensitive threshold",
-    "sensitive": "SENSITIVE - depends on the flagged units beyond what random removals explain",
-    "flipped": "FLIPPED - changes sign when the flagged units are removed",
+    "robust": "ROBUST - changes by less than the robust threshold when flagged units are repaired",
+    "nonspecific": "NONSPECIFIC - changes, but no more than the same repair applied to random units",
+    "shifted": "SHIFTED - moves more than random repairs do, but stays below the sensitive threshold",
+    "sensitive": "SENSITIVE - depends on the flagged units beyond what random repairs explain",
+    "flipped": "FLIPPED - changes sign when the flagged units are repaired",
     "failed": "FAILED - the finding function raised an error on the reduced bundle",
 }

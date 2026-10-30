@@ -17,6 +17,15 @@ def _thresholds(args):
     return DEFAULTS.override_strings(args.set or [])
 
 
+def _load_kwargs(args) -> dict:
+    kw = {}
+    if getattr(args, "sample_rate", None):
+        kw["sample_rate"] = args.sample_rate
+    if getattr(args, "trial_label", None):
+        kw["trial_label"] = args.trial_label
+    return kw
+
+
 def cmd_synth(args) -> int:
     from .synth import SynthConfig, make_session
 
@@ -37,10 +46,7 @@ def cmd_scan(args) -> int:
 
     try:
         th = _thresholds(args)
-        kw = {}
-        if args.sample_rate:
-            kw["sample_rate"] = args.sample_rate
-        bundle = load(args.bundle, **kw)
+        bundle = load(args.bundle, **_load_kwargs(args))
         if args.events is not None:
             from .bundle import Events
             import numpy as np
@@ -64,6 +70,31 @@ def cmd_scan(args) -> int:
         if args.json:
             print(f"report written to {args.json}")
     return report.exit_code(args.fail_on)
+
+
+def cmd_multiverse(args) -> int:
+    from .audit import load_finding
+    from .io import load
+    from .multiverse import multiverse
+
+    try:
+        th = _thresholds(args)
+        bundle = load(args.bundle, **_load_kwargs(args))
+        name, finding = load_finding(args.finding)
+        table = None
+        if args.metrics:
+            from .metrics import read_table
+
+            table = read_table(args.metrics, unit_column=args.unit_column, bundle=bundle)
+        rep = multiverse(bundle, finding, args.grid or None, metrics=table, thresholds=th,
+                         finding_name=name)
+    except (FileNotFoundError, ValueError, KeyError, TypeError, ImportError, AttributeError) as e:
+        print(f"ayar: error: {e}", file=sys.stderr)
+        return 2
+    if args.json:
+        Path(args.json).write_text(rep.to_json())
+    print(rep.to_json() if args.format == "json" else rep.format_text())
+    return rep.exit_code(args.fail_on)
 
 
 def cmd_validate(args) -> int:
@@ -127,10 +158,11 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("scan", help="flag sorting artifacts and audit a finding")
-    s.add_argument("bundle", help="a .npz bundle or a Phy/Kilosort output folder")
+    s.add_argument("bundle", help="a .npz bundle, .nwb file, Phy/Kilosort or SortingAnalyzer folder")
     s.add_argument("--finding", help="your analysis: file.py:func or module:func")
     s.add_argument("--events", help=".npz with 'times' (s) and optional 'labels' arrays")
     s.add_argument("--sample-rate", type=float, help="for Phy folders without params.py")
+    s.add_argument("--trial-label", help="NWB: trials-table column holding the condition label")
     s.add_argument("--only", nargs="+", metavar="CODE", help="run only these detectors")
     s.add_argument("--set", action="append", metavar="NAME=VALUE", help="override a threshold")
     s.add_argument("--format", choices=["text", "json"], default="text")
@@ -147,6 +179,21 @@ def build_parser() -> argparse.ArgumentParser:
     y.add_argument("--duration", type=float, default=600.0)
     y.add_argument("--design", choices=["block", "interleaved"], default="block")
     y.set_defaults(fn=cmd_synth)
+
+    m = sub.add_parser("multiverse", help="recompute a finding across curation thresholds")
+    m.add_argument("bundle", help="a .npz bundle, .nwb file, Phy/Kilosort or SortingAnalyzer folder")
+    m.add_argument("--finding", required=True, help="your analysis: file.py:func or module:func")
+    m.add_argument("--grid", action="append", metavar="RULE",
+                   help="e.g. 'isi_contamination<=0.1,0.25,1' (repeatable; default: a standard grid)")
+    m.add_argument("--trial-label", help="NWB: trials-table column holding the condition label")
+    m.add_argument("--metrics", help="CSV/TSV of per-unit metrics (SpikeInterface, Bombcell, ...)")
+    m.add_argument("--unit-column", help="unit id column in --metrics (auto-detected)")
+    m.add_argument("--set", action="append", metavar="NAME=VALUE")
+    m.add_argument("--format", choices=["text", "json"], default="text")
+    m.add_argument("--json", metavar="PATH", help="also write the JSON report (with every universe)")
+    m.add_argument("--fail-on", choices=["sign_unstable", "threshold_dependent", "never"],
+                   default="sign_unstable")
+    m.set_defaults(fn=cmd_multiverse)
 
     v = sub.add_parser("validate", help="measure detector accuracy on synthetic sessions")
     v.add_argument("--sessions", type=int, default=5)

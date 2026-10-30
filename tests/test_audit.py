@@ -20,8 +20,7 @@ def test_overlap_and_duplicates_bias_synchrony(session0):
 
 
 def test_scalar_finding_and_no_flags():
-    b = ayar.make_session(5, ayar.SynthConfig(n_duplicates=0, n_holes=0, n_drifting=0,
-                                               n_sync_controls=0, n_rate_controls=0))
+    b = ayar.make_session(5, ayar.SynthConfig.clean())
     rep = ayar.scan(b, lambda bb: float(bb.n_units))
     assert rep.audit == []
     assert rep.finding_baseline == {"value": float(b.n_units)}

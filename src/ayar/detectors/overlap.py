@@ -14,9 +14,11 @@ from ..config import Thresholds
 from ..flags import Flag, NotChecked, Severity
 from ..stats import count_strictly_within, count_within, poisson_lower_p
 from ._pairs import candidate_pairs
+from .split import looks_refractory_split, refractory_stats
 
 CODE = "OVERLAP_HOLE"
 TIER = 0
+ACTION = "remove"
 FIX = (
     "inspect each pair's cross-correlogram and templates; merge pairs whose templates match, "
     "otherwise exclude the pair from synchrony and correlation analyses"
@@ -56,6 +58,8 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
         p = poisson_lower_p(n_center, expected)
         if p >= alpha:
             continue
+        if looks_refractory_split(refractory_stats(bundle, a, b, th), th, alpha):
+            continue  # the whole refractory period is empty: reported as SPLIT_UNIT
         sev = Severity.ERROR if ratio <= th.overlap_ratio_error else Severity.WARNING
         da, db = bundle.depth(a), bundle.depth(b)
         dist = None if da is None or db is None else round(abs(da - db), 1)
