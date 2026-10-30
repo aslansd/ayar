@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ayar"
+version = "0.1.0"
+description = "Assay your spike-sorted finding before you publish: detect sorting artifacts and test whether your result survives them."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "Aslan Satary Dizaji", email = "aslansatary@gmail.com" }]
+keywords = [
+    "neuroscience", "electrophysiology", "spike sorting", "neuropixels",
+    "kilosort", "spikeinterface", "quality control", "reproducibility",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = ["numpy>=1.23", "scipy>=1.9"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+ayar = "ayar.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ayar"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
