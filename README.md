@@ -421,7 +421,7 @@ writes `RESULTS.md` with the reports, ready to read or share:
 ```bash
 pip install "ayar[nwb]" ONE-api ibllib dandi
 export OPENALYX_USER=<user> OPENALYX_PASSWORD=<password>    # free account: openalyx.internationalbrainlab.org/signup
-python examples/public_sessions.py --out public_results      # about 0.5-1 GB, a few minutes
+python examples/public_sessions.py --out public_results      # about 1.5 GB; about 30 minutes
 ```
 
 IBL's public server now asks every user to register (free); without credentials the script
@@ -432,14 +432,44 @@ Pick another session with `--ibl-pid` or `--dandiset` / `--dandi-asset`; `--ibl-
 output of IBL's `SpikeSortingLoader`) or `ayar.from_alf()` (ALF files on disk), DANDI data
 with `ayar.from_nwb()`.
 
-This release has **not** yet been run on these sessions: the environment it was built in had no
-access to IBL or DANDI. The script was tested end to end on local files laid out the same way,
-and the IBL and DANDI calls follow those packages' own APIs and integration tests.
+### Results: one IBL insertion and one DANDI session
+
+The full report is in [docs/public_sessions.md](https://github.com/aslansd/ayar/blob/main/docs/public_sessions.md). In short:
+
+| | IBL insertion `da8dfec1` (probe00) | DANDI 000017 (Steinmetz et al. 2019), `sub-Richards` 2017-10-31 |
+|---|---|---|
+| data | 1143 units, 39.8 M spikes, 72 min; amplitudes and depths (tier 1) | 778 units, 4.7 M spikes, 49 min; spike times only (tier 0) |
+| flags | 456 contamination, 80 duplicates, 15 splits, 136 drift (warnings), 628 overlap holes; 746 units in at least one flag | 192 contamination; pair detectors and drift not run (no depths or amplitudes) |
+| finding audit (feedback: correct vs error) | `nonspecific`, `robust`, `nonspecific` | `robust` for the mean contrast; `shifted` for the fractions of enhanced and suppressed units |
+| curation multiverse | the mean contrast is `threshold_dependent` (-0.20 Hz with all units, -0.69 median, down to -0.95), driven most by IBL's quality label | the mean contrast is `sign_unstable` (+0.07 Hz with all units, negative in 20 of 36 universes), driven most by the ISI-contamination threshold |
+| run time (laptop) | scan + audit 24 min, multiverse 6 min | 4 s and 5 s |
+
+What it shows:
+
+* **Raw sortings are full of flags.** IBL publishes every cluster, not only its good units, so
+  most units being flagged is expected; the IBL flags agree in kind with what is known about
+  the sorter (template duplicates, and overlap holes from its removal of near-simultaneous
+  spikes). There is no ground truth here, so these are hypotheses, with the evidence for each
+  in the HTML report.
+* **The finding audit holds back where it should.** In the IBL session, removing the 456
+  contaminated units moves the mean contrast by 139 %, but so does removing 456 random units
+  (141 %): the number is fragile to *any* change of unit set, not to contamination as such, and
+  the verdict is `nonspecific`, not `sensitive`. The combined repair (600 units removed) had too
+  few clean units left to compare with, and is reported as not comparable.
+* **The multiverse finds the fragility.** Both mean contrasts depend on curation thresholds;
+  in the DANDI session its sign does.
+* **Real data found two bugs**, fixed in this release: a truncated download that the script
+  reused, and audit verdicts reported as `sensitive` when no random controls were possible.
 
 ## Limitations (v0.4)
 
-* Research prototype. Thresholds are calibrated on synthetic sessions, not yet on public
-  datasets with ground truth.
+* Research prototype. Thresholds are calibrated on synthetic sessions; on public data (above)
+  ayar has run, but without ground truth its flags there are unverified.
+* Speed: a 1143-unit, 40 M-spike session took 24 minutes for the scan and finding audit on a
+  laptop. Use `--set audit_controls=5`, or scan without `--finding`, for a quick look.
+* Without depths (tier 0), the pair detectors (duplicates, splits, overlap holes) test every
+  pair, and refuse to when there are more than 20,000 pairs (about 200 units); they then say so
+  under *not checked*. Many NWB files on DANDI have no spike depths.
 * Units with few spikes (fewer than ~600) get only the weaker drift trend test, and
   contamination needs at least 5 refractory violations; both are reported as partly checked
   or simply not flagged.
@@ -458,11 +488,12 @@ and the IBL and DANDI calls follow those packages' own APIs and integration test
 
 ## Roadmap
 
-* **v0.5**: results on public sessions (DANDI, IBL, Allen) with `scan` and `hybrid`; injected
-  units that drift with the probe (SpikeInterface motion); one session report that merges
+* **v0.5**: speed (pair statistics for all units at once, cheaper audit controls), so large
+  sessions take minutes and tier-0 sessions get the pair detectors; reading unit depths from
+  more NWB layouts; `ayar hybrid` on a public raw recording; one session report that merges
   scan, multiverse and compare.
 
-See [CHANGELOG.md](CHANGELOG.md) for what changed in each release.
+See [CHANGELOG.md](https://github.com/aslansd/ayar/blob/main/CHANGELOG.md) for what changed in each release.
 
 ## Family
 

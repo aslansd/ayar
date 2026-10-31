@@ -27,6 +27,11 @@ classifiers = [
 ]
 dependencies = ["numpy>=1.23", "scipy>=1.9"]
 
+[project.urls]
+Homepage = "https://github.com/aslansd/ayar"
+Changelog = "https://github.com/aslansd/ayar/blob/main/CHANGELOG.md"
+"Public data results" = "https://github.com/aslansd/ayar/blob/main/docs/public_sessions.md"
+
 [project.optional-dependencies]
 spikeinterface = ["spikeinterface>=0.101"]
 nwb = ["pynwb>=2.5"]
@@ -39,6 +44,11 @@ ayar = "ayar.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ayar"]
+
+[tool.hatch.build.targets.sdist]
+# only what is needed to build, test and read about ayar: never downloaded data or local builds
+include = ["src", "tests", "examples", "docs", "README.md", "CHANGELOG.md", "LICENSE", "pyproject.toml"]
+exclude = ["public_results", "**/cache", "dist", "*.html", ".venv", "venv", "**/__pycache__", "**/.DS_Store"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

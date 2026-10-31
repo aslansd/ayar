@@ -148,8 +148,6 @@ def test_hybrid_scoring_with_a_known_sorting(tmp_path):
     assert c["flags_scored"] >= 2 and c["flags_correct"] == c["flags_scored"]
     again = hybrid.score_folder(tmp_path / "h", tmp_path / "h" / "sorted_fake_sorter.npz")
     assert again.counts() == c
-<<<<<<< HEAD
-=======
 
 
 def test_uncontrolled_when_most_units_are_flagged():
@@ -167,4 +165,18 @@ def test_uncontrolled_when_most_units_are_flagged():
     assert any(r.control_q is not None for r in per_detector)
     assert "uncontrolled" not in ("flipped", "sensitive")  # never fails a pipeline on its own
     assert rep.exit_code() in (0, 1)
->>>>>>> 27d2ed9 (ayar 0.4.0)
+
+
+def test_summary_verdict_ignores_uncontrolled_rows():
+    from ayar.flags import AuditRow, Report
+
+    def row(abl, rel, q, verdict):
+        return AuditRow("x", abl, 1, 1.0, 1.0 + rel, rel, q, 0.0, verdict, "", "remove 1")
+
+    rep = Report({}, [], [], {}, [row("CONTAMINATION", 1.39, 1.41, "nonspecific"),
+                                  row("ALL_FLAGS", 1.43, None, "uncontrolled")], "f", {"x": 1.0})
+    assert rep.finding_verdicts == {"x": "nonspecific"}
+    assert [r.ablation for r in rep.uncontrolled_changes["x"]] == ["ALL_FLAGS"]
+    only = Report({}, [], [], {}, [row("ALL_FLAGS", 1.43, None, "uncontrolled")], "f", {"x": 1.0})
+    assert only.finding_verdicts == {"x": "uncontrolled"}
+    assert rep.to_dict()["summary"]["uncontrolled"] == {"x": ["ALL_FLAGS"]}

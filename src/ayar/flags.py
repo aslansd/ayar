@@ -93,12 +93,26 @@ class Report:
 
     @property
     def finding_verdicts(self) -> dict[str, str]:
-        """Worst verdict per finding key across ablations."""
+        """Worst verdict per finding key across the repairs that had random controls.
+
+        An ``uncontrolled`` repair (typically ALL_FLAGS when most units are flagged) cannot be
+        compared with anything, so it decides the verdict only when no repair was controlled;
+        see :attr:`uncontrolled_changes` for those.
+        """
         out: dict[str, str] = {}
-        for row in self.audit or []:
-            cur = out.get(row.key)
-            if cur is None or VERDICT_ORDER.index(row.verdict) < VERDICT_ORDER.index(cur):
-                out[row.key] = row.verdict
+        for key in dict.fromkeys(r.key for r in self.audit or []):
+            rows = [r for r in self.audit if r.key == key]
+            controlled = [r for r in rows if r.verdict != "uncontrolled"] or rows
+            out[key] = min((r.verdict for r in controlled), key=VERDICT_ORDER.index)
+        return out
+
+    @property
+    def uncontrolled_changes(self) -> dict[str, list[AuditRow]]:
+        """Per finding key, the repairs that moved it but could not be compared with random repairs."""
+        out: dict[str, list[AuditRow]] = {}
+        for r in self.audit or []:
+            if r.verdict == "uncontrolled":
+                out.setdefault(r.key, []).append(r)
         return out
 
     def exit_code(self, fail_on: str = "error") -> int:
@@ -123,6 +137,7 @@ class Report:
                 "errors": self.n_errors,
                 "warnings": self.n_warnings,
                 "finding_verdicts": self.finding_verdicts,
+                "uncontrolled": {k: [r.ablation for r in v] for k, v in self.uncontrolled_changes.items()},
             },
             "flags": [f.to_dict() for f in self.flags],
             "not_checked": [n.to_dict() for n in self.not_checked],

@@ -99,3 +99,8 @@ def test_public_sessions_script_offline(tmp_path, session0, monkeypatch):
     md = (out / "RESULTS.md").read_text()
     assert "## IBL (local)" in md and "## DANDI" in md and "failed" not in md
     assert (out / "ibl_scan.html").exists() and (out / "dandi_curation.json").exists()
+    assert (out / "ibl_info.json").exists()
+    (out / "RESULTS.md").unlink()
+    monkeypatch.setattr(sys, "argv", ["public_sessions.py", "--out", str(out), "--rebuild"])
+    mod.main()
+    assert "## IBL (local)" in (out / "RESULTS.md").read_text()

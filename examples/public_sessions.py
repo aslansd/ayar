@@ -120,8 +120,6 @@ def _pick_trial_columns(path: Path):
         return label, tcol
 
 
-<<<<<<< HEAD
-=======
 def _download(asset, local: Path, attempts: int = 3) -> None:
     """Download a DANDI asset completely, or fail loudly.
 
@@ -165,7 +163,6 @@ def _check_hdf5(path: Path) -> None:
                            "run again") from None
 
 
->>>>>>> 27d2ed9 (ayar 0.4.0)
 def load_dandi(dandiset: str, asset_path: str | None, max_gb: float, cache: Path, local: Path | None):
     if local is None:
         from dandi.dandiapi import DandiAPIClient
@@ -184,21 +181,11 @@ def load_dandi(dandiset: str, asset_path: str | None, max_gb: float, cache: Path
                 assets = ok
             asset = assets[0]
             local = cache / "dandi" / dandiset / asset.path
-<<<<<<< HEAD
-            local.parent.mkdir(parents=True, exist_ok=True)
-            if not local.exists():
-                print(f"  downloading {asset.path} ({asset.size / 1e6:.0f} MB)")
-                asset.download(local)
-            name = asset.path
-    else:
-        name = local.name
-=======
             _download(asset, local)
             name = asset.path
     else:
         name = local.name
     _check_hdf5(local)
->>>>>>> 27d2ed9 (ayar 0.4.0)
     label, tcol = _pick_trial_columns(local)
     kw = {"shift_negative": True}
     if label:
@@ -228,6 +215,7 @@ def analyse(key: str, bundle, metrics: dict, info: dict, out: Path, multiverse: 
     if two_conditions:
         res["condition_counts"] = {str(v): int(np.sum(bundle.events.labels == v))
                                    for v in bundle.events.label_values}
+    info_path = out / f"{key}_info.json"
 
     t = time.time()
     rep = ayar.scan(bundle, finding, finding_name=fname)
@@ -247,7 +235,34 @@ def analyse(key: str, bundle, metrics: dict, info: dict, out: Path, multiverse: 
         (out / f"{key}_multiverse.json").write_text(mv.to_json())
         html.write(out / f"{key}_multiverse.html", html.multiverse_html(mv))
         res["multiverse"] = mv.to_dict()
+    info_path.write_text(json.dumps({k: v for k, v in res.items() if k not in ("scan", "multiverse")},
+                                    indent=2, default=float))
     return res
+
+
+def rebuild(out: Path) -> list[dict]:
+    """Results from the files a previous run saved (``<key>_info.json``, ``_scan.json``,
+    ``_multiverse.json``), with verdicts recomputed by this version of ayar."""
+    from ayar.flags import AuditRow, Report
+
+    results = []
+    for key in ("ibl", "dandi"):
+        info_p, scan_p = out / f"{key}_info.json", out / f"{key}_scan.json"
+        if not (info_p.exists() and scan_p.exists()):
+            continue
+        res = json.loads(info_p.read_text())
+        sc = json.loads(scan_p.read_text())
+        if sc.get("finding") and sc["finding"].get("audit") is not None:
+            rows = [AuditRow(**{k: v for k, v in a.items() if k in AuditRow.__dataclass_fields__})
+                    for a in sc["finding"]["audit"]]
+            rep = Report(sc["bundle"], [], [], {}, rows, sc["finding"]["name"], sc["finding"]["baseline"])
+            sc["summary"]["finding_verdicts"] = rep.finding_verdicts
+        res["scan"] = sc
+        mv_p = out / f"{key}_multiverse.json"
+        if mv_p.exists():
+            res["multiverse"] = json.loads(mv_p.read_text())
+        results.append(res)
+    return results
 
 
 # ------------------------------------------------------------------ report
@@ -306,19 +321,22 @@ def session_md(r: dict) -> str:
         if not fd["audit"]:
             L += ["Nothing to repair.", ""]
         else:
-            L += ["| number | baseline | verdict | largest change from a repair (vs random 95th pct) |",
-                  "|---|---|---|---|"]
+            order = ["flipped", "sensitive", "shifted", "uncontrolled", "nonspecific", "robust", "failed"]
+            L += ["| number | baseline | verdict | repair that sets the verdict: change (random 95th pct) | "
+                  "not comparable with random repairs |", "|---|---|---|---|---|"]
             for key, base in fd["baseline"].items():
                 rows = [a for a in fd["audit"] if a["key"] == key and a["rel_change"] is not None]
-                big = max(rows, key=lambda a: a["rel_change"] if np.isfinite(a["rel_change"]) else -1, default=None)
-<<<<<<< HEAD
-                ctrl = "" if big is None or big["control_q"] is None else f" (random {big['control_q']:.0%})"
-=======
-                ctrl = "" if big is None else (" (no random controls possible)" if big["control_q"] is None
-                                               else f" (random {big['control_q']:.0%})")
->>>>>>> 27d2ed9 (ayar 0.4.0)
-                eff = f"{big['ablation']} ({big['action']}): {big['rel_change']:.0%}{ctrl}" if big else ""
-                L.append(f"| `{key}` | {_f(base)} | **{verdicts.get(key, 'n/a')}** | {eff} |")
+                ctrl = [a for a in rows if a["verdict"] != "uncontrolled"] or rows
+                worst = min(ctrl, key=lambda a: (order.index(a["verdict"]),
+                                                 -(a["rel_change"] if np.isfinite(a["rel_change"]) else 0)),
+                            default=None)
+                eff = ""
+                if worst is not None:
+                    cq = "no controls" if worst["control_q"] is None else f"random {worst['control_q']:.0%}"
+                    eff = f"{worst['ablation']} ({worst['action']}): {worst['rel_change']:.0%} ({cq})"
+                unc = [a for a in rows if a["verdict"] == "uncontrolled"]
+                unc_txt = "; ".join(f"{a['ablation']}: {a['rel_change']:.0%}" for a in unc) or "-"
+                L.append(f"| `{key}` | {_f(base)} | **{verdicts.get(key, 'n/a')}** | {eff} | {unc_txt} |")
             L.append("")
 
     mv = r.get("multiverse")
@@ -359,6 +377,8 @@ def write_md(results: list[dict], failures: dict, out: Path, argv: str) -> Path:
         for r in results:
             sc = r["scan"]
             fv = ", ".join(f"{k}: {v}" for k, v in sc["summary"]["finding_verdicts"].items()) or "nothing to repair"
+            if any(a["verdict"] == "uncontrolled" for a in (sc.get("finding") or {}).get("audit") or []):
+                fv += " (combined repair not comparable: too few unflagged units)"
             mv = ", ".join(f"{k['key']}: {k['verdict']}" for k in r["multiverse"]["summaries"]) if r.get("multiverse") else "not run"
             L.append(f"| {r['title']} | {r['summary']['n_units']} | {sc['summary']['errors']} / "
                      f"{sc['summary']['warnings']} | {fv} | {mv} |")
@@ -370,15 +390,11 @@ def write_md(results: list[dict], failures: dict, out: Path, argv: str) -> Path:
           "evidence plotted in the HTML report; the finding audit says whether the example finding",
           "would change if the flagged units were repaired, and the multiverse whether it depends on",
           "curation thresholds. The example finding (a two-condition rate contrast) stands in for a",
-<<<<<<< HEAD
-          "real analysis; with your own finding the same machinery applies.", ""]
-=======
           "real analysis; with your own finding the same machinery applies.", "",
           "A verdict is only `sensitive` or `shifted` when the change beats the same repair applied",
           "to random units. When too few units are left to draw such controls (for example when",
           "most units are flagged), the verdict is `uncontrolled`: the number moves, but the audit",
           "cannot say whether the artifact or the sheer number of units removed moves it.", ""]
->>>>>>> 27d2ed9 (ayar 0.4.0)
     L += [session_md(r) for r in results]
     L += ["## Reproduce", "", "```", f"python examples/public_sessions.py {argv}".rstrip(), "```", "",
           "Versions: " + ", ".join(f"{k} {v}" for k, v in vers.items()), ""]
@@ -402,9 +418,17 @@ def main() -> None:
     p.add_argument("--skip-ibl", action="store_true")
     p.add_argument("--skip-dandi", action="store_true")
     p.add_argument("--no-multiverse", action="store_true")
+    p.add_argument("--rebuild", action="store_true",
+                   help="only rewrite RESULTS.md from the files a previous run saved in --out")
     args = p.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
+    if args.rebuild:
+        results = rebuild(out)
+        if not results:
+            raise SystemExit(f"nothing to rebuild in {out}: no <key>_info.json + <key>_scan.json")
+        print(f"wrote {write_md(results, {}, out, '--rebuild ' + ' '.join(os.sys.argv[1:]))}")
+        return
     cache = Path(args.cache) if args.cache else out / "cache"
     cache.mkdir(parents=True, exist_ok=True)
 

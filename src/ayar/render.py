@@ -93,8 +93,12 @@ def format_text(report: Report, verbose: bool = False) -> str:
                     noted.add(r.ablation)
                     lines.append(_wrap(r.note, "    "))
             lines.append("")
+            unc = report.uncontrolled_changes
             for key, v in report.finding_verdicts.items():
                 lines.append(f"  {key}: {_VERDICT_TEXT[v]}")
+                if v != "uncontrolled" and key in unc:
+                    lines.append(f"    (not compared with random repairs: {', '.join(r.ablation for r in unc[key])}, "
+                                 "too few units left)")
 
     lines.append("")
     lines.append(f"summary: {report.n_errors} error(s), {report.n_warnings} warning(s)")
