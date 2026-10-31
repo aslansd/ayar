@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 import ayar
 from ayar import Bundle
@@ -79,3 +80,27 @@ def test_merge_chain_and_dedupe():
 def test_audit_merges_duplicates(session0):
     rep = ayar.scan(session0, ayar.examples.condition_contrast, detectors=["DUPLICATE_UNIT"])
     assert all(r.action.startswith("merge") for r in rep.audit)
+
+
+def test_time_shifted_duplicate():
+    rng = np.random.default_rng(4)
+    t = np.sort(rng.uniform(0, 300, 3000))
+    t = t[np.concatenate([[True], np.diff(t) > 0.002])]
+    copy = t[rng.random(t.size) < 0.85] + 0.0006  # the same spikes, 0.6 ms later
+    other = np.sort(rng.uniform(0, 300, 1500))
+    b = Bundle(np.concatenate([t, copy, other]),
+               np.concatenate([np.zeros(t.size), np.ones(copy.size), np.full(other.size, 2)]).astype(int),
+               duration=300.5, unit_depths={0: 100.0, 1: 110.0, 2: 120.0})
+    f = by_code(ayar.scan(b, detectors=["DUPLICATE_UNIT"]), "DUPLICATE_UNIT")[frozenset((0, 1))]
+    # lag is measured from the smaller unit (the copy): its partner fires 0.6 ms earlier
+    assert abs(f.evidence["lag_ms"] + 0.6) < 0.1 and f.severity is ayar.Severity.ERROR
+    rep = ayar.scan(b, lambda bb: float(bb.n_spikes), detectors=["DUPLICATE_UNIT"])
+    # merging counts the shifted copies once
+    assert rep.audit[0].value == pytest.approx(t.size + other.size, rel=0.01)
+
+
+def test_tiny_units_reported_as_partly_checked(session0):
+    b = Bundle(np.concatenate([session0.spike_times, [1.0, 2.0, 3.0]]),
+               np.concatenate([session0.spike_clusters, [999, 999, 999]]), duration=session0.duration)
+    rep = ayar.scan(b, detectors=["SPLIT_UNIT"])
+    assert any("fewer than" in n.reason for n in rep.not_checked)

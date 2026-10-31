@@ -13,7 +13,7 @@ import math
 from ..bundle import Bundle
 from ..config import Thresholds
 from ..flags import Flag, NotChecked, Severity
-from ..stats import has_partner
+from ..stats import count_within, has_partner, peak_lag
 from ._pairs import candidate_pairs
 
 CODE = "DUPLICATE_UNIT"
@@ -36,7 +36,12 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
             small, big, ts, tbig = a, b, ta, tb
         else:
             small, big, ts, tbig = b, a, tb, ta
-        hits = int(has_partner(ts, tbig, w).sum())
+        # duplicates may be time-shifted (two templates of one neuron aligned differently):
+        # find where coincidences pile up within ±dup_max_lag, then count around that lag
+        lag = 0.0
+        if count_within(ts, tbig, th.dup_max_lag_ms / 1000.0) >= th.dup_fraction_warn * ts.size:
+            lag, _ = peak_lag(ts, tbig, th.dup_max_lag_ms / 1000.0)
+        hits = int(has_partner(ts + lag, tbig, w).sum())
         frac = hits / ts.size
         if frac < th.dup_fraction_warn:
             continue
@@ -52,7 +57,11 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
                 units=(big, small),
                 message=(
                     f"{frac:.0%} of unit {small}'s spikes have a unit {big} spike within "
-                    f"±{th.dup_window_ms:g} ms ({ratio:.0f}x chance): likely one neuron counted twice"
+                    f"±{th.dup_window_ms:g} ms" + (f" of a {lag * 1e3:+.2f} ms offset" if abs(lag) > w else "")
+                    + f" ({ratio:.0f}x chance): "
+                    + ("likely one neuron counted twice" if sev is Severity.ERROR else
+                       "these spikes are counted twice; unit "
+                       f"{small} may be a duplicate, or a cluster of collision events shared with other units")
                 ),
                 consequence=(
                     "inflates the number of neurons, doubles this neuron's weight in population "
@@ -66,6 +75,7 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
                     "shared_fraction": round(frac, 4),
                     "ratio_to_chance": round(ratio, 2),
                     "window_ms": th.dup_window_ms,
+                    "lag_ms": round(lag * 1e3, 3),
                     "n_spikes": {str(big): int(tbig.size), str(small): int(ts.size)},
                     "scope": scope,
                 },

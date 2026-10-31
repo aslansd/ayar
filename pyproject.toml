@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ayar"
-version = "0.2.0"
+version = "0.3.0"
 description = "Assay your spike-sorted finding before you publish: detect sorting artifacts and test whether your result survives them."
 readme = "README.md"
 license = "Apache-2.0"
@@ -30,8 +30,9 @@ dependencies = ["numpy>=1.23", "scipy>=1.9"]
 [project.optional-dependencies]
 spikeinterface = ["spikeinterface>=0.101"]
 nwb = ["pynwb>=2.5"]
-all = ["spikeinterface>=0.101", "pynwb>=2.5"]
-dev = ["pytest>=7", "spikeinterface>=0.101", "pynwb>=2.5"]
+provenance = ["daftar>=1.2"]
+all = ["spikeinterface>=0.101", "pynwb>=2.5", "daftar>=1.2"]
+dev = ["pytest>=7", "spikeinterface>=0.101", "pynwb>=2.5", "daftar>=1.2"]
 
 [project.scripts]
 ayar = "ayar.cli:main"

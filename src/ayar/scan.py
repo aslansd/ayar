@@ -19,11 +19,14 @@ def reconcile(flags: list[Flag]) -> list[Flag]:
       so a DRIFT_CONFOUND flag on it is the same event seen twice.
     * A contaminated unit shares a refractory dip with the neighbour it took spikes
       from, so an OVERLAP_HOLE on exactly that pair is explained by the contamination.
+    * A duplicate is the extreme case of a split (the same spikes, twice), so a pair
+      flagged DUPLICATE_UNIT is not also reported as SPLIT_UNIT.
     """
     handoff_units = {
         u for f in flags if f.code == "SPLIT_UNIT" and "handoff" in str(f.evidence.get("mode", ""))
         for u in f.units
     }
+    duplicate_pairs = {frozenset(f.units) for f in flags if f.code == "DUPLICATE_UNIT"}
     contam_pairs = {
         frozenset((f.units[0], f.evidence["likely_source"]))
         for f in flags if f.code == "CONTAMINATION" and "likely_source" in f.evidence
@@ -33,6 +36,8 @@ def reconcile(flags: list[Flag]) -> list[Flag]:
         if f.code == "DRIFT_CONFOUND" and f.units[0] in handoff_units:
             continue
         if f.code == "OVERLAP_HOLE" and frozenset(f.units) in contam_pairs:
+            continue
+        if f.code == "SPLIT_UNIT" and frozenset(f.units) in duplicate_pairs:
             continue
         out.append(f)
     return out

@@ -34,6 +34,28 @@ def has_partner(a: np.ndarray, b: np.ndarray, w: float) -> np.ndarray:
     return hi > lo
 
 
+def peak_lag(a: np.ndarray, b: np.ndarray, max_lag: float, bin_s: float = 5e-5) -> tuple[float, int]:
+    """Lag (b relative to a) where coincidences within ±max_lag pile up, and how many there are."""
+    if a.size == 0 or b.size == 0:
+        return 0.0, 0
+    lo = np.searchsorted(b, a - max_lag, side="left")
+    hi = np.searchsorted(b, a + max_lag, side="right")
+    width = hi - lo
+    if width.max(initial=0) == 0:
+        return 0.0, 0
+    lags = []
+    for k in range(int(width.max())):
+        has = width > k
+        lags.append(b[lo[has] + k] - a[has])
+    lags = np.concatenate(lags)
+    edges = np.arange(-max_lag, max_lag + bin_s / 2, bin_s)
+    counts, _ = np.histogram(lags, bins=edges)
+    # smooth over 3 bins so a duplicate spread over neighbouring bins still wins
+    sm = np.convolve(counts, np.ones(3), mode="same")
+    i = int(np.argmax(sm))
+    return float((edges[i] + edges[i + 1]) / 2), int(lags.size)
+
+
 def ccg(a: np.ndarray, b: np.ndarray, bin_s: float, window_s: float) -> tuple[np.ndarray, np.ndarray]:
     """Cross-correlogram counts of b relative to a. Returns (bin_centers, counts)."""
     edges = np.arange(-window_s, window_s + bin_s / 2, bin_s)

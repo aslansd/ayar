@@ -37,22 +37,40 @@ FIX = (
 
 
 def refractory_stats(bundle: Bundle, a: int, b: int, th: Thresholds) -> dict | None:
-    """Cross-refractory coincidences of a pair against the 2-10 ms flank expectation."""
+    """Cross-refractory coincidences of a pair against the 2-10 ms flank expectation.
+
+    Coincidences within ±``dup_window_ms`` are set aside as double detections of the
+    same spike (common when a sorter splits a neuron) rather than counted as
+    refractory violations. The outer band (1.0-1.5 ms) is tested separately: a
+    sorter that discards near-simultaneous spikes empties the centre of the
+    correlogram, but only a shared refractory period also empties its edge.
+    """
     ta, tb = bundle.train(a), bundle.train(b)
     tr = REFRACTORY_S
+    dw = th.dup_window_ms / 1000.0
+    edge = th.split_outer_ms / 1000.0
     f1, f2 = th.overlap_flank_lo_ms / 1000.0, th.overlap_flank_hi_ms / 1000.0
     n_flank = count_within(ta, tb, f2) - count_strictly_within(ta, tb, f1)
-    expected = n_flank * tr / (f2 - f1)
+    per_s = n_flank / (2 * (f2 - f1))  # expected coincidences per second of lag
+    expected = per_s * 2 * (tr - dw)
     if expected < th.overlap_min_expected:
         return None
-    n_ref = count_strictly_within(ta, tb, tr)
-    merged = np.sort(np.concatenate([ta, tb]))
+    n_ref = count_strictly_within(ta, tb, tr) - count_within(ta, tb, dw)
+    n_outer = count_strictly_within(ta, tb, tr) - count_strictly_within(ta, tb, edge)
+    exp_outer = per_s * 2 * (tr - edge)
+    n_double = count_within(ta, tb, dw)
+    # merged train with double detections counted once
+    hi = np.searchsorted(ta, tb + dw, side="right")
+    lo = np.searchsorted(ta, tb - dw, side="left")
+    merged = np.sort(np.concatenate([ta, tb[hi <= lo]]))
     c_merged = hill_contamination(isi_violations(merged), merged.size, bundle.duration)
     return {
         "n_refractory": int(n_ref),
         "expected": float(expected),
         "ratio": float(n_ref / expected),
         "p": poisson_lower_p(n_ref, expected),
+        "outer_ratio": float(n_outer / exp_outer) if exp_outer > 0 else float("nan"),
+        "double_detections": int(n_double),
         "merged_contamination": float(c_merged),
     }
 
@@ -61,6 +79,7 @@ def looks_refractory_split(stats: dict | None, th: Thresholds, alpha: float) -> 
     return (
         stats is not None
         and stats["ratio"] <= th.split_ratio
+        and stats["outer_ratio"] <= th.split_outer_ratio
         and stats["p"] < alpha
         and stats["merged_contamination"] <= th.split_max_merged_contamination
     )
@@ -125,8 +144,11 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
         return [], [NotChecked(CODE, scope)]
     alpha = th.overlap_alpha / max(len(pairs), 1)
     candidates = []
+    underpowered = 0
     for a, b in pairs:
         ref = refractory_stats(bundle, a, b, th)
+        if ref is None:
+            underpowered += 1
         is_ref = looks_refractory_split(ref, th, alpha)
         hand = handoff_stats(bundle, a, b, th)
         is_hand = looks_handoff(hand, th)
@@ -155,8 +177,9 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
         if is_ref:
             reasons.append(
                 f"they almost never fire within ±1.5 ms of each other ({ref['n_refractory']} vs "
-                f"{ref['expected']:.0f} expected) and the merged train has "
-                f"{ref['merged_contamination']:.0%} refractory contamination"
+                f"{ref['expected']:.0f} expected"
+                + (f", plus {ref['double_detections']} double detections" if ref["double_detections"] else "")
+                + f") and the merged train has {ref['merged_contamination']:.0%} refractory contamination"
             )
             evidence["refractory"] = ref
         if is_hand:
@@ -182,4 +205,21 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
                 evidence=evidence,
             )
         )
-    return flags, []
+    nc: list[NotChecked] = []
+    tiny = sum(1 for u in bundle.unit_ids if 0 < len(bundle.spike_indices(u)) < th.min_spikes)
+    if tiny:
+        nc.append(NotChecked(
+            CODE,
+            f"{tiny} unit(s) with fewer than {th.min_spikes} spikes were not tested; small units are "
+            "often fragments of a neuron that another unit already holds",
+            partial=True,
+        ))
+    if underpowered:
+        nc.append(NotChecked(
+            CODE,
+            f"{underpowered} of {len(pairs)} nearby pairs had too few spikes for the refractory test "
+            f"(expected < {th.overlap_min_expected:g} within ±1.5 ms); small fragments of a split neuron "
+            "can hide here, and longer recordings make them testable",
+            partial=True,
+        ))
+    return flags, nc

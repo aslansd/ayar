@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.3.0
+
+### New
+* **`ayar compare`: does the finding survive a different spike sorter?** Matches units between
+  a reference sorting and each other sorting (agreement within ±0.4 ms, one-to-one Hungarian
+  matching, minimum agreement 0.5), recomputes the finding on every sorting and on the
+  consensus units, and gives each number a verdict (`consistent`, `sorter_dependent`,
+  `sign_unstable`). Python: `ayar.compare(...)`, `ayar.match_units(...)`.
+* **Single-file HTML reports** (`--html` on `scan`, `multiverse`, `compare`): inline SVG
+  evidence plots for every flag, finding-audit and specification-curve charts, data tables,
+  tooltips, light and dark themes; no third-party library and no network access needed.
+* **Provenance through daftar** (`--daftar`, extra `ayar[provenance]`): records input hashes,
+  thresholds, version and environment, flags, the finding's numbers and verdicts, and report
+  files, so runs can be compared with `daftar diff`.
+* `ayar synth --sorters N` writes N-1 re-sortings of the synthetic session (conservative and
+  liberal styles, units renumbered) for trying `compare`; `ayar.synth.sorter_variants()`.
+* `examples/real_sorters.py`: sorts a simulated recording with tridesclous2, spykingcircus2
+  and mountainsort5, scans every sorting, checks each flag against the ground truth, and
+  compares the sorters (`--reuse` re-scans existing sorter output without sorting again).
+* `--events` for `ayar multiverse`.
+
+### Changed
+* `SPLIT_UNIT` (refractory signature) sets aside coincidences within ±0.25 ms as double
+  detections, requires the 1.0-1.5 ms band to be empty as well (a sorter that discards
+  near-simultaneous spikes empties only the centre of the correlogram, which produced a false
+  split on MountainSort 5 output), and checks the merged train after removing double
+  detections. Nearby pairs too sparse to test are reported as partly checked.
+* `DUPLICATE_UNIT` finds time-shifted duplicates (two templates of one neuron aligned up to
+  ±1 ms apart) by locating the lag where coincidences pile up; the lag is in the evidence, and
+  the audit counts shifted copies once when merging. Warning-level duplicates (20-50 % shared)
+  no longer claim "one neuron": they may be a cluster of collision events.
+* Units with fewer than `min_spikes` spikes are reported as partly checked by `SPLIT_UNIT`
+  (small units are often fragments of a neuron).
+* A pair flagged `DUPLICATE_UNIT` is no longer also reported as `SPLIT_UNIT`.
+* `ayar doctor` lists what each optional dependency enables.
+
 ## 0.2.0
 
 ### New

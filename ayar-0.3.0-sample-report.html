@@ -1,0 +1,801 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ayar scan</title><style>
+.ayar{color-scheme:light;--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;
+--grid:#e1e0d9;--axis:#c3c2b7;--ring:rgba(11,11,11,.10);--s1:#2a78d6;--s2:#eb6834;--band:#e1e0d9;
+--critical:#d03b3b;--warning:#fab219;--good:#0ca30c;--serious:#ec835a;--info:#898781;
+font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--page);margin:0}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .ayar{color-scheme:dark;--page:#0d0d0d;
+--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--grid:#2c2c2a;--axis:#383835;--ring:rgba(255,255,255,.10);
+--s1:#3987e5;--s2:#d95926;--band:#383835}}
+:root[data-theme="dark"] .ayar{color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;
+--grid:#2c2c2a;--axis:#383835;--ring:rgba(255,255,255,.10);--s1:#3987e5;--s2:#d95926;--band:#383835}
+.ayar main{max-width:1120px;margin:0 auto;padding:28px 24px 64px}
+.ayar h1{font-size:22px;margin:0 0 4px}.ayar h2{font-size:17px;margin:32px 0 10px}
+.ayar h3{font-size:14px;margin:0 0 6px}.ayar .sub{color:var(--ink2);margin:0 0 18px}
+.ayar .tiles{display:flex;gap:12px;flex-wrap:wrap}
+.ayar .tile{background:var(--surface);border:1px solid var(--ring);border-radius:10px;padding:12px 16px;min-width:130px}
+.ayar .tile b{display:block;font-size:26px;font-weight:600}.ayar .tile span{color:var(--ink2);font-size:13px}
+.ayar table{border-collapse:collapse;width:100%;background:var(--surface);border:1px solid var(--ring);border-radius:10px;overflow:hidden}
+.ayar th,.ayar td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
+.ayar th{color:var(--ink2);font-weight:600;font-size:12px}.ayar td.num{text-align:right;font-variant-numeric:tabular-nums}
+.ayar tr:last-child td{border-bottom:0}
+.ayar .chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;white-space:nowrap}
+.ayar .chip i{font-style:normal;display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;
+font-size:11px;color:#fff}.ayar .chip.error i{background:var(--critical)}.ayar .chip.warning i{background:var(--warning);color:#0b0b0b}
+.ayar .chip.info i{background:var(--info)}.ayar .chip.good i{background:var(--good)}.ayar .chip.serious i{background:var(--serious)}
+.ayar .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.ayar .card{background:var(--surface);border:1px solid var(--ring);border-radius:10px;padding:14px}
+.ayar .card p{margin:4px 0 8px;color:var(--ink2);font-size:13px}
+.ayar details{margin-top:6px}.ayar summary{cursor:pointer;color:var(--ink2);font-size:12px}
+.ayar details table{margin-top:6px;font-size:12px}
+.ayar svg text{font:11px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--muted)}
+.ayar svg .lab{fill:var(--ink2)}.ayar svg .hit{fill:transparent}
+.ayar .note{color:var(--ink2);font-size:13px}.ayar code{font-size:12px}
+.ayar .legend{display:flex;gap:14px;font-size:12px;color:var(--ink2);margin:2px 0 4px}
+.ayar .legend span::before{content:"";display:inline-block;width:14px;height:2px;margin-right:5px;vertical-align:middle;background:var(--k)}
+#ayar-tip{position:fixed;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--ring);
+border-radius:8px;padding:6px 9px;font-size:12px;box-shadow:0 2px 10px rgba(0,0,0,.15);display:none;z-index:9}
+#ayar-tip div:first-child{font-weight:600}
+</style></head><body class="ayar"><main><h1>ayar scan</h1><p class="sub">58 units · 290,404 spikes · 600 s · tier 1 · ayar.synth · ayar 0.3.0 · 2026-10-31 04:43 UTC</p><div class="tiles"><div class="tile"><b>9</b><span>errors</span></div><div class="tile"><b>3</b><span>warnings</span></div><div class="tile"><b>19</b><span>of 58 units flagged</span></div><div class="tile"><b>1/3</b><span>finding numbers sensitive or flipped</span></div></div><h2>Sorting artifacts</h2><table><thead><tr><th>severity</th><th>detector</th><th>units</th><th>evidence</th></tr></thead><tbody><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>CONTAMINATION</td><td>52</td><td>unit 52: 24 refractory violations (&lt;1.5 ms) imply 28% of its spikes come from other neurons</td></tr><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>DRIFT_CONFOUND</td><td>9</td><td>unit 9: rate follows amplitude (rho=0.84, amplitude range 41%); rate follows detection loss (r=0.84; up to 46% of spikes below threshold in the worst window); rate follows depth (rho=-0.84, moved 29 µm)</td></tr><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>DRIFT_CONFOUND</td><td>16</td><td>unit 16: rate follows detection loss (r=0.95; up to 50% of spikes below threshold in the worst window)</td></tr><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>DRIFT_CONFOUND</td><td>34</td><td>unit 34: rate follows amplitude (rho=0.96, amplitude range 24%); rate follows depth (rho=-0.96, moved 26 µm)</td></tr><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>DUPLICATE_UNIT</td><td>17, 41</td><td>95% of unit 41&#x27;s spikes have a unit 17 spike within ±0.25 ms (229x chance): likely one neuron counted twice</td></tr><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>DUPLICATE_UNIT</td><td>32, 40</td><td>96% of unit 40&#x27;s spikes have a unit 32 spike within ±0.25 ms (229x chance): likely one neuron counted twice</td></tr><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>OVERLAP_HOLE</td><td>42, 43</td><td>units 42 and 43 fire within ±0.5 ms 13% as often as expected from the 2-10 ms flanks (37 vs 295, p=1.6e-80)</td></tr><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>OVERLAP_HOLE</td><td>44, 45</td><td>units 44 and 45 fire within ±0.5 ms 12% as often as expected from the 2-10 ms flanks (31 vs 257, p=2.3e-71)</td></tr><tr><td><span class="chip error"><i aria-hidden="true">✕</i>error</span></td><td>SPLIT_UNIT</td><td>50, 51</td><td>units 50 and 51 look like one neuron: they almost never fire within ±1.5 ms of each other (0 vs 151 expected) and the merged train has 0% refractory contamination</td></tr><tr><td><span class="chip warning"><i aria-hidden="true">!</i>warning</span></td><td>CONTAMINATION</td><td>53</td><td>unit 53: 8 refractory violations (&lt;1.5 ms) imply 18% of its spikes come from other neurons; likely source: unit 3 (shared refractory dip, ratio 0.59)</td></tr><tr><td><span class="chip warning"><i aria-hidden="true">!</i>warning</span></td><td>SPLIT_UNIT</td><td>46, 47</td><td>units 46 and 47 look like one neuron: one fades out as the other fades in (rate r=-0.99, overlapping in 1 of 20 windows)</td></tr><tr><td><span class="chip warning"><i aria-hidden="true">!</i>warning</span></td><td>SPLIT_UNIT</td><td>48, 49</td><td>units 48 and 49 look like one neuron: one fades out as the other fades in (rate r=-1.00, overlapping in 1 of 20 windows)</td></tr></tbody></table><h2>What the flags mean</h2><div class="cards"><div class="card"><h3>CONTAMINATION · 2 flag(s)</h3><p><b>Why it matters:</b> the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron&#x27;s</p><p><b>Fix:</b> re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together</p></div><div class="card"><h3>DRIFT_CONFOUND · 3 flag(s)</h3><p><b>Why it matters:</b> the unit&#x27;s rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed; conditions are ordered in time (r=-0.87 for condition &#x27;0&#x27;), so this loss shows up as a condition effect</p><p><b>Fix:</b> apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict each unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs</p></div><div class="card"><h3>DUPLICATE_UNIT · 2 flag(s)</h3><p><b>Why it matters:</b> inflates the number of neurons, doubles this neuron&#x27;s weight in population averages and decoders, and creates a fake zero-lag correlation</p><p><b>Fix:</b> merge each pair (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis</p></div><div class="card"><h3>OVERLAP_HOLE · 2 flag(s)</h3><p><b>Why it matters:</b> zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two</p><p><b>Fix:</b> inspect each pair&#x27;s cross-correlogram and templates; merge pairs whose templates match, otherwise exclude the pair from synchrony and correlation analyses</p></div><div class="card"><h3>SPLIT_UNIT · 3 flag(s)</h3><p><b>Why it matters:</b> one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)</p><p><b>Fix:</b> merge each pair (Phy merge, SpikeInterface apply_curation with a merge) after checking that the templates match, then re-run the analysis</p></div></div><h2>Evidence</h2><div class="cards"><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> CONTAMINATION · units 52</h3><p>inter-spike intervals of unit 52; shaded: the refractory period</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="ISI histogram of unit 52" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="84.9" y2="84.9" stroke="var(--grid)" stroke-width="1"/><text x="38" y="88.4" text-anchor="end">10</text><line x1="44" x2="328" y1="49.8" y2="49.8" stroke="var(--grid)" stroke-width="1"/><text x="38" y="53.3" text-anchor="end">20</text><line x1="44" x2="328" y1="14.6" y2="14.6" stroke="var(--grid)" stroke-width="1"/><text x="38" y="18.1" text-anchor="end">30</text><text x="44.0" y="134" text-anchor="middle">0</text><text x="115.0" y="134" text-anchor="middle">5</text><text x="186.0" y="134" text-anchor="middle">10</text><text x="257.0" y="134" text-anchor="middle">15</text><text x="328.0" y="134" text-anchor="middle">20</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">inter-spike interval (ms)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">intervals</text><rect x="44.0" y="10" width="21.3" height="110" fill="var(--band)" opacity=".6"/><rect x="45.0" y="88.4" width="5.1" height="31.6" rx="1" fill="var(--s1)" data-tip="9 intervals
+0.0-0.5 ms"/><rect x="52.1" y="81.4" width="5.1" height="38.6" rx="1" fill="var(--s1)" data-tip="11 intervals
+0.5-1.0 ms"/><rect x="59.2" y="106.0" width="5.1" height="14.0" rx="1" fill="var(--s1)" data-tip="4 intervals
+1.0-1.5 ms"/><rect x="66.3" y="84.9" width="5.1" height="35.1" rx="1" fill="var(--s1)" data-tip="10 intervals
+1.5-2.0 ms"/><rect x="73.4" y="60.3" width="5.1" height="59.7" rx="1" fill="var(--s1)" data-tip="17 intervals
+2.0-2.5 ms"/><rect x="80.5" y="35.7" width="5.1" height="84.3" rx="1" fill="var(--s1)" data-tip="24 intervals
+2.5-3.0 ms"/><rect x="87.6" y="53.3" width="5.1" height="66.7" rx="1" fill="var(--s1)" data-tip="19 intervals
+3.0-3.5 ms"/><rect x="94.7" y="56.8" width="5.1" height="63.2" rx="1" fill="var(--s1)" data-tip="18 intervals
+3.5-4.0 ms"/><rect x="101.8" y="32.2" width="5.1" height="87.8" rx="1" fill="var(--s1)" data-tip="25 intervals
+4.0-4.5 ms"/><rect x="108.9" y="56.8" width="5.1" height="63.2" rx="1" fill="var(--s1)" data-tip="18 intervals
+4.5-5.0 ms"/><rect x="116.0" y="49.8" width="5.1" height="70.2" rx="1" fill="var(--s1)" data-tip="20 intervals
+5.0-5.5 ms"/><rect x="123.1" y="67.3" width="5.1" height="52.7" rx="1" fill="var(--s1)" data-tip="15 intervals
+5.5-6.0 ms"/><rect x="130.2" y="39.2" width="5.1" height="80.8" rx="1" fill="var(--s1)" data-tip="23 intervals
+6.0-6.5 ms"/><rect x="137.3" y="70.8" width="5.1" height="49.2" rx="1" fill="var(--s1)" data-tip="14 intervals
+6.5-7.0 ms"/><rect x="144.4" y="46.2" width="5.1" height="73.8" rx="1" fill="var(--s1)" data-tip="21 intervals
+7.0-7.5 ms"/><rect x="151.5" y="49.8" width="5.1" height="70.2" rx="1" fill="var(--s1)" data-tip="20 intervals
+7.5-8.0 ms"/><rect x="158.6" y="56.8" width="5.1" height="63.2" rx="1" fill="var(--s1)" data-tip="18 intervals
+8.0-8.5 ms"/><rect x="165.7" y="67.3" width="5.1" height="52.7" rx="1" fill="var(--s1)" data-tip="15 intervals
+8.5-9.0 ms"/><rect x="172.8" y="56.8" width="5.1" height="63.2" rx="1" fill="var(--s1)" data-tip="18 intervals
+9.0-9.5 ms"/><rect x="179.9" y="56.8" width="5.1" height="63.2" rx="1" fill="var(--s1)" data-tip="18 intervals
+9.5-10.0 ms"/><rect x="187.0" y="63.8" width="5.1" height="56.2" rx="1" fill="var(--s1)" data-tip="16 intervals
+10.0-10.5 ms"/><rect x="194.1" y="56.8" width="5.1" height="63.2" rx="1" fill="var(--s1)" data-tip="18 intervals
+10.5-11.0 ms"/><rect x="201.2" y="18.1" width="5.1" height="101.9" rx="1" fill="var(--s1)" data-tip="29 intervals
+11.0-11.5 ms"/><rect x="208.3" y="53.3" width="5.1" height="66.7" rx="1" fill="var(--s1)" data-tip="19 intervals
+11.5-12.0 ms"/><rect x="215.4" y="53.3" width="5.1" height="66.7" rx="1" fill="var(--s1)" data-tip="19 intervals
+12.0-12.5 ms"/><rect x="222.5" y="46.2" width="5.1" height="73.8" rx="1" fill="var(--s1)" data-tip="21 intervals
+12.5-13.0 ms"/><rect x="229.6" y="35.7" width="5.1" height="84.3" rx="1" fill="var(--s1)" data-tip="24 intervals
+13.0-13.5 ms"/><rect x="236.7" y="63.8" width="5.1" height="56.2" rx="1" fill="var(--s1)" data-tip="16 intervals
+13.5-14.0 ms"/><rect x="243.8" y="60.3" width="5.1" height="59.7" rx="1" fill="var(--s1)" data-tip="17 intervals
+14.0-14.5 ms"/><rect x="250.9" y="49.8" width="5.1" height="70.2" rx="1" fill="var(--s1)" data-tip="20 intervals
+14.5-15.0 ms"/><rect x="258.0" y="49.8" width="5.1" height="70.2" rx="1" fill="var(--s1)" data-tip="20 intervals
+15.0-15.5 ms"/><rect x="265.1" y="77.9" width="5.1" height="42.1" rx="1" fill="var(--s1)" data-tip="12 intervals
+15.5-16.0 ms"/><rect x="272.2" y="67.3" width="5.1" height="52.7" rx="1" fill="var(--s1)" data-tip="15 intervals
+16.0-16.5 ms"/><rect x="279.3" y="63.8" width="5.1" height="56.2" rx="1" fill="var(--s1)" data-tip="16 intervals
+16.5-17.0 ms"/><rect x="286.4" y="67.3" width="5.1" height="52.7" rx="1" fill="var(--s1)" data-tip="15 intervals
+17.0-17.5 ms"/><rect x="293.5" y="67.3" width="5.1" height="52.7" rx="1" fill="var(--s1)" data-tip="15 intervals
+17.5-18.0 ms"/><rect x="300.6" y="42.7" width="5.1" height="77.3" rx="1" fill="var(--s1)" data-tip="22 intervals
+18.0-18.5 ms"/><rect x="307.7" y="60.3" width="5.1" height="59.7" rx="1" fill="var(--s1)" data-tip="17 intervals
+18.5-19.0 ms"/><rect x="314.8" y="56.8" width="5.1" height="63.2" rx="1" fill="var(--s1)" data-tip="18 intervals
+19.0-19.5 ms"/><rect x="321.9" y="56.8" width="5.1" height="63.2" rx="1" fill="var(--s1)" data-tip="18 intervals
+19.5-20.0 ms"/></svg></div><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> DRIFT_CONFOUND · units 9</h3><p>unit 9: rate (top) and median amplitude (bottom) over the session</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="firing rate of unit 9 over the session" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="77.7" y2="77.7" stroke="var(--grid)" stroke-width="1"/><text x="38" y="81.2" text-anchor="end">5</text><line x1="44" x2="328" y1="35.4" y2="35.4" stroke="var(--grid)" stroke-width="1"/><text x="38" y="38.9" text-anchor="end">10</text><text x="136.2" y="134" text-anchor="middle">200</text><text x="235.8" y="134" text-anchor="middle">400</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">time (s)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">rate (Hz)</text><polyline points="44.0,33.7 58.9,29.0 73.9,29.2 88.8,31.5 103.8,28.1 118.7,29.5 133.7,15.7 148.6,39.4 163.6,32.3 178.5,39.7 193.5,36.3 208.4,31.2 223.4,33.2 238.3,37.4 253.3,43.0 268.2,37.7 283.2,53.2 298.1,52.9 313.1,78.3 328.0,87.0" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect class="hit" x="36.5" y="10" width="14.9" height="110" data-tip="time (s) 15
+rate (Hz): 10.2"/><rect class="hit" x="51.5" y="10" width="14.9" height="110" data-tip="time (s) 45
+rate (Hz): 10.77"/><rect class="hit" x="66.4" y="10" width="14.9" height="110" data-tip="time (s) 75
+rate (Hz): 10.73"/><rect class="hit" x="81.4" y="10" width="14.9" height="110" data-tip="time (s) 105
+rate (Hz): 10.47"/><rect class="hit" x="96.3" y="10" width="14.9" height="110" data-tip="time (s) 135
+rate (Hz): 10.87"/><rect class="hit" x="111.3" y="10" width="14.9" height="110" data-tip="time (s) 165
+rate (Hz): 10.7"/><rect class="hit" x="126.2" y="10" width="14.9" height="110" data-tip="time (s) 195
+rate (Hz): 12.33"/><rect class="hit" x="141.2" y="10" width="14.9" height="110" data-tip="time (s) 225
+rate (Hz): 9.533"/><rect class="hit" x="156.1" y="10" width="14.9" height="110" data-tip="time (s) 255
+rate (Hz): 10.37"/><rect class="hit" x="171.1" y="10" width="14.9" height="110" data-tip="time (s) 285
+rate (Hz): 9.5"/><rect class="hit" x="186.0" y="10" width="14.9" height="110" data-tip="time (s) 315
+rate (Hz): 9.9"/><rect class="hit" x="200.9" y="10" width="14.9" height="110" data-tip="time (s) 345
+rate (Hz): 10.5"/><rect class="hit" x="215.9" y="10" width="14.9" height="110" data-tip="time (s) 375
+rate (Hz): 10.27"/><rect class="hit" x="230.8" y="10" width="14.9" height="110" data-tip="time (s) 405
+rate (Hz): 9.767"/><rect class="hit" x="245.8" y="10" width="14.9" height="110" data-tip="time (s) 435
+rate (Hz): 9.1"/><rect class="hit" x="260.7" y="10" width="14.9" height="110" data-tip="time (s) 465
+rate (Hz): 9.733"/><rect class="hit" x="275.7" y="10" width="14.9" height="110" data-tip="time (s) 495
+rate (Hz): 7.9"/><rect class="hit" x="290.6" y="10" width="14.9" height="110" data-tip="time (s) 525
+rate (Hz): 7.933"/><rect class="hit" x="305.6" y="10" width="14.9" height="110" data-tip="time (s) 555
+rate (Hz): 4.933"/><rect class="hit" x="320.5" y="10" width="14.9" height="110" data-tip="time (s) 585
+rate (Hz): 3.9"/></svg><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="median amplitude of unit 9 over the session" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="89.7" y2="89.7" stroke="var(--grid)" stroke-width="1"/><text x="38" y="93.2" text-anchor="end">25</text><line x1="44" x2="328" y1="59.4" y2="59.4" stroke="var(--grid)" stroke-width="1"/><text x="38" y="62.9" text-anchor="end">50</text><line x1="44" x2="328" y1="29.2" y2="29.2" stroke="var(--grid)" stroke-width="1"/><text x="38" y="32.7" text-anchor="end">75</text><text x="136.2" y="134" text-anchor="middle">200</text><text x="235.8" y="134" text-anchor="middle">400</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">time (s)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">median amplitude</text><polyline points="44.0,13.3 58.9,18.0 73.9,18.7 88.8,19.1 103.8,24.1 118.7,25.0 133.7,28.5 148.6,31.3 163.6,34.7 178.5,35.3 193.5,39.1 208.4,42.4 223.4,43.1 238.3,45.7 253.3,47.6 268.2,50.3 283.2,51.7 298.1,52.5 313.1,54.9 328.0,55.0" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect class="hit" x="36.5" y="10" width="14.9" height="110" data-tip="time (s) 15
+median amplitude: 88.06"/><rect class="hit" x="51.5" y="10" width="14.9" height="110" data-tip="time (s) 45
+median amplitude: 84.19"/><rect class="hit" x="66.4" y="10" width="14.9" height="110" data-tip="time (s) 75
+median amplitude: 83.67"/><rect class="hit" x="81.4" y="10" width="14.9" height="110" data-tip="time (s) 105
+median amplitude: 83.32"/><rect class="hit" x="96.3" y="10" width="14.9" height="110" data-tip="time (s) 135
+median amplitude: 79.22"/><rect class="hit" x="111.3" y="10" width="14.9" height="110" data-tip="time (s) 165
+median amplitude: 78.47"/><rect class="hit" x="126.2" y="10" width="14.9" height="110" data-tip="time (s) 195
+median amplitude: 75.53"/><rect class="hit" x="141.2" y="10" width="14.9" height="110" data-tip="time (s) 225
+median amplitude: 73.23"/><rect class="hit" x="156.1" y="10" width="14.9" height="110" data-tip="time (s) 255
+median amplitude: 70.42"/><rect class="hit" x="171.1" y="10" width="14.9" height="110" data-tip="time (s) 285
+median amplitude: 69.9"/><rect class="hit" x="186.0" y="10" width="14.9" height="110" data-tip="time (s) 315
+median amplitude: 66.79"/><rect class="hit" x="200.9" y="10" width="14.9" height="110" data-tip="time (s) 345
+median amplitude: 64.06"/><rect class="hit" x="215.9" y="10" width="14.9" height="110" data-tip="time (s) 375
+median amplitude: 63.49"/><rect class="hit" x="230.8" y="10" width="14.9" height="110" data-tip="time (s) 405
+median amplitude: 61.31"/><rect class="hit" x="245.8" y="10" width="14.9" height="110" data-tip="time (s) 435
+median amplitude: 59.79"/><rect class="hit" x="260.7" y="10" width="14.9" height="110" data-tip="time (s) 465
+median amplitude: 57.54"/><rect class="hit" x="275.7" y="10" width="14.9" height="110" data-tip="time (s) 495
+median amplitude: 56.38"/><rect class="hit" x="290.6" y="10" width="14.9" height="110" data-tip="time (s) 525
+median amplitude: 55.75"/><rect class="hit" x="305.6" y="10" width="14.9" height="110" data-tip="time (s) 555
+median amplitude: 53.73"/><rect class="hit" x="320.5" y="10" width="14.9" height="110" data-tip="time (s) 585
+median amplitude: 53.64"/></svg></div><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> DRIFT_CONFOUND · units 16</h3><p>unit 16: rate (top) and median amplitude (bottom) over the session</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="firing rate of unit 16 over the session" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="81.9" y2="81.9" stroke="var(--grid)" stroke-width="1"/><text x="38" y="85.4" text-anchor="end">5</text><line x1="44" x2="328" y1="43.8" y2="43.8" stroke="var(--grid)" stroke-width="1"/><text x="38" y="47.3" text-anchor="end">10</text><text x="136.2" y="134" text-anchor="middle">200</text><text x="235.8" y="134" text-anchor="middle">400</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">time (s)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">rate (Hz)</text><polyline points="44.0,29.9 58.9,33.4 73.9,23.8 88.8,29.6 103.8,26.3 118.7,24.8 133.7,14.6 148.6,19.2 163.6,23.8 178.5,24.8 193.5,24.8 208.4,27.8 223.4,19.7 238.3,27.6 253.3,34.2 268.2,35.5 283.2,45.9 298.1,62.6 313.1,60.6 328.0,72.5" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect class="hit" x="36.5" y="10" width="14.9" height="110" data-tip="time (s) 15
+rate (Hz): 11.83"/><rect class="hit" x="51.5" y="10" width="14.9" height="110" data-tip="time (s) 45
+rate (Hz): 11.37"/><rect class="hit" x="66.4" y="10" width="14.9" height="110" data-tip="time (s) 75
+rate (Hz): 12.63"/><rect class="hit" x="81.4" y="10" width="14.9" height="110" data-tip="time (s) 105
+rate (Hz): 11.87"/><rect class="hit" x="96.3" y="10" width="14.9" height="110" data-tip="time (s) 135
+rate (Hz): 12.3"/><rect class="hit" x="111.3" y="10" width="14.9" height="110" data-tip="time (s) 165
+rate (Hz): 12.5"/><rect class="hit" x="126.2" y="10" width="14.9" height="110" data-tip="time (s) 195
+rate (Hz): 13.83"/><rect class="hit" x="141.2" y="10" width="14.9" height="110" data-tip="time (s) 225
+rate (Hz): 13.23"/><rect class="hit" x="156.1" y="10" width="14.9" height="110" data-tip="time (s) 255
+rate (Hz): 12.63"/><rect class="hit" x="171.1" y="10" width="14.9" height="110" data-tip="time (s) 285
+rate (Hz): 12.5"/><rect class="hit" x="186.0" y="10" width="14.9" height="110" data-tip="time (s) 315
+rate (Hz): 12.5"/><rect class="hit" x="200.9" y="10" width="14.9" height="110" data-tip="time (s) 345
+rate (Hz): 12.1"/><rect class="hit" x="215.9" y="10" width="14.9" height="110" data-tip="time (s) 375
+rate (Hz): 13.17"/><rect class="hit" x="230.8" y="10" width="14.9" height="110" data-tip="time (s) 405
+rate (Hz): 12.13"/><rect class="hit" x="245.8" y="10" width="14.9" height="110" data-tip="time (s) 435
+rate (Hz): 11.27"/><rect class="hit" x="260.7" y="10" width="14.9" height="110" data-tip="time (s) 465
+rate (Hz): 11.1"/><rect class="hit" x="275.7" y="10" width="14.9" height="110" data-tip="time (s) 495
+rate (Hz): 9.733"/><rect class="hit" x="290.6" y="10" width="14.9" height="110" data-tip="time (s) 525
+rate (Hz): 7.533"/><rect class="hit" x="305.6" y="10" width="14.9" height="110" data-tip="time (s) 555
+rate (Hz): 7.8"/><rect class="hit" x="320.5" y="10" width="14.9" height="110" data-tip="time (s) 585
+rate (Hz): 6.233"/></svg><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="median amplitude of unit 16 over the session" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="90.9" y2="90.9" stroke="var(--grid)" stroke-width="1"/><text x="38" y="94.4" text-anchor="end">25</text><line x1="44" x2="328" y1="61.9" y2="61.9" stroke="var(--grid)" stroke-width="1"/><text x="38" y="65.4" text-anchor="end">50</text><line x1="44" x2="328" y1="32.8" y2="32.8" stroke="var(--grid)" stroke-width="1"/><text x="38" y="36.3" text-anchor="end">75</text><text x="136.2" y="134" text-anchor="middle">200</text><text x="235.8" y="134" text-anchor="middle">400</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">time (s)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">median amplitude</text><polyline points="44.0,13.6 58.9,15.4 73.9,18.7 88.8,20.6 103.8,21.8 118.7,24.7 133.7,29.0 148.6,30.5 163.6,33.6 178.5,36.5 193.5,38.5 208.4,41.4 223.4,43.4 238.3,46.1 253.3,50.0 268.2,51.0 283.2,53.4 298.1,55.3 313.1,56.9 328.0,58.3" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect class="hit" x="36.5" y="10" width="14.9" height="110" data-tip="time (s) 15
+median amplitude: 91.53"/><rect class="hit" x="51.5" y="10" width="14.9" height="110" data-tip="time (s) 45
+median amplitude: 89.99"/><rect class="hit" x="66.4" y="10" width="14.9" height="110" data-tip="time (s) 75
+median amplitude: 87.12"/><rect class="hit" x="81.4" y="10" width="14.9" height="110" data-tip="time (s) 105
+median amplitude: 85.49"/><rect class="hit" x="96.3" y="10" width="14.9" height="110" data-tip="time (s) 135
+median amplitude: 84.49"/><rect class="hit" x="111.3" y="10" width="14.9" height="110" data-tip="time (s) 165
+median amplitude: 81.96"/><rect class="hit" x="126.2" y="10" width="14.9" height="110" data-tip="time (s) 195
+median amplitude: 78.24"/><rect class="hit" x="141.2" y="10" width="14.9" height="110" data-tip="time (s) 225
+median amplitude: 76.98"/><rect class="hit" x="156.1" y="10" width="14.9" height="110" data-tip="time (s) 255
+median amplitude: 74.29"/><rect class="hit" x="171.1" y="10" width="14.9" height="110" data-tip="time (s) 285
+median amplitude: 71.78"/><rect class="hit" x="186.0" y="10" width="14.9" height="110" data-tip="time (s) 315
+median amplitude: 70.06"/><rect class="hit" x="200.9" y="10" width="14.9" height="110" data-tip="time (s) 345
+median amplitude: 67.6"/><rect class="hit" x="215.9" y="10" width="14.9" height="110" data-tip="time (s) 375
+median amplitude: 65.9"/><rect class="hit" x="230.8" y="10" width="14.9" height="110" data-tip="time (s) 405
+median amplitude: 63.53"/><rect class="hit" x="245.8" y="10" width="14.9" height="110" data-tip="time (s) 435
+median amplitude: 60.21"/><rect class="hit" x="260.7" y="10" width="14.9" height="110" data-tip="time (s) 465
+median amplitude: 59.34"/><rect class="hit" x="275.7" y="10" width="14.9" height="110" data-tip="time (s) 495
+median amplitude: 57.27"/><rect class="hit" x="290.6" y="10" width="14.9" height="110" data-tip="time (s) 525
+median amplitude: 55.65"/><rect class="hit" x="305.6" y="10" width="14.9" height="110" data-tip="time (s) 555
+median amplitude: 54.27"/><rect class="hit" x="320.5" y="10" width="14.9" height="110" data-tip="time (s) 585
+median amplitude: 53.08"/></svg></div><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> DRIFT_CONFOUND · units 34</h3><p>unit 34: rate (top) and median amplitude (bottom) over the session</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="firing rate of unit 34 over the session" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="89.6" y2="89.6" stroke="var(--grid)" stroke-width="1"/><text x="38" y="93.1" text-anchor="end">1</text><line x1="44" x2="328" y1="59.1" y2="59.1" stroke="var(--grid)" stroke-width="1"/><text x="38" y="62.6" text-anchor="end">2</text><line x1="44" x2="328" y1="28.7" y2="28.7" stroke="var(--grid)" stroke-width="1"/><text x="38" y="32.2" text-anchor="end">3</text><text x="136.2" y="134" text-anchor="middle">200</text><text x="235.8" y="134" text-anchor="middle">400</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">time (s)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">rate (Hz)</text><polyline points="44.0,20.6 58.9,30.7 73.9,29.7 88.8,33.7 103.8,36.8 118.7,24.6 133.7,58.1 148.6,16.5 163.6,36.8 178.5,43.9 193.5,21.6 208.4,58.1 223.4,57.1 238.3,68.2 253.3,61.1 268.2,62.2 283.2,68.2 298.1,66.2 313.1,70.3 328.0,97.7" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect class="hit" x="36.5" y="10" width="14.9" height="110" data-tip="time (s) 15
+rate (Hz): 3.267"/><rect class="hit" x="51.5" y="10" width="14.9" height="110" data-tip="time (s) 45
+rate (Hz): 2.933"/><rect class="hit" x="66.4" y="10" width="14.9" height="110" data-tip="time (s) 75
+rate (Hz): 2.967"/><rect class="hit" x="81.4" y="10" width="14.9" height="110" data-tip="time (s) 105
+rate (Hz): 2.833"/><rect class="hit" x="96.3" y="10" width="14.9" height="110" data-tip="time (s) 135
+rate (Hz): 2.733"/><rect class="hit" x="111.3" y="10" width="14.9" height="110" data-tip="time (s) 165
+rate (Hz): 3.133"/><rect class="hit" x="126.2" y="10" width="14.9" height="110" data-tip="time (s) 195
+rate (Hz): 2.033"/><rect class="hit" x="141.2" y="10" width="14.9" height="110" data-tip="time (s) 225
+rate (Hz): 3.4"/><rect class="hit" x="156.1" y="10" width="14.9" height="110" data-tip="time (s) 255
+rate (Hz): 2.733"/><rect class="hit" x="171.1" y="10" width="14.9" height="110" data-tip="time (s) 285
+rate (Hz): 2.5"/><rect class="hit" x="186.0" y="10" width="14.9" height="110" data-tip="time (s) 315
+rate (Hz): 3.233"/><rect class="hit" x="200.9" y="10" width="14.9" height="110" data-tip="time (s) 345
+rate (Hz): 2.033"/><rect class="hit" x="215.9" y="10" width="14.9" height="110" data-tip="time (s) 375
+rate (Hz): 2.067"/><rect class="hit" x="230.8" y="10" width="14.9" height="110" data-tip="time (s) 405
+rate (Hz): 1.7"/><rect class="hit" x="245.8" y="10" width="14.9" height="110" data-tip="time (s) 435
+rate (Hz): 1.933"/><rect class="hit" x="260.7" y="10" width="14.9" height="110" data-tip="time (s) 465
+rate (Hz): 1.9"/><rect class="hit" x="275.7" y="10" width="14.9" height="110" data-tip="time (s) 495
+rate (Hz): 1.7"/><rect class="hit" x="290.6" y="10" width="14.9" height="110" data-tip="time (s) 525
+rate (Hz): 1.767"/><rect class="hit" x="305.6" y="10" width="14.9" height="110" data-tip="time (s) 555
+rate (Hz): 1.633"/><rect class="hit" x="320.5" y="10" width="14.9" height="110" data-tip="time (s) 585
+rate (Hz): 0.7333"/></svg><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="median amplitude of unit 34 over the session" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="90.0" y2="90.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="93.5" text-anchor="end">20</text><line x1="44" x2="328" y1="60.0" y2="60.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="63.5" text-anchor="end">40</text><line x1="44" x2="328" y1="30.0" y2="30.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="33.5" text-anchor="end">60</text><text x="136.2" y="134" text-anchor="middle">200</text><text x="235.8" y="134" text-anchor="middle">400</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">time (s)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">median amplitude</text><polyline points="44.0,12.2 58.9,12.5 73.9,16.0 88.8,15.9 103.8,17.2 118.7,21.5 133.7,21.9 148.6,24.7 163.6,24.1 178.5,26.2 193.5,28.7 208.4,26.8 223.4,30.7 238.3,32.9 253.3,36.9 268.2,37.3 283.2,37.6 298.1,37.2 313.1,39.5 328.0,38.4" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect class="hit" x="36.5" y="10" width="14.9" height="110" data-tip="time (s) 15
+median amplitude: 71.9"/><rect class="hit" x="51.5" y="10" width="14.9" height="110" data-tip="time (s) 45
+median amplitude: 71.68"/><rect class="hit" x="66.4" y="10" width="14.9" height="110" data-tip="time (s) 75
+median amplitude: 69.36"/><rect class="hit" x="81.4" y="10" width="14.9" height="110" data-tip="time (s) 105
+median amplitude: 69.42"/><rect class="hit" x="96.3" y="10" width="14.9" height="110" data-tip="time (s) 135
+median amplitude: 68.54"/><rect class="hit" x="111.3" y="10" width="14.9" height="110" data-tip="time (s) 165
+median amplitude: 65.65"/><rect class="hit" x="126.2" y="10" width="14.9" height="110" data-tip="time (s) 195
+median amplitude: 65.43"/><rect class="hit" x="141.2" y="10" width="14.9" height="110" data-tip="time (s) 225
+median amplitude: 63.56"/><rect class="hit" x="156.1" y="10" width="14.9" height="110" data-tip="time (s) 255
+median amplitude: 63.94"/><rect class="hit" x="171.1" y="10" width="14.9" height="110" data-tip="time (s) 285
+median amplitude: 62.56"/><rect class="hit" x="186.0" y="10" width="14.9" height="110" data-tip="time (s) 315
+median amplitude: 60.88"/><rect class="hit" x="200.9" y="10" width="14.9" height="110" data-tip="time (s) 345
+median amplitude: 62.14"/><rect class="hit" x="215.9" y="10" width="14.9" height="110" data-tip="time (s) 375
+median amplitude: 59.54"/><rect class="hit" x="230.8" y="10" width="14.9" height="110" data-tip="time (s) 405
+median amplitude: 58.07"/><rect class="hit" x="245.8" y="10" width="14.9" height="110" data-tip="time (s) 435
+median amplitude: 55.42"/><rect class="hit" x="260.7" y="10" width="14.9" height="110" data-tip="time (s) 465
+median amplitude: 55.16"/><rect class="hit" x="275.7" y="10" width="14.9" height="110" data-tip="time (s) 495
+median amplitude: 54.94"/><rect class="hit" x="290.6" y="10" width="14.9" height="110" data-tip="time (s) 525
+median amplitude: 55.23"/><rect class="hit" x="305.6" y="10" width="14.9" height="110" data-tip="time (s) 555
+median amplitude: 53.68"/><rect class="hit" x="320.5" y="10" width="14.9" height="110" data-tip="time (s) 585
+median amplitude: 54.42"/></svg></div><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> DUPLICATE_UNIT · units 17, 41</h3><p>cross-correlogram, units 17 and 41; shaded: the window the test looks at</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="cross-correlogram of units 17 and 41" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="69.5" y2="69.5" stroke="var(--grid)" stroke-width="1"/><text x="38" y="73.0" text-anchor="end">1000</text><line x1="44" x2="328" y1="18.9" y2="18.9" stroke="var(--grid)" stroke-width="1"/><text x="38" y="22.4" text-anchor="end">2000</text><text x="44.0" y="134" text-anchor="middle">-10</text><text x="186.0" y="134" text-anchor="middle">0</text><text x="328.0" y="134" text-anchor="middle">10</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">lag of unit 41 after unit 17 (ms)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">spike pairs</text><rect x="182.4" y="10" width="7.1" height="110" fill="var(--band)" opacity=".6"/><rect x="45.0" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -9.88 ms"/><rect x="48.5" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="8 pairs
+lag -9.62 ms"/><rect x="52.1" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -9.38 ms"/><rect x="55.6" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -9.12 ms"/><rect x="59.2" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="8 pairs
+lag -8.88 ms"/><rect x="62.8" y="119.2" width="1.6" height="0.8" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag -8.62 ms"/><rect x="66.3" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -8.37 ms"/><rect x="69.8" y="119.2" width="1.6" height="0.8" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag -8.12 ms"/><rect x="73.4" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -7.87 ms"/><rect x="76.9" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -7.62 ms"/><rect x="80.5" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -7.37 ms"/><rect x="84.1" y="119.7" width="1.5" height="0.3" rx="1" fill="var(--s1)" data-tip="5 pairs
+lag -7.12 ms"/><rect x="87.6" y="119.7" width="1.5" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag -6.87 ms"/><rect x="91.1" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -6.62 ms"/><rect x="94.7" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -6.37 ms"/><rect x="98.2" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag -6.12 ms"/><rect x="101.8" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -5.87 ms"/><rect x="105.3" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag -5.62 ms"/><rect x="108.9" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -5.37 ms"/><rect x="112.5" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -5.12 ms"/><rect x="116.0" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -4.87 ms"/><rect x="119.5" y="119.2" width="1.5" height="0.8" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag -4.62 ms"/><rect x="123.1" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag -4.37 ms"/><rect x="126.7" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -4.12 ms"/><rect x="130.2" y="119.9" width="1.6" height="0.1" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag -3.87 ms"/><rect x="133.8" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -3.62 ms"/><rect x="137.3" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -3.37 ms"/><rect x="140.8" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag -3.12 ms"/><rect x="144.4" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag -2.87 ms"/><rect x="147.9" y="119.3" width="1.6" height="0.7" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag -2.62 ms"/><rect x="151.5" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -2.37 ms"/><rect x="155.1" y="119.7" width="1.6" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag -2.12 ms"/><rect x="158.6" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -1.87 ms"/><rect x="162.1" y="119.7" width="1.6" height="0.3" rx="1" fill="var(--s1)" data-tip="5 pairs
+lag -1.62 ms"/><rect x="165.7" y="119.9" width="1.6" height="0.1" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag -1.37 ms"/><rect x="169.2" y="119.9" width="1.5" height="0.1" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag -1.12 ms"/><rect x="172.8" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -0.87 ms"/><rect x="176.3" y="119.9" width="1.6" height="0.1" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag -0.62 ms"/><rect x="179.9" y="119.9" width="1.5" height="0.1" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag -0.37 ms"/><rect x="183.4" y="20.6" width="1.6" height="99.4" rx="1" fill="var(--s1)" data-tip="1966 pairs
+lag -0.12 ms"/><rect x="187.0" y="18.1" width="1.5" height="101.9" rx="1" fill="var(--s1)" data-tip="2015 pairs
+lag +0.13 ms"/><rect x="190.5" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.38 ms"/><rect x="194.1" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.63 ms"/><rect x="197.7" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.88 ms"/><rect x="201.2" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +1.13 ms"/><rect x="204.8" y="119.9" width="1.6" height="0.1" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag +1.38 ms"/><rect x="208.3" y="119.9" width="1.5" height="0.1" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag +1.63 ms"/><rect x="211.8" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +1.88 ms"/><rect x="215.4" y="119.7" width="1.6" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag +2.13 ms"/><rect x="219.0" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="8 pairs
+lag +2.38 ms"/><rect x="222.5" y="119.3" width="1.5" height="0.7" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +2.63 ms"/><rect x="226.0" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +2.88 ms"/><rect x="229.6" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +3.13 ms"/><rect x="233.2" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +3.38 ms"/><rect x="236.7" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +3.63 ms"/><rect x="240.2" y="119.8" width="1.5" height="0.2" rx="1" fill="var(--s1)" data-tip="3 pairs
+lag +3.88 ms"/><rect x="243.8" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +4.13 ms"/><rect x="247.3" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag +4.38 ms"/><rect x="250.9" y="119.2" width="1.5" height="0.8" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag +4.63 ms"/><rect x="254.5" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +4.88 ms"/><rect x="258.0" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +5.13 ms"/><rect x="261.6" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +5.38 ms"/><rect x="265.1" y="119.3" width="1.5" height="0.7" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +5.63 ms"/><rect x="268.6" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +5.88 ms"/><rect x="272.2" y="119.7" width="1.5" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag +6.13 ms"/><rect x="275.8" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +6.38 ms"/><rect x="279.3" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag +6.63 ms"/><rect x="282.9" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag +6.88 ms"/><rect x="286.4" y="119.8" width="1.6" height="0.2" rx="1" fill="var(--s1)" data-tip="3 pairs
+lag +7.13 ms"/><rect x="289.9" y="119.3" width="1.6" height="0.7" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +7.38 ms"/><rect x="293.5" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +7.63 ms"/><rect x="297.0" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +7.88 ms"/><rect x="300.6" y="119.3" width="1.6" height="0.7" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +8.13 ms"/><rect x="304.1" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag +8.38 ms"/><rect x="307.7" y="119.3" width="1.5" height="0.7" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +8.63 ms"/><rect x="311.2" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag +8.88 ms"/><rect x="314.8" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +9.13 ms"/><rect x="318.4" y="119.1" width="1.5" height="0.9" rx="1" fill="var(--s1)" data-tip="17 pairs
+lag +9.38 ms"/><rect x="321.9" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag +9.63 ms"/><rect x="325.4" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="8 pairs
+lag +9.88 ms"/></svg></div><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> DUPLICATE_UNIT · units 32, 40</h3><p>cross-correlogram, units 32 and 40; shaded: the window the test looks at</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="cross-correlogram of units 32 and 40" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="70.3" y2="70.3" stroke="var(--grid)" stroke-width="1"/><text x="38" y="73.8" text-anchor="end">1000</text><line x1="44" x2="328" y1="20.5" y2="20.5" stroke="var(--grid)" stroke-width="1"/><text x="38" y="24.0" text-anchor="end">2000</text><text x="44.0" y="134" text-anchor="middle">-10</text><text x="186.0" y="134" text-anchor="middle">0</text><text x="328.0" y="134" text-anchor="middle">10</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">lag of unit 40 after unit 32 (ms)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">spike pairs</text><rect x="182.4" y="10" width="7.1" height="110" fill="var(--band)" opacity=".6"/><rect x="45.0" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -9.88 ms"/><rect x="48.5" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -9.62 ms"/><rect x="52.1" y="119.7" width="1.5" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag -9.38 ms"/><rect x="55.6" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -9.12 ms"/><rect x="59.2" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -8.88 ms"/><rect x="62.8" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -8.62 ms"/><rect x="66.3" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -8.37 ms"/><rect x="69.8" y="119.3" width="1.6" height="0.7" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag -8.12 ms"/><rect x="73.4" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -7.87 ms"/><rect x="76.9" y="119.8" width="1.6" height="0.2" rx="1" fill="var(--s1)" data-tip="4 pairs
+lag -7.62 ms"/><rect x="80.5" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -7.37 ms"/><rect x="84.1" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -7.12 ms"/><rect x="87.6" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -6.87 ms"/><rect x="91.1" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -6.62 ms"/><rect x="94.7" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -6.37 ms"/><rect x="98.2" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -6.12 ms"/><rect x="101.8" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -5.87 ms"/><rect x="105.3" y="119.7" width="1.5" height="0.3" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag -5.62 ms"/><rect x="108.9" y="119.9" width="1.5" height="0.1" rx="1" fill="var(--s1)" data-tip="3 pairs
+lag -5.37 ms"/><rect x="112.5" y="119.7" width="1.5" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag -5.12 ms"/><rect x="116.0" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="8 pairs
+lag -4.87 ms"/><rect x="119.5" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -4.62 ms"/><rect x="123.1" y="119.8" width="1.5" height="0.2" rx="1" fill="var(--s1)" data-tip="4 pairs
+lag -4.37 ms"/><rect x="126.7" y="119.3" width="1.5" height="0.7" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag -4.12 ms"/><rect x="130.2" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -3.87 ms"/><rect x="133.8" y="119.9" width="1.5" height="0.1" rx="1" fill="var(--s1)" data-tip="2 pairs
+lag -3.62 ms"/><rect x="137.3" y="119.8" width="1.6" height="0.2" rx="1" fill="var(--s1)" data-tip="4 pairs
+lag -3.37 ms"/><rect x="140.8" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -3.12 ms"/><rect x="144.4" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -2.87 ms"/><rect x="147.9" y="119.7" width="1.6" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag -2.62 ms"/><rect x="151.5" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -2.37 ms"/><rect x="155.1" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -2.12 ms"/><rect x="158.6" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag -1.87 ms"/><rect x="162.1" y="119.9" width="1.6" height="0.1" rx="1" fill="var(--s1)" data-tip="2 pairs
+lag -1.62 ms"/><rect x="165.7" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag -1.37 ms"/><rect x="169.2" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -1.12 ms"/><rect x="172.8" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -0.87 ms"/><rect x="176.3" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -0.62 ms"/><rect x="179.9" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag -0.37 ms"/><rect x="183.4" y="22.0" width="1.6" height="98.0" rx="1" fill="var(--s1)" data-tip="1971 pairs
+lag -0.12 ms"/><rect x="187.0" y="18.1" width="1.5" height="101.9" rx="1" fill="var(--s1)" data-tip="2048 pairs
+lag +0.13 ms"/><rect x="190.5" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag +0.38 ms"/><rect x="194.1" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.63 ms"/><rect x="197.7" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.88 ms"/><rect x="201.2" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +1.13 ms"/><rect x="204.8" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +1.38 ms"/><rect x="208.3" y="119.9" width="1.5" height="0.1" rx="1" fill="var(--s1)" data-tip="3 pairs
+lag +1.63 ms"/><rect x="211.8" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="1 pairs
+lag +1.88 ms"/><rect x="215.4" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +2.13 ms"/><rect x="219.0" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +2.38 ms"/><rect x="222.5" y="119.8" width="1.5" height="0.2" rx="1" fill="var(--s1)" data-tip="5 pairs
+lag +2.63 ms"/><rect x="226.0" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag +2.88 ms"/><rect x="229.6" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +3.13 ms"/><rect x="233.2" y="119.8" width="1.5" height="0.2" rx="1" fill="var(--s1)" data-tip="4 pairs
+lag +3.38 ms"/><rect x="236.7" y="119.8" width="1.5" height="0.2" rx="1" fill="var(--s1)" data-tip="5 pairs
+lag +3.63 ms"/><rect x="240.2" y="119.3" width="1.5" height="0.7" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag +3.88 ms"/><rect x="243.8" y="119.1" width="1.6" height="0.9" rx="1" fill="var(--s1)" data-tip="18 pairs
+lag +4.13 ms"/><rect x="247.3" y="119.7" width="1.6" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag +4.38 ms"/><rect x="250.9" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +4.63 ms"/><rect x="254.5" y="119.7" width="1.5" height="0.3" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag +4.88 ms"/><rect x="258.0" y="119.7" width="1.6" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag +5.13 ms"/><rect x="261.6" y="119.9" width="1.6" height="0.1" rx="1" fill="var(--s1)" data-tip="3 pairs
+lag +5.38 ms"/><rect x="265.1" y="119.7" width="1.5" height="0.3" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag +5.63 ms"/><rect x="268.6" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +5.88 ms"/><rect x="272.2" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag +6.13 ms"/><rect x="275.8" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +6.38 ms"/><rect x="279.3" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="8 pairs
+lag +6.63 ms"/><rect x="282.9" y="119.4" width="1.5" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +6.88 ms"/><rect x="286.4" y="119.7" width="1.6" height="0.3" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag +7.13 ms"/><rect x="289.9" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +7.38 ms"/><rect x="293.5" y="119.8" width="1.5" height="0.2" rx="1" fill="var(--s1)" data-tip="5 pairs
+lag +7.63 ms"/><rect x="297.0" y="119.6" width="1.6" height="0.4" rx="1" fill="var(--s1)" data-tip="8 pairs
+lag +7.88 ms"/><rect x="300.6" y="119.3" width="1.6" height="0.7" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag +8.13 ms"/><rect x="304.1" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +8.38 ms"/><rect x="307.7" y="119.5" width="1.5" height="0.5" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +8.63 ms"/><rect x="311.2" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +8.88 ms"/><rect x="314.8" y="119.7" width="1.6" height="0.3" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag +9.13 ms"/><rect x="318.4" y="119.6" width="1.5" height="0.4" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag +9.38 ms"/><rect x="321.9" y="119.4" width="1.6" height="0.6" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +9.63 ms"/><rect x="325.4" y="119.5" width="1.6" height="0.5" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +9.88 ms"/></svg></div><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> OVERLAP_HOLE · units 42, 43</h3><p>cross-correlogram, units 42 and 43; shaded: the window the test looks at</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="cross-correlogram of units 42 and 43" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="92.0" y2="92.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="95.5" text-anchor="end">25</text><line x1="44" x2="328" y1="64.0" y2="64.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="67.5" text-anchor="end">50</text><line x1="44" x2="328" y1="36.1" y2="36.1" stroke="var(--grid)" stroke-width="1"/><text x="38" y="39.6" text-anchor="end">75</text><text x="44.0" y="134" text-anchor="middle">-10</text><text x="186.0" y="134" text-anchor="middle">0</text><text x="328.0" y="134" text-anchor="middle">10</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">lag of unit 43 after unit 42 (ms)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">spike pairs</text><rect x="178.9" y="10" width="14.2" height="110" fill="var(--band)" opacity=".6"/><rect x="45.0" y="18.1" width="1.5" height="101.9" rx="1" fill="var(--s1)" data-tip="91 pairs
+lag -9.88 ms"/><rect x="48.5" y="31.6" width="1.5" height="88.4" rx="1" fill="var(--s1)" data-tip="79 pairs
+lag -9.62 ms"/><rect x="52.1" y="48.4" width="1.5" height="71.6" rx="1" fill="var(--s1)" data-tip="64 pairs
+lag -9.38 ms"/><rect x="55.6" y="34.9" width="1.5" height="85.1" rx="1" fill="var(--s1)" data-tip="76 pairs
+lag -9.12 ms"/><rect x="59.2" y="31.6" width="1.5" height="88.4" rx="1" fill="var(--s1)" data-tip="79 pairs
+lag -8.88 ms"/><rect x="62.8" y="33.8" width="1.6" height="86.2" rx="1" fill="var(--s1)" data-tip="77 pairs
+lag -8.62 ms"/><rect x="66.3" y="43.9" width="1.5" height="76.1" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag -8.37 ms"/><rect x="69.8" y="22.6" width="1.6" height="97.4" rx="1" fill="var(--s1)" data-tip="87 pairs
+lag -8.12 ms"/><rect x="73.4" y="32.7" width="1.5" height="87.3" rx="1" fill="var(--s1)" data-tip="78 pairs
+lag -7.87 ms"/><rect x="76.9" y="43.9" width="1.6" height="76.1" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag -7.62 ms"/><rect x="80.5" y="57.3" width="1.5" height="62.7" rx="1" fill="var(--s1)" data-tip="56 pairs
+lag -7.37 ms"/><rect x="84.1" y="40.5" width="1.5" height="79.5" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag -7.12 ms"/><rect x="87.6" y="49.5" width="1.5" height="70.5" rx="1" fill="var(--s1)" data-tip="63 pairs
+lag -6.87 ms"/><rect x="91.1" y="37.2" width="1.5" height="82.8" rx="1" fill="var(--s1)" data-tip="74 pairs
+lag -6.62 ms"/><rect x="94.7" y="43.9" width="1.6" height="76.1" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag -6.37 ms"/><rect x="98.2" y="51.7" width="1.6" height="68.3" rx="1" fill="var(--s1)" data-tip="61 pairs
+lag -6.12 ms"/><rect x="101.8" y="27.1" width="1.5" height="92.9" rx="1" fill="var(--s1)" data-tip="83 pairs
+lag -5.87 ms"/><rect x="105.3" y="31.6" width="1.5" height="88.4" rx="1" fill="var(--s1)" data-tip="79 pairs
+lag -5.62 ms"/><rect x="108.9" y="32.7" width="1.5" height="87.3" rx="1" fill="var(--s1)" data-tip="78 pairs
+lag -5.37 ms"/><rect x="112.5" y="31.6" width="1.5" height="88.4" rx="1" fill="var(--s1)" data-tip="79 pairs
+lag -5.12 ms"/><rect x="116.0" y="28.2" width="1.5" height="91.8" rx="1" fill="var(--s1)" data-tip="82 pairs
+lag -4.87 ms"/><rect x="119.5" y="39.4" width="1.5" height="80.6" rx="1" fill="var(--s1)" data-tip="72 pairs
+lag -4.62 ms"/><rect x="123.1" y="42.8" width="1.5" height="77.2" rx="1" fill="var(--s1)" data-tip="69 pairs
+lag -4.37 ms"/><rect x="126.7" y="34.9" width="1.5" height="85.1" rx="1" fill="var(--s1)" data-tip="76 pairs
+lag -4.12 ms"/><rect x="130.2" y="39.4" width="1.6" height="80.6" rx="1" fill="var(--s1)" data-tip="72 pairs
+lag -3.87 ms"/><rect x="133.8" y="33.8" width="1.5" height="86.2" rx="1" fill="var(--s1)" data-tip="77 pairs
+lag -3.62 ms"/><rect x="137.3" y="34.9" width="1.6" height="85.1" rx="1" fill="var(--s1)" data-tip="76 pairs
+lag -3.37 ms"/><rect x="140.8" y="37.2" width="1.5" height="82.8" rx="1" fill="var(--s1)" data-tip="74 pairs
+lag -3.12 ms"/><rect x="144.4" y="33.8" width="1.6" height="86.2" rx="1" fill="var(--s1)" data-tip="77 pairs
+lag -2.87 ms"/><rect x="147.9" y="40.5" width="1.6" height="79.5" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag -2.62 ms"/><rect x="151.5" y="42.8" width="1.6" height="77.2" rx="1" fill="var(--s1)" data-tip="69 pairs
+lag -2.37 ms"/><rect x="155.1" y="34.9" width="1.6" height="85.1" rx="1" fill="var(--s1)" data-tip="76 pairs
+lag -2.12 ms"/><rect x="158.6" y="20.4" width="1.5" height="99.6" rx="1" fill="var(--s1)" data-tip="89 pairs
+lag -1.87 ms"/><rect x="162.1" y="45.0" width="1.6" height="75.0" rx="1" fill="var(--s1)" data-tip="67 pairs
+lag -1.62 ms"/><rect x="165.7" y="45.0" width="1.6" height="75.0" rx="1" fill="var(--s1)" data-tip="67 pairs
+lag -1.37 ms"/><rect x="169.2" y="24.9" width="1.5" height="95.1" rx="1" fill="var(--s1)" data-tip="85 pairs
+lag -1.12 ms"/><rect x="172.8" y="36.1" width="1.6" height="83.9" rx="1" fill="var(--s1)" data-tip="75 pairs
+lag -0.87 ms"/><rect x="176.3" y="41.7" width="1.6" height="78.3" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag -0.62 ms"/><rect x="179.9" y="107.7" width="1.5" height="12.3" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -0.37 ms"/><rect x="183.4" y="112.2" width="1.6" height="7.8" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag -0.12 ms"/><rect x="187.0" y="109.9" width="1.5" height="10.1" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag +0.13 ms"/><rect x="190.5" y="108.8" width="1.6" height="11.2" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +0.38 ms"/><rect x="194.1" y="37.2" width="1.6" height="82.8" rx="1" fill="var(--s1)" data-tip="74 pairs
+lag +0.63 ms"/><rect x="197.7" y="30.5" width="1.5" height="89.5" rx="1" fill="var(--s1)" data-tip="80 pairs
+lag +0.88 ms"/><rect x="201.2" y="29.3" width="1.5" height="90.7" rx="1" fill="var(--s1)" data-tip="81 pairs
+lag +1.13 ms"/><rect x="204.8" y="49.5" width="1.6" height="70.5" rx="1" fill="var(--s1)" data-tip="63 pairs
+lag +1.38 ms"/><rect x="208.3" y="32.7" width="1.5" height="87.3" rx="1" fill="var(--s1)" data-tip="78 pairs
+lag +1.63 ms"/><rect x="211.8" y="36.1" width="1.6" height="83.9" rx="1" fill="var(--s1)" data-tip="75 pairs
+lag +1.88 ms"/><rect x="215.4" y="40.5" width="1.6" height="79.5" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag +2.13 ms"/><rect x="219.0" y="32.7" width="1.5" height="87.3" rx="1" fill="var(--s1)" data-tip="78 pairs
+lag +2.38 ms"/><rect x="222.5" y="31.6" width="1.5" height="88.4" rx="1" fill="var(--s1)" data-tip="79 pairs
+lag +2.63 ms"/><rect x="226.0" y="38.3" width="1.5" height="81.7" rx="1" fill="var(--s1)" data-tip="73 pairs
+lag +2.88 ms"/><rect x="229.6" y="46.1" width="1.6" height="73.9" rx="1" fill="var(--s1)" data-tip="66 pairs
+lag +3.13 ms"/><rect x="233.2" y="51.7" width="1.5" height="68.3" rx="1" fill="var(--s1)" data-tip="61 pairs
+lag +3.38 ms"/><rect x="236.7" y="26.0" width="1.5" height="94.0" rx="1" fill="var(--s1)" data-tip="84 pairs
+lag +3.63 ms"/><rect x="240.2" y="56.2" width="1.5" height="63.8" rx="1" fill="var(--s1)" data-tip="57 pairs
+lag +3.88 ms"/><rect x="243.8" y="41.7" width="1.6" height="78.3" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag +4.13 ms"/><rect x="247.3" y="33.8" width="1.6" height="86.2" rx="1" fill="var(--s1)" data-tip="77 pairs
+lag +4.38 ms"/><rect x="250.9" y="46.1" width="1.5" height="73.9" rx="1" fill="var(--s1)" data-tip="66 pairs
+lag +4.63 ms"/><rect x="254.5" y="43.9" width="1.5" height="76.1" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag +4.88 ms"/><rect x="258.0" y="41.7" width="1.6" height="78.3" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag +5.13 ms"/><rect x="261.6" y="36.1" width="1.6" height="83.9" rx="1" fill="var(--s1)" data-tip="75 pairs
+lag +5.38 ms"/><rect x="265.1" y="31.6" width="1.5" height="88.4" rx="1" fill="var(--s1)" data-tip="79 pairs
+lag +5.63 ms"/><rect x="268.6" y="42.8" width="1.6" height="77.2" rx="1" fill="var(--s1)" data-tip="69 pairs
+lag +5.88 ms"/><rect x="272.2" y="30.5" width="1.5" height="89.5" rx="1" fill="var(--s1)" data-tip="80 pairs
+lag +6.13 ms"/><rect x="275.8" y="49.5" width="1.5" height="70.5" rx="1" fill="var(--s1)" data-tip="63 pairs
+lag +6.38 ms"/><rect x="279.3" y="29.3" width="1.6" height="90.7" rx="1" fill="var(--s1)" data-tip="81 pairs
+lag +6.63 ms"/><rect x="282.9" y="41.7" width="1.5" height="78.3" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag +6.88 ms"/><rect x="286.4" y="46.1" width="1.6" height="73.9" rx="1" fill="var(--s1)" data-tip="66 pairs
+lag +7.13 ms"/><rect x="289.9" y="21.5" width="1.6" height="98.5" rx="1" fill="var(--s1)" data-tip="88 pairs
+lag +7.38 ms"/><rect x="293.5" y="40.5" width="1.5" height="79.5" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag +7.63 ms"/><rect x="297.0" y="29.3" width="1.6" height="90.7" rx="1" fill="var(--s1)" data-tip="81 pairs
+lag +7.88 ms"/><rect x="300.6" y="28.2" width="1.6" height="91.8" rx="1" fill="var(--s1)" data-tip="82 pairs
+lag +8.13 ms"/><rect x="304.1" y="26.0" width="1.6" height="94.0" rx="1" fill="var(--s1)" data-tip="84 pairs
+lag +8.38 ms"/><rect x="307.7" y="52.8" width="1.5" height="67.2" rx="1" fill="var(--s1)" data-tip="60 pairs
+lag +8.63 ms"/><rect x="311.2" y="33.8" width="1.6" height="86.2" rx="1" fill="var(--s1)" data-tip="77 pairs
+lag +8.88 ms"/><rect x="314.8" y="42.8" width="1.6" height="77.2" rx="1" fill="var(--s1)" data-tip="69 pairs
+lag +9.13 ms"/><rect x="318.4" y="28.2" width="1.5" height="91.8" rx="1" fill="var(--s1)" data-tip="82 pairs
+lag +9.38 ms"/><rect x="321.9" y="41.7" width="1.6" height="78.3" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag +9.63 ms"/><rect x="325.4" y="28.2" width="1.6" height="91.8" rx="1" fill="var(--s1)" data-tip="82 pairs
+lag +9.88 ms"/></svg></div><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> OVERLAP_HOLE · units 44, 45</h3><p>cross-correlogram, units 44 and 45; shaded: the window the test looks at</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="cross-correlogram of units 44 and 45" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="88.9" y2="88.9" stroke="var(--grid)" stroke-width="1"/><text x="38" y="92.4" text-anchor="end">25</text><line x1="44" x2="328" y1="57.9" y2="57.9" stroke="var(--grid)" stroke-width="1"/><text x="38" y="61.4" text-anchor="end">50</text><line x1="44" x2="328" y1="26.8" y2="26.8" stroke="var(--grid)" stroke-width="1"/><text x="38" y="30.3" text-anchor="end">75</text><text x="44.0" y="134" text-anchor="middle">-10</text><text x="186.0" y="134" text-anchor="middle">0</text><text x="328.0" y="134" text-anchor="middle">10</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">lag of unit 45 after unit 44 (ms)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">spike pairs</text><rect x="178.9" y="10" width="14.2" height="110" fill="var(--band)" opacity=".6"/><rect x="45.0" y="39.3" width="1.5" height="80.7" rx="1" fill="var(--s1)" data-tip="65 pairs
+lag -9.88 ms"/><rect x="48.5" y="36.8" width="1.5" height="83.2" rx="1" fill="var(--s1)" data-tip="67 pairs
+lag -9.62 ms"/><rect x="52.1" y="20.6" width="1.5" height="99.4" rx="1" fill="var(--s1)" data-tip="80 pairs
+lag -9.38 ms"/><rect x="55.6" y="40.5" width="1.5" height="79.5" rx="1" fill="var(--s1)" data-tip="64 pairs
+lag -9.12 ms"/><rect x="59.2" y="48.0" width="1.5" height="72.0" rx="1" fill="var(--s1)" data-tip="58 pairs
+lag -8.88 ms"/><rect x="62.8" y="45.5" width="1.6" height="74.5" rx="1" fill="var(--s1)" data-tip="60 pairs
+lag -8.62 ms"/><rect x="66.3" y="45.5" width="1.5" height="74.5" rx="1" fill="var(--s1)" data-tip="60 pairs
+lag -8.37 ms"/><rect x="69.8" y="52.9" width="1.6" height="67.1" rx="1" fill="var(--s1)" data-tip="54 pairs
+lag -8.12 ms"/><rect x="73.4" y="35.5" width="1.5" height="84.5" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag -7.87 ms"/><rect x="76.9" y="29.3" width="1.6" height="90.7" rx="1" fill="var(--s1)" data-tip="73 pairs
+lag -7.62 ms"/><rect x="80.5" y="33.1" width="1.5" height="86.9" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag -7.37 ms"/><rect x="84.1" y="31.8" width="1.5" height="88.2" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag -7.12 ms"/><rect x="87.6" y="41.7" width="1.5" height="78.3" rx="1" fill="var(--s1)" data-tip="63 pairs
+lag -6.87 ms"/><rect x="91.1" y="44.2" width="1.5" height="75.8" rx="1" fill="var(--s1)" data-tip="61 pairs
+lag -6.62 ms"/><rect x="94.7" y="43.0" width="1.6" height="77.0" rx="1" fill="var(--s1)" data-tip="62 pairs
+lag -6.37 ms"/><rect x="98.2" y="46.7" width="1.6" height="73.3" rx="1" fill="var(--s1)" data-tip="59 pairs
+lag -6.12 ms"/><rect x="101.8" y="46.7" width="1.5" height="73.3" rx="1" fill="var(--s1)" data-tip="59 pairs
+lag -5.87 ms"/><rect x="105.3" y="35.5" width="1.5" height="84.5" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag -5.62 ms"/><rect x="108.9" y="45.5" width="1.5" height="74.5" rx="1" fill="var(--s1)" data-tip="60 pairs
+lag -5.37 ms"/><rect x="112.5" y="52.9" width="1.5" height="67.1" rx="1" fill="var(--s1)" data-tip="54 pairs
+lag -5.12 ms"/><rect x="116.0" y="33.1" width="1.5" height="86.9" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag -4.87 ms"/><rect x="119.5" y="33.1" width="1.5" height="86.9" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag -4.62 ms"/><rect x="123.1" y="35.5" width="1.5" height="84.5" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag -4.37 ms"/><rect x="126.7" y="40.5" width="1.5" height="79.5" rx="1" fill="var(--s1)" data-tip="64 pairs
+lag -4.12 ms"/><rect x="130.2" y="34.3" width="1.6" height="85.7" rx="1" fill="var(--s1)" data-tip="69 pairs
+lag -3.87 ms"/><rect x="133.8" y="31.8" width="1.5" height="88.2" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag -3.62 ms"/><rect x="137.3" y="50.4" width="1.6" height="69.6" rx="1" fill="var(--s1)" data-tip="56 pairs
+lag -3.37 ms"/><rect x="140.8" y="49.2" width="1.5" height="70.8" rx="1" fill="var(--s1)" data-tip="57 pairs
+lag -3.12 ms"/><rect x="144.4" y="55.4" width="1.6" height="64.6" rx="1" fill="var(--s1)" data-tip="52 pairs
+lag -2.87 ms"/><rect x="147.9" y="54.2" width="1.6" height="65.8" rx="1" fill="var(--s1)" data-tip="53 pairs
+lag -2.62 ms"/><rect x="151.5" y="31.8" width="1.6" height="88.2" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag -2.37 ms"/><rect x="155.1" y="34.3" width="1.6" height="85.7" rx="1" fill="var(--s1)" data-tip="69 pairs
+lag -2.12 ms"/><rect x="158.6" y="41.7" width="1.5" height="78.3" rx="1" fill="var(--s1)" data-tip="63 pairs
+lag -1.87 ms"/><rect x="162.1" y="39.3" width="1.6" height="80.7" rx="1" fill="var(--s1)" data-tip="65 pairs
+lag -1.62 ms"/><rect x="165.7" y="41.7" width="1.6" height="78.3" rx="1" fill="var(--s1)" data-tip="63 pairs
+lag -1.37 ms"/><rect x="169.2" y="48.0" width="1.5" height="72.0" rx="1" fill="var(--s1)" data-tip="58 pairs
+lag -1.12 ms"/><rect x="172.8" y="51.7" width="1.6" height="68.3" rx="1" fill="var(--s1)" data-tip="55 pairs
+lag -0.87 ms"/><rect x="176.3" y="40.5" width="1.6" height="79.5" rx="1" fill="var(--s1)" data-tip="64 pairs
+lag -0.62 ms"/><rect x="179.9" y="110.1" width="1.5" height="9.9" rx="1" fill="var(--s1)" data-tip="8 pairs
+lag -0.37 ms"/><rect x="183.4" y="112.5" width="1.6" height="7.5" rx="1" fill="var(--s1)" data-tip="6 pairs
+lag -0.12 ms"/><rect x="187.0" y="107.6" width="1.5" height="12.4" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +0.13 ms"/><rect x="190.5" y="111.3" width="1.6" height="8.7" rx="1" fill="var(--s1)" data-tip="7 pairs
+lag +0.38 ms"/><rect x="194.1" y="48.0" width="1.6" height="72.0" rx="1" fill="var(--s1)" data-tip="58 pairs
+lag +0.63 ms"/><rect x="197.7" y="45.5" width="1.5" height="74.5" rx="1" fill="var(--s1)" data-tip="60 pairs
+lag +0.88 ms"/><rect x="201.2" y="67.8" width="1.5" height="52.2" rx="1" fill="var(--s1)" data-tip="42 pairs
+lag +1.13 ms"/><rect x="204.8" y="36.8" width="1.6" height="83.2" rx="1" fill="var(--s1)" data-tip="67 pairs
+lag +1.38 ms"/><rect x="208.3" y="44.2" width="1.5" height="75.8" rx="1" fill="var(--s1)" data-tip="61 pairs
+lag +1.63 ms"/><rect x="211.8" y="40.5" width="1.6" height="79.5" rx="1" fill="var(--s1)" data-tip="64 pairs
+lag +1.88 ms"/><rect x="215.4" y="33.1" width="1.6" height="86.9" rx="1" fill="var(--s1)" data-tip="70 pairs
+lag +2.13 ms"/><rect x="219.0" y="62.9" width="1.5" height="57.1" rx="1" fill="var(--s1)" data-tip="46 pairs
+lag +2.38 ms"/><rect x="222.5" y="45.5" width="1.5" height="74.5" rx="1" fill="var(--s1)" data-tip="60 pairs
+lag +2.63 ms"/><rect x="226.0" y="19.4" width="1.5" height="100.6" rx="1" fill="var(--s1)" data-tip="81 pairs
+lag +2.88 ms"/><rect x="229.6" y="31.8" width="1.6" height="88.2" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag +3.13 ms"/><rect x="233.2" y="50.4" width="1.5" height="69.6" rx="1" fill="var(--s1)" data-tip="56 pairs
+lag +3.38 ms"/><rect x="236.7" y="51.7" width="1.5" height="68.3" rx="1" fill="var(--s1)" data-tip="55 pairs
+lag +3.63 ms"/><rect x="240.2" y="48.0" width="1.5" height="72.0" rx="1" fill="var(--s1)" data-tip="58 pairs
+lag +3.88 ms"/><rect x="243.8" y="29.3" width="1.6" height="90.7" rx="1" fill="var(--s1)" data-tip="73 pairs
+lag +4.13 ms"/><rect x="247.3" y="46.7" width="1.6" height="73.3" rx="1" fill="var(--s1)" data-tip="59 pairs
+lag +4.38 ms"/><rect x="250.9" y="24.4" width="1.5" height="95.6" rx="1" fill="var(--s1)" data-tip="77 pairs
+lag +4.63 ms"/><rect x="254.5" y="49.2" width="1.5" height="70.8" rx="1" fill="var(--s1)" data-tip="57 pairs
+lag +4.88 ms"/><rect x="258.0" y="44.2" width="1.6" height="75.8" rx="1" fill="var(--s1)" data-tip="61 pairs
+lag +5.13 ms"/><rect x="261.6" y="44.2" width="1.6" height="75.8" rx="1" fill="var(--s1)" data-tip="61 pairs
+lag +5.38 ms"/><rect x="265.1" y="45.5" width="1.5" height="74.5" rx="1" fill="var(--s1)" data-tip="60 pairs
+lag +5.63 ms"/><rect x="268.6" y="39.3" width="1.6" height="80.7" rx="1" fill="var(--s1)" data-tip="65 pairs
+lag +5.88 ms"/><rect x="272.2" y="35.5" width="1.5" height="84.5" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag +6.13 ms"/><rect x="275.8" y="31.8" width="1.5" height="88.2" rx="1" fill="var(--s1)" data-tip="71 pairs
+lag +6.38 ms"/><rect x="279.3" y="28.1" width="1.6" height="91.9" rx="1" fill="var(--s1)" data-tip="74 pairs
+lag +6.63 ms"/><rect x="282.9" y="28.1" width="1.5" height="91.9" rx="1" fill="var(--s1)" data-tip="74 pairs
+lag +6.88 ms"/><rect x="286.4" y="35.5" width="1.6" height="84.5" rx="1" fill="var(--s1)" data-tip="68 pairs
+lag +7.13 ms"/><rect x="289.9" y="38.0" width="1.6" height="82.0" rx="1" fill="var(--s1)" data-tip="66 pairs
+lag +7.38 ms"/><rect x="293.5" y="18.1" width="1.5" height="101.9" rx="1" fill="var(--s1)" data-tip="82 pairs
+lag +7.63 ms"/><rect x="297.0" y="52.9" width="1.6" height="67.1" rx="1" fill="var(--s1)" data-tip="54 pairs
+lag +7.88 ms"/><rect x="300.6" y="39.3" width="1.6" height="80.7" rx="1" fill="var(--s1)" data-tip="65 pairs
+lag +8.13 ms"/><rect x="304.1" y="38.0" width="1.6" height="82.0" rx="1" fill="var(--s1)" data-tip="66 pairs
+lag +8.38 ms"/><rect x="307.7" y="51.7" width="1.5" height="68.3" rx="1" fill="var(--s1)" data-tip="55 pairs
+lag +8.63 ms"/><rect x="311.2" y="38.0" width="1.6" height="82.0" rx="1" fill="var(--s1)" data-tip="66 pairs
+lag +8.88 ms"/><rect x="314.8" y="41.7" width="1.6" height="78.3" rx="1" fill="var(--s1)" data-tip="63 pairs
+lag +9.13 ms"/><rect x="318.4" y="38.0" width="1.5" height="82.0" rx="1" fill="var(--s1)" data-tip="66 pairs
+lag +9.38 ms"/><rect x="321.9" y="54.2" width="1.6" height="65.8" rx="1" fill="var(--s1)" data-tip="53 pairs
+lag +9.63 ms"/><rect x="325.4" y="45.5" width="1.6" height="74.5" rx="1" fill="var(--s1)" data-tip="60 pairs
+lag +9.88 ms"/></svg></div><div class="card"><h3><span class="chip error"><i aria-hidden="true">✕</i>error</span> SPLIT_UNIT · units 50, 51</h3><p>cross-correlogram, units 50 and 51; shaded: the window the test looks at</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="cross-correlogram of units 50 and 51" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="83.6" y2="83.6" stroke="var(--grid)" stroke-width="1"/><text x="38" y="87.1" text-anchor="end">10</text><line x1="44" x2="328" y1="47.2" y2="47.2" stroke="var(--grid)" stroke-width="1"/><text x="38" y="50.7" text-anchor="end">20</text><line x1="44" x2="328" y1="10.9" y2="10.9" stroke="var(--grid)" stroke-width="1"/><text x="38" y="14.4" text-anchor="end">30</text><text x="44.0" y="134" text-anchor="middle">-10</text><text x="186.0" y="134" text-anchor="middle">0</text><text x="328.0" y="134" text-anchor="middle">10</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">lag of unit 51 after unit 50 (ms)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">spike pairs</text><rect x="164.7" y="10" width="42.6" height="110" fill="var(--band)" opacity=".6"/><rect x="45.0" y="80.0" width="1.5" height="40.0" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -9.88 ms"/><rect x="48.5" y="58.2" width="1.5" height="61.8" rx="1" fill="var(--s1)" data-tip="17 pairs
+lag -9.62 ms"/><rect x="52.1" y="61.8" width="1.5" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag -9.38 ms"/><rect x="55.6" y="54.5" width="1.5" height="65.5" rx="1" fill="var(--s1)" data-tip="18 pairs
+lag -9.12 ms"/><rect x="59.2" y="61.8" width="1.5" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag -8.88 ms"/><rect x="62.8" y="87.3" width="1.6" height="32.7" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -8.62 ms"/><rect x="66.3" y="47.2" width="1.5" height="72.8" rx="1" fill="var(--s1)" data-tip="20 pairs
+lag -8.37 ms"/><rect x="69.8" y="61.8" width="1.6" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag -8.12 ms"/><rect x="73.4" y="76.3" width="1.5" height="43.7" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -7.87 ms"/><rect x="76.9" y="61.8" width="1.6" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag -7.62 ms"/><rect x="80.5" y="80.0" width="1.5" height="40.0" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -7.37 ms"/><rect x="84.1" y="69.1" width="1.5" height="50.9" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag -7.12 ms"/><rect x="87.6" y="76.3" width="1.5" height="43.7" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -6.87 ms"/><rect x="91.1" y="76.3" width="1.5" height="43.7" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag -6.62 ms"/><rect x="94.7" y="87.3" width="1.6" height="32.7" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -6.37 ms"/><rect x="98.2" y="61.8" width="1.6" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag -6.12 ms"/><rect x="101.8" y="69.1" width="1.5" height="50.9" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag -5.87 ms"/><rect x="105.3" y="58.2" width="1.5" height="61.8" rx="1" fill="var(--s1)" data-tip="17 pairs
+lag -5.62 ms"/><rect x="108.9" y="47.2" width="1.5" height="72.8" rx="1" fill="var(--s1)" data-tip="20 pairs
+lag -5.37 ms"/><rect x="112.5" y="61.8" width="1.5" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag -5.12 ms"/><rect x="116.0" y="43.6" width="1.5" height="76.4" rx="1" fill="var(--s1)" data-tip="21 pairs
+lag -4.87 ms"/><rect x="119.5" y="61.8" width="1.5" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag -4.62 ms"/><rect x="123.1" y="72.7" width="1.5" height="47.3" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag -4.37 ms"/><rect x="126.7" y="87.3" width="1.5" height="32.7" rx="1" fill="var(--s1)" data-tip="9 pairs
+lag -4.12 ms"/><rect x="130.2" y="65.4" width="1.6" height="54.6" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag -3.87 ms"/><rect x="133.8" y="83.6" width="1.5" height="36.4" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -3.62 ms"/><rect x="137.3" y="29.1" width="1.6" height="90.9" rx="1" fill="var(--s1)" data-tip="25 pairs
+lag -3.37 ms"/><rect x="140.8" y="50.9" width="1.5" height="69.1" rx="1" fill="var(--s1)" data-tip="19 pairs
+lag -3.12 ms"/><rect x="144.4" y="58.2" width="1.6" height="61.8" rx="1" fill="var(--s1)" data-tip="17 pairs
+lag -2.87 ms"/><rect x="147.9" y="83.6" width="1.6" height="36.4" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag -2.62 ms"/><rect x="151.5" y="72.7" width="1.6" height="47.3" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag -2.37 ms"/><rect x="155.1" y="80.0" width="1.6" height="40.0" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag -2.12 ms"/><rect x="158.6" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -1.87 ms"/><rect x="162.1" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -1.62 ms"/><rect x="165.7" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -1.37 ms"/><rect x="169.2" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -1.12 ms"/><rect x="172.8" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -0.87 ms"/><rect x="176.3" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -0.62 ms"/><rect x="179.9" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -0.37 ms"/><rect x="183.4" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag -0.12 ms"/><rect x="187.0" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.13 ms"/><rect x="190.5" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.38 ms"/><rect x="194.1" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.63 ms"/><rect x="197.7" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +0.88 ms"/><rect x="201.2" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +1.13 ms"/><rect x="204.8" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +1.38 ms"/><rect x="208.3" y="120.0" width="1.5" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +1.63 ms"/><rect x="211.8" y="120.0" width="1.6" height="0.0" rx="1" fill="var(--s1)" data-tip="0 pairs
+lag +1.88 ms"/><rect x="215.4" y="43.6" width="1.6" height="76.4" rx="1" fill="var(--s1)" data-tip="21 pairs
+lag +2.13 ms"/><rect x="219.0" y="18.1" width="1.5" height="101.9" rx="1" fill="var(--s1)" data-tip="28 pairs
+lag +2.38 ms"/><rect x="222.5" y="61.8" width="1.5" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag +2.63 ms"/><rect x="226.0" y="58.2" width="1.5" height="61.8" rx="1" fill="var(--s1)" data-tip="17 pairs
+lag +2.88 ms"/><rect x="229.6" y="65.4" width="1.6" height="54.6" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag +3.13 ms"/><rect x="233.2" y="80.0" width="1.5" height="40.0" rx="1" fill="var(--s1)" data-tip="11 pairs
+lag +3.38 ms"/><rect x="236.7" y="50.9" width="1.5" height="69.1" rx="1" fill="var(--s1)" data-tip="19 pairs
+lag +3.63 ms"/><rect x="240.2" y="69.1" width="1.5" height="50.9" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag +3.88 ms"/><rect x="243.8" y="72.7" width="1.6" height="47.3" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +4.13 ms"/><rect x="247.3" y="72.7" width="1.6" height="47.3" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +4.38 ms"/><rect x="250.9" y="69.1" width="1.5" height="50.9" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag +4.63 ms"/><rect x="254.5" y="61.8" width="1.5" height="58.2" rx="1" fill="var(--s1)" data-tip="16 pairs
+lag +4.88 ms"/><rect x="258.0" y="69.1" width="1.6" height="50.9" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag +5.13 ms"/><rect x="261.6" y="69.1" width="1.6" height="50.9" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag +5.38 ms"/><rect x="265.1" y="58.2" width="1.5" height="61.8" rx="1" fill="var(--s1)" data-tip="17 pairs
+lag +5.63 ms"/><rect x="268.6" y="72.7" width="1.6" height="47.3" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +5.88 ms"/><rect x="272.2" y="65.4" width="1.5" height="54.6" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag +6.13 ms"/><rect x="275.8" y="69.1" width="1.5" height="50.9" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag +6.38 ms"/><rect x="279.3" y="58.2" width="1.6" height="61.8" rx="1" fill="var(--s1)" data-tip="17 pairs
+lag +6.63 ms"/><rect x="282.9" y="76.3" width="1.5" height="43.7" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +6.88 ms"/><rect x="286.4" y="58.2" width="1.6" height="61.8" rx="1" fill="var(--s1)" data-tip="17 pairs
+lag +7.13 ms"/><rect x="289.9" y="72.7" width="1.6" height="47.3" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +7.38 ms"/><rect x="293.5" y="83.6" width="1.5" height="36.4" rx="1" fill="var(--s1)" data-tip="10 pairs
+lag +7.63 ms"/><rect x="297.0" y="54.5" width="1.6" height="65.5" rx="1" fill="var(--s1)" data-tip="18 pairs
+lag +7.88 ms"/><rect x="300.6" y="72.7" width="1.6" height="47.3" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +8.13 ms"/><rect x="304.1" y="69.1" width="1.6" height="50.9" rx="1" fill="var(--s1)" data-tip="14 pairs
+lag +8.38 ms"/><rect x="307.7" y="72.7" width="1.5" height="47.3" rx="1" fill="var(--s1)" data-tip="13 pairs
+lag +8.63 ms"/><rect x="311.2" y="65.4" width="1.6" height="54.6" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag +8.88 ms"/><rect x="314.8" y="54.5" width="1.6" height="65.5" rx="1" fill="var(--s1)" data-tip="18 pairs
+lag +9.13 ms"/><rect x="318.4" y="65.4" width="1.5" height="54.6" rx="1" fill="var(--s1)" data-tip="15 pairs
+lag +9.38 ms"/><rect x="321.9" y="32.7" width="1.6" height="87.3" rx="1" fill="var(--s1)" data-tip="24 pairs
+lag +9.63 ms"/><rect x="325.4" y="76.3" width="1.6" height="43.7" rx="1" fill="var(--s1)" data-tip="12 pairs
+lag +9.88 ms"/></svg></div><div class="card"><h3><span class="chip warning"><i aria-hidden="true">!</i>warning</span> CONTAMINATION · units 53</h3><p>inter-spike intervals of unit 53; shaded: the refractory period</p><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="ISI histogram of unit 53" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="86.0" y2="86.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="89.5" text-anchor="end">5</text><line x1="44" x2="328" y1="52.1" y2="52.1" stroke="var(--grid)" stroke-width="1"/><text x="38" y="55.6" text-anchor="end">10</text><line x1="44" x2="328" y1="18.1" y2="18.1" stroke="var(--grid)" stroke-width="1"/><text x="38" y="21.6" text-anchor="end">15</text><text x="44.0" y="134" text-anchor="middle">0</text><text x="115.0" y="134" text-anchor="middle">5</text><text x="186.0" y="134" text-anchor="middle">10</text><text x="257.0" y="134" text-anchor="middle">15</text><text x="328.0" y="134" text-anchor="middle">20</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">inter-spike interval (ms)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">intervals</text><rect x="44.0" y="10" width="21.3" height="110" fill="var(--band)" opacity=".6"/><rect x="45.0" y="106.4" width="5.1" height="13.6" rx="1" fill="var(--s1)" data-tip="2 intervals
+0.0-0.5 ms"/><rect x="52.1" y="113.2" width="5.1" height="6.8" rx="1" fill="var(--s1)" data-tip="1 intervals
+0.5-1.0 ms"/><rect x="59.2" y="86.0" width="5.1" height="34.0" rx="1" fill="var(--s1)" data-tip="5 intervals
+1.0-1.5 ms"/><rect x="66.3" y="113.2" width="5.1" height="6.8" rx="1" fill="var(--s1)" data-tip="1 intervals
+1.5-2.0 ms"/><rect x="73.4" y="31.7" width="5.1" height="88.3" rx="1" fill="var(--s1)" data-tip="13 intervals
+2.0-2.5 ms"/><rect x="80.5" y="65.7" width="5.1" height="54.3" rx="1" fill="var(--s1)" data-tip="8 intervals
+2.5-3.0 ms"/><rect x="87.6" y="79.3" width="5.1" height="40.7" rx="1" fill="var(--s1)" data-tip="6 intervals
+3.0-3.5 ms"/><rect x="94.7" y="65.7" width="5.1" height="54.3" rx="1" fill="var(--s1)" data-tip="8 intervals
+3.5-4.0 ms"/><rect x="101.8" y="58.9" width="5.1" height="61.1" rx="1" fill="var(--s1)" data-tip="9 intervals
+4.0-4.5 ms"/><rect x="108.9" y="86.0" width="5.1" height="34.0" rx="1" fill="var(--s1)" data-tip="5 intervals
+4.5-5.0 ms"/><rect x="116.0" y="72.5" width="5.1" height="47.5" rx="1" fill="var(--s1)" data-tip="7 intervals
+5.0-5.5 ms"/><rect x="123.1" y="18.1" width="5.1" height="101.9" rx="1" fill="var(--s1)" data-tip="15 intervals
+5.5-6.0 ms"/><rect x="130.2" y="45.3" width="5.1" height="74.7" rx="1" fill="var(--s1)" data-tip="11 intervals
+6.0-6.5 ms"/><rect x="137.3" y="52.1" width="5.1" height="67.9" rx="1" fill="var(--s1)" data-tip="10 intervals
+6.5-7.0 ms"/><rect x="144.4" y="18.1" width="5.1" height="101.9" rx="1" fill="var(--s1)" data-tip="15 intervals
+7.0-7.5 ms"/><rect x="151.5" y="79.3" width="5.1" height="40.7" rx="1" fill="var(--s1)" data-tip="6 intervals
+7.5-8.0 ms"/><rect x="158.6" y="65.7" width="5.1" height="54.3" rx="1" fill="var(--s1)" data-tip="8 intervals
+8.0-8.5 ms"/><rect x="165.7" y="86.0" width="5.1" height="34.0" rx="1" fill="var(--s1)" data-tip="5 intervals
+8.5-9.0 ms"/><rect x="172.8" y="38.5" width="5.1" height="81.5" rx="1" fill="var(--s1)" data-tip="12 intervals
+9.0-9.5 ms"/><rect x="179.9" y="52.1" width="5.1" height="67.9" rx="1" fill="var(--s1)" data-tip="10 intervals
+9.5-10.0 ms"/><rect x="187.0" y="79.3" width="5.1" height="40.7" rx="1" fill="var(--s1)" data-tip="6 intervals
+10.0-10.5 ms"/><rect x="194.1" y="65.7" width="5.1" height="54.3" rx="1" fill="var(--s1)" data-tip="8 intervals
+10.5-11.0 ms"/><rect x="201.2" y="24.9" width="5.1" height="95.1" rx="1" fill="var(--s1)" data-tip="14 intervals
+11.0-11.5 ms"/><rect x="208.3" y="72.5" width="5.1" height="47.5" rx="1" fill="var(--s1)" data-tip="7 intervals
+11.5-12.0 ms"/><rect x="215.4" y="58.9" width="5.1" height="61.1" rx="1" fill="var(--s1)" data-tip="9 intervals
+12.0-12.5 ms"/><rect x="222.5" y="79.3" width="5.1" height="40.7" rx="1" fill="var(--s1)" data-tip="6 intervals
+12.5-13.0 ms"/><rect x="229.6" y="58.9" width="5.1" height="61.1" rx="1" fill="var(--s1)" data-tip="9 intervals
+13.0-13.5 ms"/><rect x="236.7" y="45.3" width="5.1" height="74.7" rx="1" fill="var(--s1)" data-tip="11 intervals
+13.5-14.0 ms"/><rect x="243.8" y="65.7" width="5.1" height="54.3" rx="1" fill="var(--s1)" data-tip="8 intervals
+14.0-14.5 ms"/><rect x="250.9" y="86.0" width="5.1" height="34.0" rx="1" fill="var(--s1)" data-tip="5 intervals
+14.5-15.0 ms"/><rect x="258.0" y="72.5" width="5.1" height="47.5" rx="1" fill="var(--s1)" data-tip="7 intervals
+15.0-15.5 ms"/><rect x="265.1" y="72.5" width="5.1" height="47.5" rx="1" fill="var(--s1)" data-tip="7 intervals
+15.5-16.0 ms"/><rect x="272.2" y="31.7" width="5.1" height="88.3" rx="1" fill="var(--s1)" data-tip="13 intervals
+16.0-16.5 ms"/><rect x="279.3" y="65.7" width="5.1" height="54.3" rx="1" fill="var(--s1)" data-tip="8 intervals
+16.5-17.0 ms"/><rect x="286.4" y="72.5" width="5.1" height="47.5" rx="1" fill="var(--s1)" data-tip="7 intervals
+17.0-17.5 ms"/><rect x="293.5" y="65.7" width="5.1" height="54.3" rx="1" fill="var(--s1)" data-tip="8 intervals
+17.5-18.0 ms"/><rect x="300.6" y="92.8" width="5.1" height="27.2" rx="1" fill="var(--s1)" data-tip="4 intervals
+18.0-18.5 ms"/><rect x="307.7" y="52.1" width="5.1" height="67.9" rx="1" fill="var(--s1)" data-tip="10 intervals
+18.5-19.0 ms"/><rect x="314.8" y="72.5" width="5.1" height="47.5" rx="1" fill="var(--s1)" data-tip="7 intervals
+19.0-19.5 ms"/><rect x="321.9" y="79.3" width="5.1" height="40.7" rx="1" fill="var(--s1)" data-tip="6 intervals
+19.5-20.0 ms"/></svg></div><div class="card"><h3><span class="chip warning"><i aria-hidden="true">!</i>warning</span> SPLIT_UNIT · units 46, 47</h3><p>firing rate over the session: one unit hands over to the other</p><div class="legend"><span style="--k:var(--s1)">unit 46</span><span style="--k:var(--s2)">unit 47</span></div><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="firing rates of units 46 and 47 over the session" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="76.3" y2="76.3" stroke="var(--grid)" stroke-width="1"/><text x="38" y="79.8" text-anchor="end">5</text><line x1="44" x2="328" y1="32.6" y2="32.6" stroke="var(--grid)" stroke-width="1"/><text x="38" y="36.1" text-anchor="end">10</text><text x="137.0" y="134" text-anchor="middle">200</text><text x="235.0" y="134" text-anchor="middle">400</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">time (s)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">rate (Hz)</text><polyline points="44.0,36.1 53.8,20.3 63.6,20.8 73.4,41.3 83.2,32.6 93.0,35.2 102.8,26.0 112.6,35.6 122.3,27.3 132.1,31.7 141.9,20.3 151.7,27.8 161.5,30.0 171.3,18.1 181.1,33.4 190.9,21.6 200.7,24.7 210.5,53.1 220.3,82.8 230.1,113.4 239.9,120.0 249.7,120.0 259.4,120.0 269.2,120.0 279.0,120.0 288.8,120.0 298.6,120.0 308.4,120.0 318.2,120.0 328.0,120.0" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="44.0,120.0 53.8,120.0 63.6,120.0 73.4,120.0 83.2,120.0 93.0,120.0 102.8,120.0 112.6,120.0 122.3,120.0 132.1,120.0 141.9,120.0 151.7,120.0 161.5,120.0 171.3,120.0 181.1,120.0 190.9,120.0 200.7,117.8 210.5,98.6 220.3,65.8 230.1,33.9 239.9,29.1 249.7,34.3 259.4,34.8 269.2,23.4 279.0,29.1 288.8,24.3 298.6,27.3 308.4,41.8 318.2,36.1 328.0,38.3" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect class="hit" x="39.1" y="10" width="9.8" height="110" data-tip="time (s) 10
+unit 46: 9.6
+unit 47: 0"/><rect class="hit" x="48.9" y="10" width="9.8" height="110" data-tip="time (s) 30
+unit 46: 11.4
+unit 47: 0"/><rect class="hit" x="58.7" y="10" width="9.8" height="110" data-tip="time (s) 50
+unit 46: 11.35
+unit 47: 0"/><rect class="hit" x="68.5" y="10" width="9.8" height="110" data-tip="time (s) 70
+unit 46: 9
+unit 47: 0"/><rect class="hit" x="78.3" y="10" width="9.8" height="110" data-tip="time (s) 90
+unit 46: 10
+unit 47: 0"/><rect class="hit" x="88.1" y="10" width="9.8" height="110" data-tip="time (s) 110
+unit 46: 9.7
+unit 47: 0"/><rect class="hit" x="97.9" y="10" width="9.8" height="110" data-tip="time (s) 130
+unit 46: 10.75
+unit 47: 0"/><rect class="hit" x="107.7" y="10" width="9.8" height="110" data-tip="time (s) 150
+unit 46: 9.65
+unit 47: 0"/><rect class="hit" x="117.4" y="10" width="9.8" height="110" data-tip="time (s) 170
+unit 46: 10.6
+unit 47: 0"/><rect class="hit" x="127.2" y="10" width="9.8" height="110" data-tip="time (s) 190
+unit 46: 10.1
+unit 47: 0"/><rect class="hit" x="137.0" y="10" width="9.8" height="110" data-tip="time (s) 210
+unit 46: 11.4
+unit 47: 0"/><rect class="hit" x="146.8" y="10" width="9.8" height="110" data-tip="time (s) 230
+unit 46: 10.55
+unit 47: 0"/><rect class="hit" x="156.6" y="10" width="9.8" height="110" data-tip="time (s) 250
+unit 46: 10.3
+unit 47: 0"/><rect class="hit" x="166.4" y="10" width="9.8" height="110" data-tip="time (s) 270
+unit 46: 11.65
+unit 47: 0"/><rect class="hit" x="176.2" y="10" width="9.8" height="110" data-tip="time (s) 290
+unit 46: 9.9
+unit 47: 0"/><rect class="hit" x="186.0" y="10" width="9.8" height="110" data-tip="time (s) 310
+unit 46: 11.25
+unit 47: 0"/><rect class="hit" x="195.8" y="10" width="9.8" height="110" data-tip="time (s) 330
+unit 46: 10.9
+unit 47: 0.25"/><rect class="hit" x="205.6" y="10" width="9.8" height="110" data-tip="time (s) 350
+unit 46: 7.65
+unit 47: 2.45"/><rect class="hit" x="215.4" y="10" width="9.8" height="110" data-tip="time (s) 370
+unit 46: 4.25
+unit 47: 6.2"/><rect class="hit" x="225.2" y="10" width="9.8" height="110" data-tip="time (s) 390
+unit 46: 0.75
+unit 47: 9.85"/><rect class="hit" x="235.0" y="10" width="9.8" height="110" data-tip="time (s) 410
+unit 46: 0
+unit 47: 10.4"/><rect class="hit" x="244.8" y="10" width="9.8" height="110" data-tip="time (s) 430
+unit 46: 0
+unit 47: 9.8"/><rect class="hit" x="254.6" y="10" width="9.8" height="110" data-tip="time (s) 450
+unit 46: 0
+unit 47: 9.75"/><rect class="hit" x="264.3" y="10" width="9.8" height="110" data-tip="time (s) 470
+unit 46: 0
+unit 47: 11.05"/><rect class="hit" x="274.1" y="10" width="9.8" height="110" data-tip="time (s) 490
+unit 46: 0
+unit 47: 10.4"/><rect class="hit" x="283.9" y="10" width="9.8" height="110" data-tip="time (s) 510
+unit 46: 0
+unit 47: 10.95"/><rect class="hit" x="293.7" y="10" width="9.8" height="110" data-tip="time (s) 530
+unit 46: 0
+unit 47: 10.6"/><rect class="hit" x="303.5" y="10" width="9.8" height="110" data-tip="time (s) 550
+unit 46: 0
+unit 47: 8.95"/><rect class="hit" x="313.3" y="10" width="9.8" height="110" data-tip="time (s) 570
+unit 46: 0
+unit 47: 9.6"/><rect class="hit" x="323.1" y="10" width="9.8" height="110" data-tip="time (s) 590
+unit 46: 0
+unit 47: 9.35"/></svg></div><div class="card"><h3><span class="chip warning"><i aria-hidden="true">!</i>warning</span> SPLIT_UNIT · units 48, 49</h3><p>firing rate over the session: one unit hands over to the other</p><div class="legend"><span style="--k:var(--s1)">unit 48</span><span style="--k:var(--s2)">unit 49</span></div><svg viewBox="0 0 340 150" width="100%" role="img" aria-label="firing rates of units 48 and 49 over the session" style="max-width:476px"><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--grid)" stroke-width="1"/><text x="38" y="123.5" text-anchor="end">0</text><line x1="44" x2="328" y1="70.8" y2="70.8" stroke="var(--grid)" stroke-width="1"/><text x="38" y="74.3" text-anchor="end">5</text><line x1="44" x2="328" y1="21.6" y2="21.6" stroke="var(--grid)" stroke-width="1"/><text x="38" y="25.1" text-anchor="end">10</text><text x="137.0" y="134" text-anchor="middle">200</text><text x="235.0" y="134" text-anchor="middle">400</text><line x1="44" x2="328" y1="120.0" y2="120.0" stroke="var(--axis)" stroke-width="1"/><text class="lab" x="186.0" y="147" text-anchor="middle">time (s)</text><text class="lab" x="10" y="65.0" text-anchor="middle" transform="rotate(-90 10 65.0)">rate (Hz)</text><polyline points="44.0,30.9 53.8,29.0 63.6,29.0 73.4,31.4 83.2,25.5 93.0,35.4 102.8,23.6 112.6,31.9 122.3,37.3 132.1,29.5 141.9,34.4 151.7,36.4 161.5,26.5 171.3,34.9 181.1,26.0 190.9,54.6 200.7,80.1 210.5,110.7 220.3,120.0 230.1,120.0 239.9,120.0 249.7,120.0 259.4,120.0 269.2,120.0 279.0,120.0 288.8,120.0 298.6,120.0 308.4,120.0 318.2,120.0 328.0,120.0" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><polyline points="44.0,120.0 53.8,120.0 63.6,120.0 73.4,120.0 83.2,120.0 93.0,120.0 102.8,120.0 112.6,120.0 122.3,120.0 132.1,120.0 141.9,120.0 151.7,120.0 161.5,120.0 171.3,120.0 181.1,119.0 190.9,95.9 200.7,69.3 210.5,36.8 220.3,26.0 230.1,18.1 239.9,29.5 249.7,24.1 259.4,30.9 269.2,25.5 279.0,29.5 288.8,31.9 298.6,24.5 308.4,30.4 318.2,18.6 328.0,26.0" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><rect class="hit" x="39.1" y="10" width="9.8" height="110" data-tip="time (s) 10
+unit 48: 9.05
+unit 49: 0"/><rect class="hit" x="48.9" y="10" width="9.8" height="110" data-tip="time (s) 30
+unit 48: 9.25
+unit 49: 0"/><rect class="hit" x="58.7" y="10" width="9.8" height="110" data-tip="time (s) 50
+unit 48: 9.25
+unit 49: 0"/><rect class="hit" x="68.5" y="10" width="9.8" height="110" data-tip="time (s) 70
+unit 48: 9
+unit 49: 0"/><rect class="hit" x="78.3" y="10" width="9.8" height="110" data-tip="time (s) 90
+unit 48: 9.6
+unit 49: 0"/><rect class="hit" x="88.1" y="10" width="9.8" height="110" data-tip="time (s) 110
+unit 48: 8.6
+unit 49: 0"/><rect class="hit" x="97.9" y="10" width="9.8" height="110" data-tip="time (s) 130
+unit 48: 9.8
+unit 49: 0"/><rect class="hit" x="107.7" y="10" width="9.8" height="110" data-tip="time (s) 150
+unit 48: 8.95
+unit 49: 0"/><rect class="hit" x="117.4" y="10" width="9.8" height="110" data-tip="time (s) 170
+unit 48: 8.4
+unit 49: 0"/><rect class="hit" x="127.2" y="10" width="9.8" height="110" data-tip="time (s) 190
+unit 48: 9.2
+unit 49: 0"/><rect class="hit" x="137.0" y="10" width="9.8" height="110" data-tip="time (s) 210
+unit 48: 8.7
+unit 49: 0"/><rect class="hit" x="146.8" y="10" width="9.8" height="110" data-tip="time (s) 230
+unit 48: 8.5
+unit 49: 0"/><rect class="hit" x="156.6" y="10" width="9.8" height="110" data-tip="time (s) 250
+unit 48: 9.5
+unit 49: 0"/><rect class="hit" x="166.4" y="10" width="9.8" height="110" data-tip="time (s) 270
+unit 48: 8.65
+unit 49: 0"/><rect class="hit" x="176.2" y="10" width="9.8" height="110" data-tip="time (s) 290
+unit 48: 9.55
+unit 49: 0.1"/><rect class="hit" x="186.0" y="10" width="9.8" height="110" data-tip="time (s) 310
+unit 48: 6.65
+unit 49: 2.45"/><rect class="hit" x="195.8" y="10" width="9.8" height="110" data-tip="time (s) 330
+unit 48: 4.05
+unit 49: 5.15"/><rect class="hit" x="205.6" y="10" width="9.8" height="110" data-tip="time (s) 350
+unit 48: 0.95
+unit 49: 8.45"/><rect class="hit" x="215.4" y="10" width="9.8" height="110" data-tip="time (s) 370
+unit 48: 0
+unit 49: 9.55"/><rect class="hit" x="225.2" y="10" width="9.8" height="110" data-tip="time (s) 390
+unit 48: 0
+unit 49: 10.35"/><rect class="hit" x="235.0" y="10" width="9.8" height="110" data-tip="time (s) 410
+unit 48: 0
+unit 49: 9.2"/><rect class="hit" x="244.8" y="10" width="9.8" height="110" data-tip="time (s) 430
+unit 48: 0
+unit 49: 9.75"/><rect class="hit" x="254.6" y="10" width="9.8" height="110" data-tip="time (s) 450
+unit 48: 0
+unit 49: 9.05"/><rect class="hit" x="264.3" y="10" width="9.8" height="110" data-tip="time (s) 470
+unit 48: 0
+unit 49: 9.6"/><rect class="hit" x="274.1" y="10" width="9.8" height="110" data-tip="time (s) 490
+unit 48: 0
+unit 49: 9.2"/><rect class="hit" x="283.9" y="10" width="9.8" height="110" data-tip="time (s) 510
+unit 48: 0
+unit 49: 8.95"/><rect class="hit" x="293.7" y="10" width="9.8" height="110" data-tip="time (s) 530
+unit 48: 0
+unit 49: 9.7"/><rect class="hit" x="303.5" y="10" width="9.8" height="110" data-tip="time (s) 550
+unit 48: 0
+unit 49: 9.1"/><rect class="hit" x="313.3" y="10" width="9.8" height="110" data-tip="time (s) 570
+unit 48: 0
+unit 49: 10.3"/><rect class="hit" x="323.1" y="10" width="9.8" height="110" data-tip="time (s) 590
+unit 48: 0
+unit 49: 9.55"/></svg></div></div><h2>Not checked</h2><table><thead><tr><th>status</th><th>detector</th><th>reason</th></tr></thead><tbody><tr><td>partly checked</td><td>SPLIT_UNIT</td><td>2 of 102 nearby pairs had too few spikes for the refractory test (expected &lt; 10 within ±1.5 ms); small fragments of a split neuron can hide here, and longer recordings make them testable</td></tr><tr><td>partly checked</td><td>OVERLAP_HOLE</td><td>5 of 102 candidate pairs had too few coincidences to test (expected &lt; 10 near zero lag)</td></tr></tbody></table><h2>Finding audit: ayar.examples:condition_contrast</h2><p class="note">Each dot is how much a number changes when the flagged units are repaired; the gray bar is what the same repair does to random unflagged units (95th percentile).</p><div class="cards"><div class="card"><h3>mean_contrast_hz <span class="chip serious"><i aria-hidden="true">↕</i>shifted</span></h3><p>baseline 1.933</p><svg viewBox="0 0 460 178" width="100%" role="img" aria-label="change of mean_contrast_hz after each repair" style="max-width:644px"><line x1="116.0" x2="116.0" y1="4" y2="148" stroke="var(--grid)"/><text x="116.0" y="162" text-anchor="middle">0%</text><line x1="239.1" x2="239.1" y1="4" y2="148" stroke="var(--grid)"/><text x="239.1" y="162" text-anchor="middle">10%</text><line x1="362.2" x2="362.2" y1="4" y2="148" stroke="var(--grid)"/><text x="362.2" y="162" text-anchor="middle">20%</text><text class="lab" x="282.0" y="175" text-anchor="middle">relative change</text><text class="lab" x="108" y="20.0" text-anchor="end">CONTAMINATION</text><rect x="116.0" y="11.0" width="82.8" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+7%"/><circle cx="149.4" cy="16.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="3%
+CONTAMINATION"/><text class="lab" x="108" y="44.0" text-anchor="end">DRIFT_CONFOUND</text><rect x="116.0" y="35.0" width="158.4" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+13%"/><circle cx="251.7" cy="40.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="11%
+DRIFT_CONFOUND"/><text class="lab" x="108" y="68.0" text-anchor="end">DUPLICATE_UNIT</text><rect x="116.0" y="59.0" width="45.2" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+4%"/><circle cx="247.4" cy="64.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="11%
+DUPLICATE_UNIT"/><text class="lab" x="108" y="92.0" text-anchor="end">OVERLAP_HOLE</text><rect x="116.0" y="83.0" width="85.7" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+7%"/><circle cx="170.0" cy="88.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="4%
+OVERLAP_HOLE"/><text class="lab" x="108" y="116.0" text-anchor="end">SPLIT_UNIT</text><rect x="116.0" y="107.0" width="65.6" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+5%"/><circle cx="183.1" cy="112.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="5%
+SPLIT_UNIT"/><text class="lab" x="108" y="140.0" text-anchor="end">ALL_FLAGS</text><rect x="116.0" y="131.0" width="313.2" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+25%"/><circle cx="223.6" cy="136.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="9%
+ALL_FLAGS"/></svg><details><summary>data table</summary><table><thead><tr><th>flags</th><th style="text-align:right">repair</th><th style="text-align:right">baseline</th><th style="text-align:right">after</th><th style="text-align:right">change</th><th style="text-align:right">random q95</th><th style="text-align:right">verdict</th></tr></thead><tbody><tr><td>CONTAMINATION</td><td class="num">remove 2</td><td class="num">1.933</td><td class="num">1.88</td><td class="num">3%</td><td class="num">7%</td><td class="num">robust</td></tr><tr><td>DRIFT_CONFOUND</td><td class="num">remove 3</td><td class="num">1.933</td><td class="num">2.146</td><td class="num">11%</td><td class="num">13%</td><td class="num">nonspecific</td></tr><tr><td>DUPLICATE_UNIT</td><td class="num">merge 2</td><td class="num">1.933</td><td class="num">1.726</td><td class="num">11%</td><td class="num">4%</td><td class="num">shifted</td></tr><tr><td>OVERLAP_HOLE</td><td class="num">remove 2</td><td class="num">1.933</td><td class="num">2.018</td><td class="num">4%</td><td class="num">7%</td><td class="num">robust</td></tr><tr><td>SPLIT_UNIT</td><td class="num">merge 3</td><td class="num">1.933</td><td class="num">2.038</td><td class="num">5%</td><td class="num">5%</td><td class="num">robust</td></tr><tr><td>ALL_FLAGS</td><td class="num">merge 5, remove 7</td><td class="num">1.933</td><td class="num">2.102</td><td class="num">9%</td><td class="num">25%</td><td class="num">robust</td></tr></tbody></table></details></div><div class="card"><h3>frac_units_enhanced <span class="chip info"><i aria-hidden="true">≈</i>nonspecific</span></h3><p>baseline 0.3103</p><svg viewBox="0 0 460 178" width="100%" role="img" aria-label="change of frac_units_enhanced after each repair" style="max-width:644px"><line x1="116.0" x2="116.0" y1="4" y2="148" stroke="var(--grid)"/><text x="116.0" y="162" text-anchor="middle">0%</text><line x1="236.1" x2="236.1" y1="4" y2="148" stroke="var(--grid)"/><text x="236.1" y="162" text-anchor="middle">10%</text><line x1="356.1" x2="356.1" y1="4" y2="148" stroke="var(--grid)"/><text x="356.1" y="162" text-anchor="middle">20%</text><text class="lab" x="282.0" y="175" text-anchor="middle">relative change</text><text class="lab" x="108" y="20.0" text-anchor="end">CONTAMINATION</text><rect x="116.0" y="11.0" width="45.5" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+4%"/><circle cx="211.3" cy="16.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="8%
+CONTAMINATION"/><text class="lab" x="108" y="44.0" text-anchor="end">DRIFT_CONFOUND</text><rect x="116.0" y="35.0" width="75.2" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+6%"/><circle cx="181.5" cy="40.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="5%
+DRIFT_CONFOUND"/><text class="lab" x="108" y="68.0" text-anchor="end">DUPLICATE_UNIT</text><rect x="116.0" y="59.0" width="42.9" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+4%"/><circle cx="211.3" cy="64.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="8%
+DUPLICATE_UNIT"/><text class="lab" x="108" y="92.0" text-anchor="end">OVERLAP_HOLE</text><rect x="116.0" y="83.0" width="45.5" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+4%"/><circle cx="158.9" cy="88.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="4%
+OVERLAP_HOLE"/><text class="lab" x="108" y="116.0" text-anchor="end">SPLIT_UNIT</text><rect x="116.0" y="107.0" width="65.5" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+5%"/><circle cx="191.2" cy="112.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="6%
+SPLIT_UNIT"/><text class="lab" x="108" y="140.0" text-anchor="end">ALL_FLAGS</text><rect x="116.0" y="131.0" width="313.2" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+26%"/><circle cx="307.4" cy="136.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="16%
+ALL_FLAGS"/></svg><details><summary>data table</summary><table><thead><tr><th>flags</th><th style="text-align:right">repair</th><th style="text-align:right">baseline</th><th style="text-align:right">after</th><th style="text-align:right">change</th><th style="text-align:right">random q95</th><th style="text-align:right">verdict</th></tr></thead><tbody><tr><td>CONTAMINATION</td><td class="num">remove 2</td><td class="num">0.3103</td><td class="num">0.2857</td><td class="num">8%</td><td class="num">4%</td><td class="num">robust</td></tr><tr><td>DRIFT_CONFOUND</td><td class="num">remove 3</td><td class="num">0.3103</td><td class="num">0.3273</td><td class="num">5%</td><td class="num">6%</td><td class="num">robust</td></tr><tr><td>DUPLICATE_UNIT</td><td class="num">merge 2</td><td class="num">0.3103</td><td class="num">0.2857</td><td class="num">8%</td><td class="num">4%</td><td class="num">robust</td></tr><tr><td>OVERLAP_HOLE</td><td class="num">remove 2</td><td class="num">0.3103</td><td class="num">0.3214</td><td class="num">4%</td><td class="num">4%</td><td class="num">robust</td></tr><tr><td>SPLIT_UNIT</td><td class="num">merge 3</td><td class="num">0.3103</td><td class="num">0.2909</td><td class="num">6%</td><td class="num">5%</td><td class="num">robust</td></tr><tr><td>ALL_FLAGS</td><td class="num">merge 5, remove 7</td><td class="num">0.3103</td><td class="num">0.2609</td><td class="num">16%</td><td class="num">26%</td><td class="num">nonspecific</td></tr></tbody></table></details></div><div class="card"><h3>frac_units_suppressed <span class="chip error"><i aria-hidden="true">!</i>sensitive</span></h3><p>baseline 0.08621</p><svg viewBox="0 0 460 178" width="100%" role="img" aria-label="change of frac_units_suppressed after each repair" style="max-width:644px"><line x1="116.0" x2="116.0" y1="4" y2="148" stroke="var(--grid)"/><text x="116.0" y="162" text-anchor="middle">0%</text><line x1="272.6" x2="272.6" y1="4" y2="148" stroke="var(--grid)"/><text x="272.6" y="162" text-anchor="middle">50%</text><line x1="429.2" x2="429.2" y1="4" y2="148" stroke="var(--grid)"/><text x="429.2" y="162" text-anchor="middle">100%</text><text class="lab" x="282.0" y="175" text-anchor="middle">relative change</text><text class="lab" x="108" y="20.0" text-anchor="end">CONTAMINATION</text><rect x="116.0" y="11.0" width="11.2" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+4%"/><circle cx="127.2" cy="16.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="4%
+CONTAMINATION"/><text class="lab" x="108" y="44.0" text-anchor="end">DRIFT_CONFOUND</text><rect x="116.0" y="35.0" width="17.1" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+5%"/><circle cx="297.1" cy="40.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="58%
+DRIFT_CONFOUND"/><text class="lab" x="108" y="68.0" text-anchor="end">DUPLICATE_UNIT</text><rect x="116.0" y="59.0" width="11.2" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+4%"/><circle cx="127.2" cy="64.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="4%
+DUPLICATE_UNIT"/><text class="lab" x="108" y="92.0" text-anchor="end">OVERLAP_HOLE</text><rect x="116.0" y="83.0" width="11.2" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+4%"/><circle cx="127.2" cy="88.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="4%
+OVERLAP_HOLE"/><text class="lab" x="108" y="116.0" text-anchor="end">SPLIT_UNIT</text><rect x="116.0" y="107.0" width="17.1" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+5%"/><circle cx="231.0" cy="112.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="37%
+SPLIT_UNIT"/><text class="lab" x="108" y="140.0" text-anchor="end">ALL_FLAGS</text><rect x="116.0" y="131.0" width="81.7" height="10" rx="4" fill="var(--band)" data-tip="random controls, 95th percentile
+26%"/><circle cx="429.2" cy="136.0" r="5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" data-tip="100%
+ALL_FLAGS"/></svg><details><summary>data table</summary><table><thead><tr><th>flags</th><th style="text-align:right">repair</th><th style="text-align:right">baseline</th><th style="text-align:right">after</th><th style="text-align:right">change</th><th style="text-align:right">random q95</th><th style="text-align:right">verdict</th></tr></thead><tbody><tr><td>CONTAMINATION</td><td class="num">remove 2</td><td class="num">0.08621</td><td class="num">0.08929</td><td class="num">4%</td><td class="num">4%</td><td class="num">robust</td></tr><tr><td>DRIFT_CONFOUND</td><td class="num">remove 3</td><td class="num">0.08621</td><td class="num">0.03636</td><td class="num">58%</td><td class="num">5%</td><td class="num">sensitive</td></tr><tr><td>DUPLICATE_UNIT</td><td class="num">merge 2</td><td class="num">0.08621</td><td class="num">0.08929</td><td class="num">4%</td><td class="num">4%</td><td class="num">robust</td></tr><tr><td>OVERLAP_HOLE</td><td class="num">remove 2</td><td class="num">0.08621</td><td class="num">0.08929</td><td class="num">4%</td><td class="num">4%</td><td class="num">robust</td></tr><tr><td>SPLIT_UNIT</td><td class="num">merge 3</td><td class="num">0.08621</td><td class="num">0.05455</td><td class="num">37%</td><td class="num">5%</td><td class="num">sensitive</td></tr><tr><td>ALL_FLAGS</td><td class="num">merge 5, remove 7</td><td class="num">0.08621</td><td class="num">0</td><td class="num">100%</td><td class="num">26%</td><td class="num">sensitive</td></tr></tbody></table></details></div></div><details><summary>thresholds</summary><table><thead><tr><th>name</th><th style="text-align:right">value</th></tr></thead><tbody><tr><td>audit_control_quantile</td><td class="num">0.95</td></tr><tr><td>audit_controls</td><td class="num">20</td></tr><tr><td>audit_robust</td><td class="num">0.1</td></tr><tr><td>audit_seed</td><td class="num">0</td></tr><tr><td>audit_sensitive</td><td class="num">0.25</td></tr><tr><td>cmp_delta_ms</td><td class="num">0.4</td></tr><tr><td>cmp_min_agreement</td><td class="num">0.5</td></tr><tr><td>cmp_spread</td><td class="num">0.25</td></tr><tr><td>contam_error</td><td class="num">0.2</td></tr><tr><td>contam_min_violations</td><td class="num">5</td></tr><tr><td>contam_warn</td><td class="num">0.1</td></tr><tr><td>drift_alpha</td><td class="num">0.01</td></tr><tr><td>drift_completeness_spikes</td><td class="num">100</td></tr><tr><td>drift_confound_r</td><td class="num">0.3</td></tr><tr><td>drift_loss_slack</td><td class="num">0.25</td></tr><tr><td>drift_min_amp_change</td><td class="num">0.15</td></tr><tr><td>drift_min_completeness_change</td><td class="num">0.15</td></tr><tr><td>drift_min_depth_change_um</td><td class="num">10.0</td></tr><tr><td>drift_min_spikes_per_window</td><td class="num">5</td></tr><tr><td>drift_min_window_s</td><td class="num">10.0</td></tr><tr><td>drift_min_windows</td><td class="num">6</td></tr><tr><td>drift_rho</td><td class="num">0.6</td></tr><tr><td>drift_window_s</td><td class="num">60.0</td></tr><tr><td>dup_fraction_error</td><td class="num">0.5</td></tr><tr><td>dup_fraction_warn</td><td class="num">0.2</td></tr><tr><td>dup_max_distance_um</td><td class="num">100.0</td></tr><tr><td>dup_max_lag_ms</td><td class="num">1.0</td></tr><tr><td>dup_min_ratio</td><td class="num">10.0</td></tr><tr><td>dup_window_ms</td><td class="num">0.25</td></tr><tr><td>max_pairs</td><td class="num">20000</td></tr><tr><td>min_spikes</td><td class="num">100</td></tr><tr><td>mv_min_units</td><td class="num">5</td></tr><tr><td>mv_sign_agreement</td><td class="num">0.9</td></tr><tr><td>mv_spread</td><td class="num">0.5</td></tr><tr><td>overlap_alpha</td><td class="num">0.001</td></tr><tr><td>overlap_center_ms</td><td class="num">0.5</td></tr><tr><td>overlap_flank_hi_ms</td><td class="num">10.0</td></tr><tr><td>overlap_flank_lo_ms</td><td class="num">2.0</td></tr><tr><td>overlap_max_distance_um</td><td class="num">100.0</td></tr><tr><td>overlap_min_expected</td><td class="num">10.0</td></tr><tr><td>overlap_ratio_error</td><td class="num">0.3</td></tr><tr><td>overlap_ratio_warn</td><td class="num">0.6</td></tr><tr><td>split_active_fraction</td><td class="num">0.2</td></tr><tr><td>split_handoff_r</td><td class="num">0.5</td></tr><tr><td>split_handoff_windows</td><td class="num">20</td></tr><tr><td>split_max_amp_ratio</td><td class="num">1.25</td></tr><tr><td>split_max_distance_um</td><td class="num">100.0</td></tr><tr><td>split_max_merged_contamination</td><td class="num">0.1</td></tr><tr><td>split_max_ratio</td><td class="num">2.0</td></tr><tr><td>split_min_window_s</td><td class="num">20.0</td></tr><tr><td>split_outer_ms</td><td class="num">1.0</td></tr><tr><td>split_outer_ratio</td><td class="num">0.25</td></tr><tr><td>split_ratio</td><td class="num">0.3</td></tr></tbody></table></details></main><div id="ayar-tip"></div><script>
+(function(){var t=document.getElementById('ayar-tip');
+document.addEventListener('pointermove',function(e){var el=e.target.closest&&e.target.closest('[data-tip]');
+if(!el){t.style.display='none';return}t.textContent='';el.getAttribute('data-tip').split('\n').forEach(function(l){
+var d=document.createElement('div');d.textContent=l;t.appendChild(d)});t.style.display='block';
+var x=e.clientX+14,y=e.clientY+14;if(x+t.offsetWidth>innerWidth-8)x=e.clientX-t.offsetWidth-14;
+if(y+t.offsetHeight>innerHeight-8)y=e.clientY-t.offsetHeight-14;t.style.left=x+'px';t.style.top=y+'px'});})();
+</script></body></html>

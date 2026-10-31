@@ -264,3 +264,95 @@ def make_session(seed: int = 0, config: SynthConfig | None = None) -> Bundle:
             "roles": {str(u["id"]): u["role"] for u in units},
         },
     )
+
+
+def sorter_variants(bundle: Bundle, n: int = 2, seed: int = 0) -> list[Bundle]:
+    """Re-sortings of a synthetic session, the way a different spike sorter might produce them.
+
+    Variants alternate between two styles:
+
+    ``conservative``
+        drops most low-amplitude units, misses 8 % of spikes, and merges the
+        session's planted duplicates and split units (a different sorter would
+        not have made those mistakes)
+    ``liberal``
+        keeps every unit, splits two high-rate units in two, and adds three
+        low-amplitude noise units
+
+    Every variant jitters spike times by ~0.05 ms and renumbers its units, so units
+    must be matched before sortings can be compared. ``meta['origin']`` maps each
+    variant unit to the original unit(s) it came from.
+    """
+    out = []
+    truth = bundle.meta.get("truth", [])
+    for k in range(n):
+        rng = np.random.default_rng(seed * 1000 + k)
+        style = "conservative" if k % 2 == 0 else "liberal"
+        times = bundle.spike_times.copy()
+        clus = bundle.spike_clusters.copy()
+        amps = None if bundle.amplitudes is None else bundle.amplitudes.copy()
+        deps = None if bundle.spike_depths is None else bundle.spike_depths.copy()
+        origin: dict[int, list[int]] = {int(u): [int(u)] for u in bundle.unit_ids}
+        keep = np.ones(times.size, dtype=bool)
+        next_id = int(bundle.unit_ids.max()) + 1 if bundle.n_units else 0
+
+        if style == "conservative":
+            for t in truth:
+                if t["code"] in ("DUPLICATE_UNIT", "SPLIT_UNIT"):
+                    a, b = t["units"]
+                    if t["code"] == "DUPLICATE_UNIT":
+                        keep &= clus != b  # the copy is simply not there
+                    else:
+                        clus[clus == b] = a
+                    origin[a] = origin.get(a, [a]) + [b]
+                    origin.pop(b, None)
+            if amps is not None:
+                for u in list(origin):
+                    a = amps[clus == u]
+                    if a.size and np.median(a) < 100 and rng.random() < 0.7:
+                        keep &= clus != u
+                        origin.pop(u)
+            keep &= rng.random(times.size) >= 0.08
+        else:
+            rates = {int(u): bundle.spike_indices(u).size for u in bundle.unit_ids}
+            for u in sorted(rates, key=rates.get, reverse=True)[:2]:
+                idx = np.flatnonzero(clus == u)
+                half = idx[rng.random(idx.size) < 0.5]
+                clus[half] = next_id
+                origin[next_id] = [u]
+                next_id += 1
+            extra_t, extra_c, extra_a, extra_d = [], [], [], []
+            for _ in range(3):
+                t = np.sort(rng.uniform(0, bundle.duration, int(2.0 * bundle.duration)))
+                extra_t.append(t)
+                extra_c.append(np.full(t.size, next_id))
+                extra_a.append(rng.uniform(50, 70, t.size))
+                extra_d.append(np.full(t.size, rng.uniform(0, 3840)) + rng.normal(0, 5, t.size))
+                origin[next_id] = []
+                next_id += 1
+            times = np.concatenate([times, *extra_t])
+            clus = np.concatenate([clus, *extra_c])
+            keep = np.concatenate([keep, np.ones(sum(x.size for x in extra_t), dtype=bool)])
+            if amps is not None:
+                amps = np.concatenate([amps, *extra_a])
+            if deps is not None:
+                deps = np.concatenate([deps, *extra_d])
+
+        times = np.clip(times + rng.normal(0, 5e-5, times.size), 0, bundle.duration)
+        old_ids = sorted(origin)
+        new_ids = rng.permutation(len(old_ids)) + 100 * (k + 1)
+        remap = dict(zip(old_ids, new_ids.tolist()))
+        keep &= np.isin(clus, old_ids)
+        clus_new = np.array([remap[int(c)] for c in clus[keep]], dtype=np.int64)
+        out.append(Bundle(
+            times[keep], clus_new, duration=bundle.duration,
+            amplitudes=None if amps is None else amps[keep],
+            spike_depths=None if deps is None else deps[keep],
+            unit_ids=sorted(remap.values()),
+            events=bundle.events,
+            meta={
+                "source": "ayar.synth.sorter_variants", "style": style, "variant": k,
+                "origin": {str(remap[u]): v for u, v in origin.items()},
+            },
+        ))
+    return out

@@ -20,6 +20,8 @@ class Thresholds:
     dup_fraction_error: float = 0.5
     dup_min_ratio: float = 10.0
     dup_max_distance_um: float = 100.0
+    dup_max_lag_ms: float = 1.0
+    """Duplicates may be offset by up to this lag (templates of one neuron aligned differently)."""
 
     # OVERLAP_HOLE
     overlap_center_ms: float = 0.5
@@ -35,6 +37,9 @@ class Thresholds:
     split_max_distance_um: float = 100.0
     split_ratio: float = 0.3
     """Cross-refractory (±1.5 ms) coincidences at most this share of the flank expectation."""
+    split_outer_ms: float = 1.0
+    split_outer_ratio: float = 0.25
+    """The 1.0-1.5 ms band must be this empty too: discarded overlaps empty only the centre."""
     split_max_merged_contamination: float = 0.1
     split_handoff_windows: int = 20
     split_min_window_s: float = 20.0
@@ -68,6 +73,12 @@ class Thresholds:
     mv_min_units: int = 5
     mv_sign_agreement: float = 0.9
     mv_spread: float = 0.5
+
+    # sorter comparison
+    cmp_delta_ms: float = 0.4
+    """Two spikes from different sortings match if they are within this lag."""
+    cmp_min_agreement: float = 0.5
+    cmp_spread: float = 0.25
 
     # finding audit
     audit_robust: float = 0.10

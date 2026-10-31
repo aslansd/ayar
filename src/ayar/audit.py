@@ -145,7 +145,8 @@ def audit(
     th: Thresholds,
 ) -> tuple[dict[str, float], list[AuditRow]]:
     baseline = call_finding(finding, bundle)
-    dedupe = th.dup_window_ms / 1000.0
+    # merged copies may be time-shifted by up to dup_max_lag: count them once
+    dedupe = (th.dup_window_ms + th.dup_max_lag_ms) / 1000.0
 
     groups: dict[str, Action] = {}
     for f in flags:
