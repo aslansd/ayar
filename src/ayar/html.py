@@ -101,6 +101,7 @@ _CHIP = {
     "error": ("error", "✕", "error"), "warning": ("warning", "!", "warning"), "info": ("info", "i", "info"),
     "robust": ("good", "✓", "robust"), "nonspecific": ("info", "≈", "nonspecific"),
     "shifted": ("serious", "↕", "shifted"), "sensitive": ("error", "!", "sensitive"),
+    "uncontrolled": ("info", "?", "uncontrolled"),
     "flipped": ("error", "⇅", "flipped"), "failed": ("info", "?", "failed"),
     "stable": ("good", "✓", "stable"), "consistent": ("good", "✓", "consistent"),
     "threshold_dependent": ("serious", "↕", "threshold dependent"),

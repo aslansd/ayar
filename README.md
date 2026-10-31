@@ -169,7 +169,12 @@ epoch. A finding that averages over trials should skip the trials outside it:
 | `shifted` | moves beyond random repairs, by 10-25 % |
 | `sensitive` | moves beyond random repairs, by 25 % or more |
 | `flipped` | changes sign, which random repairs almost never do |
+| `uncontrolled` | changes, but too few units are left to draw random controls, so the audit cannot tell the artifact from the number of units repaired |
 | `failed` | your function raised an error on the repaired bundle |
+
+Controls come from unflagged units. In raw, uncurated sortings, where most units may be flagged,
+a single detector's controls also draw on units flagged by *other* detectors; the combined
+`ALL_FLAGS` repair can then be `uncontrolled`.
 
 ## Detectors
 

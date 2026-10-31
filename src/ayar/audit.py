@@ -147,12 +147,15 @@ def _flipped(new: float, base: float) -> bool:
     return base != 0 and new != 0 and math.copysign(1, new) != math.copysign(1, base)
 
 
-def _verdict(rel, new, base, ctrl_q, flip_rate, th) -> str:
+def _verdict(rel, new, base, ctrl_q, flip_rate, th, controlled: bool = True) -> str:
+    if rel < th.audit_robust:
+        return "robust"
+    if not controlled:
+        # without random controls there is no way to tell an artifact from removing many units
+        return "uncontrolled"
     beyond = ctrl_q is None or rel > ctrl_q
     if _flipped(new, base) and (flip_rate is None or flip_rate < 1 - th.audit_control_quantile):
         return "flipped"
-    if rel < th.audit_robust:
-        return "robust"
     if not beyond:
         return "nonspecific"
     if rel >= th.audit_sensitive:
@@ -180,9 +183,9 @@ def audit(
         groups["ALL_FLAGS"] = total
 
     flagged_any = set().union(*(a.units for a in groups.values())) if groups else set()
-    pool = np.array([int(u) for u in bundle.unit_ids if int(u) not in flagged_any])
     rng = np.random.default_rng(th.audit_seed)
-    depth = {int(u): bundle.depth(int(u)) for u in pool} if bundle.has_depths else None
+    all_units = [int(u) for u in bundle.unit_ids]
+    depth = {u: bundle.depth(u) for u in all_units} if bundle.has_depths else None
 
     rows: list[AuditRow] = []
     for name, action in groups.items():
@@ -195,6 +198,13 @@ def audit(
                                      f"finding raised {type(e).__name__}: {e}", action.describe()))
             continue
 
+        # controls come from unflagged units; only when there are too few (raw sortings where most
+        # units are flagged) does a single detector's control also draw on units flagged by *other*
+        # detectors, which are not the artifact under test. ALL_FLAGS can only use unflagged units.
+        need = len(action.removes) + 2 * len(action.merges) + len(action.restricts)
+        pool = np.array([u for u in all_units if u not in flagged_any])
+        if pool.size < need and name != "ALL_FLAGS":
+            pool = np.array([u for u in all_units if u not in action.units])
         controls: list[dict[str, float]] = []
         note = ""
         if th.audit_controls > 0:
@@ -227,7 +237,8 @@ def audit(
                     rel_change=rel,
                     control_q=ctrl_q,
                     control_flip_rate=flip_rate,
-                    verdict=_verdict(rel, new, base, ctrl_q, flip_rate, th),
+                    verdict=_verdict(rel, new, base, ctrl_q, flip_rate, th,
+                                     controlled=bool(ctrl_rel) or th.audit_controls == 0),
                     note=note,
                     action=action.describe(),
                 )

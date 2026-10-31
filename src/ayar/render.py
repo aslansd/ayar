@@ -107,5 +107,6 @@ _VERDICT_TEXT = {
     "shifted": "SHIFTED - moves more than random repairs do, but stays below the sensitive threshold",
     "sensitive": "SENSITIVE - depends on the flagged units beyond what random repairs explain",
     "flipped": "FLIPPED - changes sign when the flagged units are repaired",
+    "uncontrolled": "UNCONTROLLED - changes, but too few unflagged units are left to compare with random repairs",
     "failed": "FAILED - the finding function raised an error on the reduced bundle",
 }

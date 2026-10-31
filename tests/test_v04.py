@@ -148,3 +148,23 @@ def test_hybrid_scoring_with_a_known_sorting(tmp_path):
     assert c["flags_scored"] >= 2 and c["flags_correct"] == c["flags_scored"]
     again = hybrid.score_folder(tmp_path / "h", tmp_path / "h" / "sorted_fake_sorter.npz")
     assert again.counts() == c
+<<<<<<< HEAD
+=======
+
+
+def test_uncontrolled_when_most_units_are_flagged():
+    # a small session where flagged units outnumber clean ones, as in raw (uncurated) real sortings
+    cfg = ayar.SynthConfig(n_units=14, n_responsive=6, n_drifting=3, n_rate_controls=0, n_sync_controls=0)
+    b = ayar.make_session(3, cfg)
+    rep = ayar.scan(b, condition_contrast)
+    rows = rep.audit
+    no_ctrl = [r for r in rows if r.control_q is None]
+    assert no_ctrl, "expected some groups without random controls"
+    for r in no_ctrl:
+        assert r.verdict in ("robust", "uncontrolled"), (r.ablation, r.verdict)
+    # per-detector groups may draw controls from units flagged by other detectors
+    per_detector = [r for r in rows if r.ablation != "ALL_FLAGS"]
+    assert any(r.control_q is not None for r in per_detector)
+    assert "uncontrolled" not in ("flipped", "sensitive")  # never fails a pipeline on its own
+    assert rep.exit_code() in (0, 1)
+>>>>>>> 27d2ed9 (ayar 0.4.0)

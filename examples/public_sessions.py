@@ -120,6 +120,52 @@ def _pick_trial_columns(path: Path):
         return label, tcol
 
 
+<<<<<<< HEAD
+=======
+def _download(asset, local: Path, attempts: int = 3) -> None:
+    """Download a DANDI asset completely, or fail loudly.
+
+    A file already on disk is reused only if its size matches the archive's; the download goes
+    to a ``.part`` file that is renamed only once complete, so an interrupted run never leaves a
+    truncated file behind.
+    """
+    local.parent.mkdir(parents=True, exist_ok=True)
+    if local.exists():
+        if local.stat().st_size == asset.size:
+            return
+        print(f"  {local.name} is incomplete ({local.stat().st_size / 1e6:.0f} of {asset.size / 1e6:.0f} MB): "
+              "downloading again")
+        local.unlink()
+    part = local.with_name(local.name + ".part")
+    for k in range(1, attempts + 1):
+        if part.exists():
+            part.unlink()
+        print(f"  downloading {asset.path} ({asset.size / 1e6:.0f} MB), attempt {k} of {attempts}")
+        try:
+            asset.download(part)
+        except Exception as e:  # network errors: try again
+            print(f"  download failed: {e}")
+            continue
+        if part.exists() and part.stat().st_size == asset.size:
+            part.rename(local)
+            return
+        got = part.stat().st_size if part.exists() else 0
+        print(f"  download incomplete ({got / 1e6:.0f} of {asset.size / 1e6:.0f} MB)")
+    raise RuntimeError(f"could not download {asset.path} completely after {attempts} attempts")
+
+
+def _check_hdf5(path: Path) -> None:
+    import h5py
+
+    try:
+        with h5py.File(path, "r"):
+            pass
+    except OSError as e:
+        raise RuntimeError(f"{path} cannot be opened ({e}); if it is a partial download, delete it and "
+                           "run again") from None
+
+
+>>>>>>> 27d2ed9 (ayar 0.4.0)
 def load_dandi(dandiset: str, asset_path: str | None, max_gb: float, cache: Path, local: Path | None):
     if local is None:
         from dandi.dandiapi import DandiAPIClient
@@ -138,6 +184,7 @@ def load_dandi(dandiset: str, asset_path: str | None, max_gb: float, cache: Path
                 assets = ok
             asset = assets[0]
             local = cache / "dandi" / dandiset / asset.path
+<<<<<<< HEAD
             local.parent.mkdir(parents=True, exist_ok=True)
             if not local.exists():
                 print(f"  downloading {asset.path} ({asset.size / 1e6:.0f} MB)")
@@ -145,6 +192,13 @@ def load_dandi(dandiset: str, asset_path: str | None, max_gb: float, cache: Path
             name = asset.path
     else:
         name = local.name
+=======
+            _download(asset, local)
+            name = asset.path
+    else:
+        name = local.name
+    _check_hdf5(local)
+>>>>>>> 27d2ed9 (ayar 0.4.0)
     label, tcol = _pick_trial_columns(local)
     kw = {"shift_negative": True}
     if label:
@@ -257,7 +311,12 @@ def session_md(r: dict) -> str:
             for key, base in fd["baseline"].items():
                 rows = [a for a in fd["audit"] if a["key"] == key and a["rel_change"] is not None]
                 big = max(rows, key=lambda a: a["rel_change"] if np.isfinite(a["rel_change"]) else -1, default=None)
+<<<<<<< HEAD
                 ctrl = "" if big is None or big["control_q"] is None else f" (random {big['control_q']:.0%})"
+=======
+                ctrl = "" if big is None else (" (no random controls possible)" if big["control_q"] is None
+                                               else f" (random {big['control_q']:.0%})")
+>>>>>>> 27d2ed9 (ayar 0.4.0)
                 eff = f"{big['ablation']} ({big['action']}): {big['rel_change']:.0%}{ctrl}" if big else ""
                 L.append(f"| `{key}` | {_f(base)} | **{verdicts.get(key, 'n/a')}** | {eff} |")
             L.append("")
@@ -311,7 +370,15 @@ def write_md(results: list[dict], failures: dict, out: Path, argv: str) -> Path:
           "evidence plotted in the HTML report; the finding audit says whether the example finding",
           "would change if the flagged units were repaired, and the multiverse whether it depends on",
           "curation thresholds. The example finding (a two-condition rate contrast) stands in for a",
+<<<<<<< HEAD
           "real analysis; with your own finding the same machinery applies.", ""]
+=======
+          "real analysis; with your own finding the same machinery applies.", "",
+          "A verdict is only `sensitive` or `shifted` when the change beats the same repair applied",
+          "to random units. When too few units are left to draw such controls (for example when",
+          "most units are flagged), the verdict is `uncontrolled`: the number moves, but the audit",
+          "cannot say whether the artifact or the sheer number of units removed moves it.", ""]
+>>>>>>> 27d2ed9 (ayar 0.4.0)
     L += [session_md(r) for r in results]
     L += ["## Reproduce", "", "```", f"python examples/public_sessions.py {argv}".rstrip(), "```", "",
           "Versions: " + ", ".join(f"{k} {v}" for k, v in vers.items()), ""]

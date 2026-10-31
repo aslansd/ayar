@@ -69,7 +69,7 @@ class AuditRow:
         return asdict(self)
 
 
-VERDICT_ORDER = ["flipped", "sensitive", "shifted", "nonspecific", "robust", "failed"]
+VERDICT_ORDER = ["flipped", "sensitive", "shifted", "uncontrolled", "nonspecific", "robust", "failed"]
 
 
 @dataclass

@@ -38,6 +38,17 @@
 ### Changed
 * Merges in the audit and in curation count copies within ±1.25 ms once (time-shifted
   duplicates).
+<<<<<<< HEAD
+=======
+* **Finding audit: no verdict without controls.** A change that cannot be compared with random
+  repairs (too few units left to draw them) is now `uncontrolled`, never `sensitive` or
+  `shifted`. When unflagged units are too few, a single detector's controls also draw on units
+  flagged by other detectors. Found on a public IBL session, where 746 of 1143 units were
+  flagged and the uncontrolled rows had been reported as sensitive.
+* `examples/public_sessions.py` verifies DANDI downloads against the archive's file size,
+  downloads to a `.part` file and renames it only when complete, re-downloads partial files,
+  and retries, after a truncated download broke a first run.
+>>>>>>> 27d2ed9 (ayar 0.4.0)
 
 ## 0.3.0
 
