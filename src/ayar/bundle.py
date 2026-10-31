@@ -68,6 +68,7 @@ class Bundle:
         unit_depths: Iterable[float] | Mapping[int, float] | None = None,
         events: Events | tuple | Mapping | None = None,
         meta: Mapping[str, Any] | None = None,
+        epochs: Mapping[int, Iterable[tuple[float, float]]] | None = None,
     ):
         st = np.asarray(spike_times, dtype=float).ravel()
         sc = np.asarray(spike_clusters).ravel()
@@ -108,6 +109,10 @@ class Bundle:
         self.events = self._events(events)
         self.meta: dict[str, Any] = dict(meta or {})
         self._index: dict[int, np.ndarray] | None = None
+        self.epochs: dict[int, np.ndarray] = {}
+        if epochs:
+            for u, ep in epochs.items():
+                self.epochs[int(u)] = _normalise_epochs(ep, self.duration)
 
     # ------------------------------------------------------------------ build
     def _per_spike(self, values, order, name):
@@ -187,7 +192,87 @@ class Bundle:
         return None
 
     def rate(self, unit: int) -> float:
-        return len(self.spike_indices(unit)) / self.duration if self.duration > 0 else 0.0
+        """Spikes per second over the time the unit was observed (its epochs, if any)."""
+        d = self.observed_duration(unit)
+        return len(self.spike_indices(unit)) / d if d > 0 else 0.0
+
+    # ----------------------------------------------------------------- epochs
+    def unit_epochs(self, unit: int) -> np.ndarray:
+        """(k, 2) array of [start, stop) times in which the unit is valid; the whole session by default."""
+        ep = self.epochs.get(int(unit))
+        return ep if ep is not None else np.array([[0.0, self.duration]])
+
+    def observed_duration(self, unit: int) -> float:
+        ep = self.unit_epochs(unit)
+        return float(np.sum(ep[:, 1] - ep[:, 0]))
+
+    def in_epochs(self, unit: int, times, until=None) -> np.ndarray:
+        """Boolean mask: which ``times`` (or intervals ``[times, until]``) lie inside the unit's epochs.
+
+        Findings that average over trials should use this, so a unit restricted to its
+        stable epoch is only counted on trials it was actually recorded for.
+        """
+        t = np.asarray(times, dtype=float)
+        if int(unit) not in self.epochs:
+            return np.ones(t.shape, dtype=bool)
+        ep = self.epochs[int(unit)]
+        end = t if until is None else np.asarray(until, dtype=float)
+        i = np.searchsorted(ep[:, 0], t, side="right") - 1
+        ok = i >= 0
+        ic = np.clip(i, 0, len(ep) - 1)
+        return ok & (end <= ep[ic, 1]) & (t >= ep[ic, 0])
+
+    def restrict(self, epochs: Mapping[int, Iterable[tuple[float, float]]]) -> "Bundle":
+        """A new bundle where each listed unit keeps only its spikes inside the given epochs.
+
+        Epochs intersect with any the unit already has. Spikes outside are dropped, and the
+        epochs are recorded so that rates and epoch-aware findings use the observed time.
+        """
+        if self._index is None:
+            self._index = self._build_index()
+        keep_spk = np.ones(self.n_spikes, dtype=bool)
+        new_epochs = {u: ep.copy() for u, ep in self.epochs.items()}
+        for u, ep in epochs.items():
+            u = int(u)
+            ep = _normalise_epochs(ep, self.duration)
+            if u in new_epochs:
+                ep = _intersect_epochs(new_epochs[u], ep)
+            new_epochs[u] = ep
+            idx = self._index.get(u)
+            if idx is None:
+                continue
+            t = self.spike_times[idx]
+            inside = np.zeros(t.size, dtype=bool)
+            for t0, t1 in ep:
+                inside |= (t >= t0) & (t < t1)
+            keep_spk[idx[~inside]] = False
+        child = self._subset(keep_spk, np.ones(self.n_units, dtype=bool))
+        child.epochs = new_epochs
+        return child
+
+    def _subset(self, keep_spk: np.ndarray, keep_unit: np.ndarray, clusters: np.ndarray | None = None) -> "Bundle":
+        """Fast internal copy with a subset of spikes and units (no re-validation, index derived)."""
+        if self._index is None:
+            self._index = self._build_index()
+        clus = self.spike_clusters if clusters is None else clusters
+        child = object.__new__(Bundle)
+        child.spike_times = self.spike_times[keep_spk]
+        child.spike_clusters = clus[keep_spk]
+        child.amplitudes = None if self.amplitudes is None else self.amplitudes[keep_spk]
+        child.spike_depths = None if self.spike_depths is None else self.spike_depths[keep_spk]
+        child.unit_ids = self.unit_ids[keep_unit]
+        child.unit_depths = None if self.unit_depths is None else self.unit_depths[keep_unit]
+        child.duration = self.duration
+        child.events = self.events
+        child.meta = self.meta
+        kept = {int(u) for u in child.unit_ids}
+        child.epochs = {u: ep for u, ep in self.epochs.items() if u in kept}
+        if clusters is None:
+            new_pos = np.cumsum(keep_spk) - 1
+            child._index = {u: new_pos[self._index[u][keep_spk[self._index[u]]]] for u in kept}
+        else:
+            child._index = None
+        return child
 
     @property
     def n_units(self) -> int:
@@ -221,23 +306,7 @@ class Bundle:
         for u in drop:
             if int(u) in self._index:
                 keep_spk[self._index[int(u)]] = False
-        new_pos = np.cumsum(keep_spk) - 1
-        child_index = {
-            int(u): new_pos[self._index[int(u)]] for u in self.unit_ids[keep_unit]
-        }
-        # internal fast path: the parent is already validated and sorted
-        child = object.__new__(Bundle)
-        child.spike_times = self.spike_times[keep_spk]
-        child.spike_clusters = self.spike_clusters[keep_spk]
-        child.amplitudes = None if self.amplitudes is None else self.amplitudes[keep_spk]
-        child.spike_depths = None if self.spike_depths is None else self.spike_depths[keep_spk]
-        child.unit_ids = self.unit_ids[keep_unit]
-        child.unit_depths = None if self.unit_depths is None else self.unit_depths[keep_unit]
-        child.duration = self.duration
-        child.events = self.events
-        child.meta = self.meta
-        child._index = child_index
-        return child
+        return self._subset(keep_spk, keep_unit)
 
     def merge(self, pairs: Iterable[tuple[int, int]], dedupe_s: float = 0.0) -> "Bundle":
         """A new bundle where each ``(keep, absorb)`` pair becomes one unit.
@@ -289,6 +358,14 @@ class Bundle:
         child.duration = self.duration
         child.events = self.events
         child.meta = self.meta
+        kept = {int(u) for u in child.unit_ids}
+        child.epochs = {u: ep for u, ep in self.epochs.items() if u in kept}
+        for r, members in groups.items():
+            eps = [self.epochs[m] for m in [r, *members] if m in self.epochs]
+            if eps and len(eps) == len(members) + 1:
+                child.epochs[r] = _normalise_epochs(np.concatenate(eps), self.duration)
+            elif r in child.epochs:
+                del child.epochs[r]  # a member was observed everywhere: so is the merged unit
         # derive the child's per-unit index from the parent's instead of re-sorting
         new_pos = np.cumsum(keep_spk) - 1
         child_index: dict[int, np.ndarray] = {}
@@ -316,6 +393,7 @@ class Bundle:
             "amplitudes": self.has_amplitudes,
             "depths": self.has_depths,
             "events": ev,
+            "units_with_epochs": len(self.epochs),
             "source": self.meta.get("source"),
         }
 
@@ -344,6 +422,10 @@ class Bundle:
             arrays["spike_depths"] = self.spike_depths
         if self.unit_depths is not None:
             arrays["unit_depths"] = self.unit_depths
+        if self.epochs:
+            units = [u for u in sorted(self.epochs) for _ in range(len(self.epochs[u]))]
+            arrays["epoch_units"] = np.asarray(units, dtype=np.int64)
+            arrays["epoch_bounds"] = np.concatenate([self.epochs[u] for u in sorted(self.epochs)])
         if self.events is not None:
             arrays["event_times"] = self.events.times
             if self.events.labels is not None:
@@ -367,6 +449,11 @@ class Bundle:
             if "event_times" in z:
                 events = Events(z["event_times"], get("event_labels"))
             meta = json.loads(str(z["meta_json"])) if "meta_json" in z else {}
+            epochs = None
+            if "epoch_units" in z:
+                epochs = {}
+                for u, b in zip(z["epoch_units"], z["epoch_bounds"]):
+                    epochs.setdefault(int(u), []).append(tuple(b))
             return cls(
                 z["spike_times"],
                 z["spike_clusters"],
@@ -377,7 +464,35 @@ class Bundle:
                 unit_depths=get("unit_depths"),
                 events=events,
                 meta=meta,
+                epochs=epochs,
             )
+
+
+def _normalise_epochs(epochs, duration: float) -> np.ndarray:
+    """Sorted, merged, clipped (k, 2) array of [start, stop) intervals."""
+    ep = np.asarray(list(epochs) if not isinstance(epochs, np.ndarray) else epochs, dtype=float).reshape(-1, 2)
+    ep = np.clip(ep, 0.0, duration)
+    ep = ep[ep[:, 1] > ep[:, 0]]
+    if ep.size == 0:
+        return np.zeros((0, 2))
+    ep = ep[np.argsort(ep[:, 0])]
+    out = [ep[0].copy()]
+    for a, b in ep[1:]:
+        if a <= out[-1][1]:
+            out[-1][1] = max(out[-1][1], b)
+        else:
+            out.append(np.array([a, b]))
+    return np.array(out)
+
+
+def _intersect_epochs(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    out = []
+    for a0, a1 in a:
+        for b0, b1 in b:
+            lo, hi = max(a0, b0), min(a1, b1)
+            if hi > lo:
+                out.append((lo, hi))
+    return np.array(out, dtype=float).reshape(-1, 2)
 
 
 def _json_default(o):

@@ -213,6 +213,7 @@ def from_nwb(
     event_time_column: str = "start_time",
     amplitude_column: str | None = None,
     depth_column: str | None = None,
+    shift_negative: bool = False,
 ) -> Bundle:
     """Read the units table (and optionally the trials table) of an NWB file.
 
@@ -271,9 +272,140 @@ def from_nwb(
         if id_map:
             meta["unit_id_map"] = id_map
     if times.size and times.min() < 0:
-        raise ValueError("NWB spike times before session start (negative) are not supported")
+        if not shift_negative:
+            raise ValueError("NWB spike times before session start (negative): pass shift_negative=True "
+                             "to shift all times so the session starts at 0")
+        offset = -float(times.min())
+        times = times + offset
+        if events is not None:
+            events = Events(events.times + offset, events.labels)
+        meta["time_offset_s"] = offset
     return Bundle(times, clusters, amplitudes=amps, unit_ids=uid, unit_depths=unit_depths,
                   events=events, meta=meta)
+
+
+_IBL_EVENTS = {
+    # name: (time column, how to label each trial)
+    "feedback": ("feedback_times", "feedbackType"),
+    "stimulus": ("stimOn_times", "side"),
+    "choice": ("firstMovement_times", "choice"),
+}
+
+
+def _col(table, name):
+    if table is None:
+        return None
+    try:
+        v = table[name]
+    except (KeyError, IndexError, TypeError):
+        return None
+    return np.asarray(v)
+
+
+def ibl_events(trials, event: str = "feedback") -> Events:
+    """Events from an IBL trials table (``SessionLoader.trials`` or ``one.load_object(eid, 'trials')``).
+
+    ``feedback``: feedback times labelled correct (1) / error (-1);
+    ``stimulus``: stimulus onsets labelled by side (left / right; zero-contrast trials dropped);
+    ``choice``: first-movement times labelled by choice (-1 / 1; no-go trials dropped).
+    """
+    if event not in _IBL_EVENTS:
+        raise ValueError(f"event must be one of {sorted(_IBL_EVENTS)}")
+    tcol, lcol = _IBL_EVENTS[event]
+    times = _col(trials, tcol)
+    if times is None:
+        raise ValueError(f"trials have no {tcol!r} column")
+    times = times.astype(float)
+    if lcol == "side":
+        left, right = _col(trials, "contrastLeft"), _col(trials, "contrastRight")
+        left = np.nan_to_num(left.astype(float)) if left is not None else np.zeros(times.size)
+        right = np.nan_to_num(right.astype(float)) if right is not None else np.zeros(times.size)
+        labels = np.where(left > 0, "left", np.where(right > 0, "right", ""))
+    else:
+        labels = _col(trials, lcol)
+        if labels is None:
+            raise ValueError(f"trials have no {lcol!r} column")
+        labels = np.asarray(labels).astype(float)
+        labels = np.where(np.isfinite(labels) & (labels != 0), labels, np.nan)
+    ok = np.isfinite(times) & np.array([str(x) not in ("", "nan") for x in labels])
+    lab = labels[ok]
+    if lab.dtype.kind == "f":
+        lab = lab.astype(int)
+    return Events(times[ok], lab)
+
+
+def ibl_metrics(clusters) -> dict[str, dict[int, float]]:
+    """Per-cluster metrics from an IBL clusters table (``label`` is IBL's 0-1 quality score)."""
+    out: dict[str, dict[int, float]] = {}
+    if clusters is None:
+        return out
+    ids = _col(clusters, "cluster_id")
+    keys = clusters.keys() if hasattr(clusters, "keys") else []
+    for k in keys:
+        v = _col(clusters, k)
+        if v is None or v.ndim != 1 or k in ("cluster_id", "uuids"):
+            continue
+        try:
+            v = v.astype(float)
+        except (TypeError, ValueError):
+            continue
+        idx = ids if ids is not None and len(ids) == len(v) else np.arange(len(v))
+        out[str(k)] = {int(i): float(x) for i, x in zip(idx, v)}
+    return out
+
+
+def from_ibl(spikes, clusters=None, trials=None, *, event: str | None = "feedback",
+             duration: float | None = None, meta: dict | None = None) -> Bundle:
+    """Read IBL spike sorting (``SpikeSortingLoader.load_spike_sorting()``) into a bundle.
+
+    ``spikes`` needs ``times`` and ``clusters`` and may have ``amps`` (V, stored as µV)
+    and ``depths`` (µm). ``trials`` (optional) gives events, see :func:`ibl_events`.
+    Cluster metrics, including IBL's ``label``, are kept in ``meta['ibl_metrics']``
+    for ``ayar multiverse``.
+    """
+    times = np.asarray(spikes["times"], dtype=float)
+    clus = np.asarray(spikes["clusters"]).astype(np.int64)
+    amps = _col(spikes, "amps")
+    depths = _col(spikes, "depths")
+    ok = np.isfinite(times)
+    if times[ok].size and times[ok].min() < 0:
+        raise ValueError("IBL spike times before 0 are not expected")
+    events = ibl_events(trials, event) if (trials is not None and event) else None
+    m = {"source": "ibl", **(meta or {})}
+    mt = ibl_metrics(clusters)
+    if mt:
+        m["ibl_metrics"] = {k: {str(u): v for u, v in d.items()} for k, d in mt.items()}
+    return Bundle(times[ok], clus[ok], duration=duration,
+                  amplitudes=None if amps is None else np.abs(amps.astype(float)[ok]) * 1e6,
+                  spike_depths=None if depths is None else depths.astype(float)[ok],
+                  events=events, meta=m)
+
+
+def from_alf(folder: str | Path, *, trials_folder: str | Path | None = None, event: str | None = "feedback",
+             duration: float | None = None) -> Bundle:
+    """Read IBL/ALF files from disk: ``spikes.times.npy``, ``spikes.clusters.npy`` and optionally
+    ``spikes.amps.npy``, ``spikes.depths.npy``, ``clusters.*.npy`` and (in ``trials_folder``)
+    ``_ibl_trials.*.npy`` / ``trials.*.npy``."""
+    folder = Path(folder)
+
+    def obj(dirpath, name):
+        out = {}
+        for f in sorted(Path(dirpath).glob(f"*{name}.*.npy")):
+            parts = f.name.split(".")
+            i = parts.index(name) if name in parts else len(parts) - 3
+            out[parts[i + 1]] = np.load(f, allow_pickle=False)
+        return out
+
+    spikes = obj(folder, "spikes")
+    if "times" not in spikes or "clusters" not in spikes:
+        raise FileNotFoundError(f"{folder} has no spikes.times.npy / spikes.clusters.npy")
+    clusters = obj(folder, "clusters") or None
+    trials = obj(trials_folder, "trials") if trials_folder else None
+    if clusters is not None and "cluster_id" not in clusters:
+        n = max(len(v) for v in clusters.values())
+        clusters["cluster_id"] = np.arange(n)
+    return from_ibl(spikes, clusters, trials or None, event=event, duration=duration,
+                    meta={"folder": str(folder)})
 
 
 def load(path: str | Path, **kwargs) -> Bundle:
@@ -283,6 +415,8 @@ def load(path: str | Path, **kwargs) -> Bundle:
     if path.is_dir():
         if (path / "spike_times.npy").exists():
             return from_phy(path, **kwargs)
+        if any(path.glob("*spikes.times.npy")):
+            return from_alf(path, **kwargs)
         try:
             import spikeinterface as si  # noqa: F401
             from spikeinterface import load_sorting_analyzer
@@ -291,6 +425,8 @@ def load(path: str | Path, **kwargs) -> Bundle:
         return from_spikeinterface(load_sorting_analyzer(path), **kwargs)
     if path.suffix == ".nwb":
         return from_nwb(path, **kwargs)
+    if path.is_dir() and (path / "spikes.times.npy").exists():
+        return from_alf(path, **kwargs)
     if path.suffix == ".zarr":
         from spikeinterface import load_sorting_analyzer
 

@@ -68,6 +68,18 @@ class Thresholds:
     drift_completeness_spikes: int = 100
     """Target spikes per window for the completeness (amplitude-cutoff) test."""
     drift_confound_r: float = 0.3
+    drift_rho_time: float = 0.8
+    """Fade test: |Spearman rho| of amplitude against time."""
+    drift_min_fade: float = 0.3
+    """Fade test: the amplitude must change by at least this share before the unit vanishes."""
+    drift_vanish: float = 0.3
+    """Fade test: the edge window's rate is at most this share of the unit's healthy rate."""
+    drift_stable_loss: float = 0.1
+    """A window is stable if at most this share of spikes is lost below threshold."""
+    drift_stable_amp_drop: float = 0.15
+    """Without a completeness estimate: stable while amplitude is within this of its peak."""
+    drift_min_stable: float = 0.3
+    """Restrict a drifting unit to its stable epoch only if that covers this share of the session."""
 
     # curation multiverse
     mv_min_units: int = 5

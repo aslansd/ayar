@@ -46,6 +46,7 @@ class CompareReport:
     notes: list[str] = field(default_factory=list)
     failed: dict[str, str] = field(default_factory=dict)
     finding_name: str | None = None
+    attribution: dict[str, list[dict]] = field(default_factory=dict)
     version: str = __version__
 
     @property
@@ -72,6 +73,7 @@ class CompareReport:
             ],
             "consensus_units": self.consensus_units,
             "summaries": [asdict(s) for s in self.summaries],
+            "attribution": self.attribution,
             "failed": self.failed,
             "notes": self.notes,
         }
@@ -109,6 +111,12 @@ class CompareReport:
                 lines.append(f"  {s.key:<{wk}}  " + "  ".join(f"{v:>{w}}" for v in vals)
                              + f"  {s.spread:>7.0%}  {s.sign_agreement:>9.0%}  {s.verdict.upper()}")
             lines.append("")
+            for key, rows in self.attribution.items():
+                if rows:
+                    top = ", ".join(f"{r['sorting']} unit {r['unit']} ({r['delta']:+.3g})" for r in rows[:5])
+                    lines.append(f"  {key}: units outside the consensus that move it most when left out: {top}")
+            if any(self.attribution.values()):
+                lines.append("")
             for v, text in _VERDICTS.items():
                 if v in self.verdicts.values():
                     lines.append(f"  {v.upper()}: {text}")
@@ -137,8 +145,15 @@ def compare(
     reference: str | None = None,
     thresholds: Thresholds | None = None,
     finding_name: str | None = None,
+    attribute: bool = True,
+    max_attributed_units: int = 40,
 ) -> CompareReport:
-    """Recompute ``finding`` on several sortings of one recording and on their consensus units."""
+    """Recompute ``finding`` on several sortings of one recording and on their consensus units.
+
+    With ``attribute``, numbers that are not consistent across sorters are traced to units:
+    each unit that only part of the sortings found is left out of its own sorting in turn,
+    and the units whose removal moves the number most are listed.
+    """
     th = thresholds or DEFAULTS
     names = list(sortings)
     if len(names) < 2:
@@ -212,6 +227,31 @@ def compare(
             verdict = "consistent"
         summaries.append(CompareSummary(key, per, cons, med, spread, agree, cons_change, verdict))
 
+    attribution: dict[str, list[dict]] = {}
+    shaky = [sm.key for sm in summaries if sm.verdict != "consistent"]
+    if attribute and shaky:
+        unmatched: dict[str, list[int]] = {ref: sorted(set(int(u) for u in bundles[ref].unit_ids) - consensus)}
+        for m in matchings:
+            unmatched[m.name_b] = m.unmatched_b
+        rows: dict[str, list[dict]] = {k: [] for k in shaky}
+        budget = max_attributed_units
+        for n, units in unmatched.items():
+            if n not in values:
+                continue
+            for u in units[:budget]:
+                try:
+                    v = call_finding(finding, bundles[n].without([u]))
+                except Exception:
+                    continue
+                for k in shaky:
+                    if k in v and k in values[n]:
+                        rows[k].append({"sorting": n, "unit": int(u), "delta": float(values[n][k] - v[k])})
+        for k in shaky:
+            attribution[k] = sorted(rows[k], key=lambda r: -abs(r["delta"]))[:10]
+        n_total = sum(len(u) for u in unmatched.values())
+        if n_total > max_attributed_units * len(unmatched):
+            notes.append(f"attribution checked at most {max_attributed_units} unmatched units per sorting")
+
     return CompareReport(
         reference=ref,
         names=names,
@@ -222,4 +262,5 @@ def compare(
         notes=notes,
         failed=failed,
         finding_name=finding_name or getattr(finding, "__name__", None),
+        attribution=attribution,
     )

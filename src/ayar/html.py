@@ -519,8 +519,17 @@ def compare_html(cr) -> str:
         vals = list(s.values.values()) + ([s.consensus] if s.consensus is not None else [])
         svg = dot_strip(labels, vals, ref=s.values.get(cr.reference), xlabel=s.key, label=f"{s.key} per sorting")
         table = _data_table(["sorting", s.key], [(lab, _fmt(v)) for lab, v in zip(labels, vals)])
+        attr = ""
+        rows = (getattr(cr, "attribution", None) or {}).get(s.key) or []
+        if rows:
+            top = rows[:8]
+            attr = ("<h3 style=\"margin-top:10px\">Units that move it most</h3><p>Each unit found by only some "
+                    "sortings, left out of its own sorting in turn: the change in the number.</p>"
+                    + dot_strip([f"{r['sorting']} unit {r['unit']}" for r in top], [r["delta"] for r in top],
+                                ref=0.0, xlabel=f"change in {s.key} when the unit is left out",
+                                label=f"units driving {s.key}"))
         cards.append(f"<div class=\"card\"><h3>{_e(s.key)} {_chip(s.verdict)}</h3><p>spread {s.spread:.0%} · same "
-                     f"sign {s.sign_agreement:.0%}</p>{svg}{table}</div>")
+                     f"sign {s.sign_agreement:.0%}</p>{svg}{table}{attr}</div>")
     body.append("<div class=\"cards\">" + "".join(cards) + "</div>")
     for name, err in cr.failed.items():
         body.append(f"<p class=\"note\">failed on {_e(name)}: {_e(err)}</p>")

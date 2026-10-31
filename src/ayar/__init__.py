@@ -12,12 +12,12 @@ choice of spike sorter.
     print(report)
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 from .bundle import Bundle, Events  # noqa: E402
 from .config import DEFAULTS, Thresholds  # noqa: E402
 from .flags import Flag, NotChecked, Report, Severity  # noqa: E402
-from .io import from_arrays, from_nwb, from_phy, from_spikeinterface, load  # noqa: E402
+from .io import from_alf, from_arrays, from_ibl, from_nwb, from_phy, from_spikeinterface, load  # noqa: E402
 from .compare import compare  # noqa: E402
 from .matching import match_units  # noqa: E402
 from .multiverse import Rule, multiverse  # noqa: E402
@@ -27,7 +27,7 @@ from .validate import validate  # noqa: E402
 
 __all__ = [
     "Bundle", "Events", "Thresholds", "DEFAULTS", "Flag", "NotChecked", "Report", "Severity",
-    "from_arrays", "from_phy", "from_spikeinterface", "from_nwb", "load", "scan", "multiverse",
+    "from_arrays", "from_phy", "from_ibl", "from_alf", "from_spikeinterface", "from_nwb", "load", "scan", "multiverse",
     "Rule", "compare", "match_units", "make_session", "SynthConfig", "validate",
     "__version__",
 ]

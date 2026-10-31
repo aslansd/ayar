@@ -1,4 +1,4 @@
-"""Command-line interface: ``ayar scan | multiverse | compare | synth | validate | info | doctor``."""
+"""Command-line interface: ``ayar scan | multiverse | compare | hybrid | synth | validate | info | doctor``."""
 
 from __future__ import annotations
 
@@ -93,15 +93,28 @@ def cmd_scan(args) -> int:
         bundle = load(args.bundle, **_load_kwargs(args))
         if args.events is not None:
             bundle.events = _events_from(args.events)
+        if args.curation:
+            from .curation import apply as apply_curation
+
+            bundle = apply_curation(bundle, args.curation)
         finding, name = None, None
         if args.finding:
             name, finding = load_finding(args.finding)
-        inputs = [args.bundle] + ([args.events] if args.events else [])
+        inputs = [args.bundle] + [x for x in (args.events, args.curation) if x]
         with provenance.tracked("ayar scan", {"bundle": str(args.bundle), "finding": name,
                                               "detectors": args.only, **th.to_dict()},
                                 inputs, enabled=track) as run:
             report = scan(bundle, finding, thresholds=th, detectors=args.only, finding_name=name)
             written = _outputs(args, report, lambda: __import__("ayar.html").html.scan_html(report, bundle))
+            if args.export_curation:
+                from .curation import write_spikeinterface
+
+                written.append(str(write_spikeinterface(report, bundle, args.export_curation,
+                                                        include_warnings=args.curate_warnings)))
+            if args.export_phy:
+                from .curation import to_phy
+
+                written.append(str(to_phy(report, bundle, args.export_phy)))
             provenance.log_scan(run, report)
             provenance.add_outputs(run, written)
     except _ERRORS as e:
@@ -194,6 +207,37 @@ def cmd_compare(args) -> int:
     return rep.exit_code(args.fail_on)
 
 
+def _hybrid_out(args, sc) -> int:
+    if args.json:
+        Path(args.json).write_text(sc.to_json())
+    print(sc.to_json() if args.format == "json" else sc.format_text())
+    return 0
+
+
+def cmd_hybrid(args) -> int:
+    try:
+        from . import hybrid
+
+        th = _thresholds(args)
+        if args.hybrid_cmd == "score":
+            sc = hybrid.score_folder(args.folder, args.sorting, name=args.name, thresholds=th)
+            return _hybrid_out(args, sc)
+        rec = hybrid.load_recording(args.recording, args.reader, args.stream)
+        kw = dict(n_units=args.units, n_fading=args.fading, fade_to=args.fade_to, seed=args.seed,
+                  max_duration=args.max_duration)
+        if args.hybrid_cmd == "make":
+            out = hybrid.make(rec, args.folder, **kw)
+            print(f"hybrid recording written to {out / 'recording'} ({args.units} injected units, "
+                  f"{args.fading} fading); truth in {out / 'injected.npz'}")
+            print(f"sort {out / 'recording'} with your pipeline, then: ayar hybrid score {out} SORTING")
+            return 0
+        sc = hybrid.run(rec, args.folder, args.sorter, thresholds=th, **kw)
+        return _hybrid_out(args, sc)
+    except _ERRORS as e:
+        print(f"ayar: error: {e}", file=sys.stderr)
+        return 2
+
+
 def cmd_validate(args) -> int:
     from .synth import SynthConfig
     from .validate import validate
@@ -268,6 +312,13 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--json", metavar="PATH", help="also write the JSON report here")
     s.add_argument("--html", metavar="PATH", help="also write a single-file HTML report with evidence plots")
     s.add_argument("--daftar", action="store_true", help="record the run with daftar (provenance)")
+    s.add_argument("--export-curation", metavar="PATH",
+                   help="write a SpikeInterface curation JSON (merges, removals, labels, stable epochs)")
+    s.add_argument("--curate-warnings", action="store_true",
+                   help="also act on warning-level flags in --export-curation (default: errors only)")
+    s.add_argument("--export-phy", metavar="PATH", help="write cluster_ayar.tsv (a Phy column) here")
+    s.add_argument("--curation", metavar="PATH",
+                   help="apply a curation JSON (ayar's or SpikeInterface's) before scanning",)
     s.add_argument("--fail-on", choices=["error", "warning", "never"], default="error",
                    help="exit 1 when flags reach this severity (default: error)")
     s.add_argument("-v", "--verbose", action="store_true", help="explain every flag")
@@ -315,6 +366,36 @@ def build_parser() -> argparse.ArgumentParser:
     c.add_argument("--daftar", action="store_true", help="record the run with daftar (provenance)")
     c.add_argument("--fail-on", choices=["sign_unstable", "sorter_dependent", "never"], default="sign_unstable")
     c.set_defaults(fn=cmd_compare)
+
+    h = sub.add_parser("hybrid", help="check ayar on your own recording with injected units of known truth")
+    hs = h.add_subparsers(dest="hybrid_cmd", required=True)
+    for name, helptext in (("make", "inject known units into a recording and save it"),
+                           ("run", "make, sort with a SpikeInterface sorter, and score"),
+                           ("score", "score a sorting of a hybrid recording made by `ayar hybrid make`")):
+        x = hs.add_parser(name, help=helptext)
+        if name == "score":
+            x.add_argument("folder", help="the folder written by `ayar hybrid make`")
+            x.add_argument("sorting", help="sorter output folder, saved SortingAnalyzer, or ayar .npz")
+            x.add_argument("--name", help="a name for the sorting in the report")
+        else:
+            x.add_argument("recording", help="a SpikeInterface-loadable recording (folder), or a path for --reader")
+            x.add_argument("folder", help="output folder")
+            x.add_argument("--reader", help="SpikeInterface reader, e.g. spikeglx, openephys, nwb")
+            x.add_argument("--stream", help="stream name or id for the reader, e.g. imec0.ap")
+            x.add_argument("--units", type=int, default=10, help="injected units (default 10)")
+            x.add_argument("--fading", type=int, default=3, help="of which fade over the session (default 3)")
+            x.add_argument("--fade-to", type=float, default=0.25, help="final amplitude of fading units")
+            x.add_argument("--seed", type=int, default=0)
+            x.add_argument("--max-duration", type=float, help="use only the first N seconds")
+            if name == "run":
+                x.add_argument("--sorter", required=True, help="a SpikeInterface sorter name, e.g. kilosort4")
+        if name != "make":
+            x.add_argument("--set", action="append", metavar="NAME=VALUE")
+            x.add_argument("--format", choices=["text", "json"], default="text")
+            x.add_argument("--json", metavar="PATH")
+        else:
+            x.add_argument("--set", action="append", metavar="NAME=VALUE")
+        x.set_defaults(fn=cmd_hybrid)
 
     v = sub.add_parser("validate", help="measure detector accuracy on synthetic sessions")
     v.add_argument("--sessions", type=int, default=5)

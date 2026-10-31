@@ -17,7 +17,14 @@ answers three questions:
    choose?
 3. **`ayar compare`**: does my result survive a different spike sorter?
 
-Each can write a single-file HTML report with the evidence plotted (`--html`) and record
+and helps you act on the answer and check it:
+
+4. **`ayar scan --export-curation`**: the repairs as a curation file that SpikeInterface
+   applies directly (merges, removals, labels, stable epochs for drifting units).
+5. **`ayar hybrid`**: how well does `ayar` work on *your* recording? Inject units with a known
+   answer, sort, and score every flag against the truth.
+
+Each analysis can write a single-file HTML report with the evidence plotted (`--html`) and record
 itself with [daftar](https://pypi.org/project/daftar/) (`--daftar`).
 
 `ayar` does not sort spikes and does not prove a finding is right. It tests whether
@@ -56,15 +63,15 @@ WARNING SPLIT_UNIT      units 46 and 47 look like one neuron: one fades out as t
                         fades in (rate r=-0.99, overlapping in 1 of 20 windows)
 ...
 finding audit: ayar.examples:condition_contrast
-  number                 flags           repair               baseline   after  change  random q95  verdict
-  frac_units_suppressed  DRIFT_CONFOUND  remove 3              0.08621  0.03636     58%          5%  SENSITIVE
-  frac_units_suppressed  SPLIT_UNIT      merge 3               0.08621  0.05455     37%          5%  SENSITIVE
-  frac_units_suppressed  ALL_FLAGS       merge 5, remove 7     0.08621        0    100%         26%  SENSITIVE
+  number                 flags           repair                         baseline   after  change  random q95  verdict
+  frac_units_suppressed  DRIFT_CONFOUND  restrict 2, remove 1            0.08621  0.03509     59%          2%  SENSITIVE
+  frac_units_suppressed  SPLIT_UNIT      merge 3                         0.08621  0.05455     37%          5%  SENSITIVE
+  frac_units_suppressed  ALL_FLAGS       merge 5, restrict 2, remove 5   0.08621        0    100%         21%  SENSITIVE
   ...
 ```
 
 ```
-ayar 0.3.0 multiverse: ayar.examples:condition_contrast
+ayar 0.4.0 multiverse: ayar.examples:condition_contrast
 72 universes; 72 evaluated, 0 skipped (too few units), 0 failed; 58 units before curation
 
   number                  all units      min   median      max  same sign  spread  verdict
@@ -75,7 +82,7 @@ ayar 0.3.0 multiverse: ayar.examples:condition_contrast
 ```
 
 ```
-ayar 0.3.0 compare: ayar.examples:condition_contrast
+ayar 0.4.0 compare: ayar.examples:condition_contrast
   main vs conservative: 47 matched (median agreement 0.92), 11 only in main, 1 only in conservative
   main vs liberal: 58 matched (median agreement 1.00), 0 only in main, 5 only in liberal
   consensus: 47 of 58 main units are found by every sorting
@@ -83,13 +90,17 @@ ayar 0.3.0 compare: ayar.examples:condition_contrast
   number                       main  conservative       liberal     consensus  spread  same sign  verdict
   mean_contrast_hz            1.933         1.843         1.769         1.739     11%       100%  CONSISTENT
   frac_units_suppressed     0.08621       0.02083       0.07937       0.06383     91%       100%  SORTER_DEPENDENT
+
+  frac_units_suppressed: units outside the consensus that move it most when left out: main unit 9 (+0.016),
+  main unit 34 (+0.016), ...
 ```
 
 In this synthetic block-design session there is no suppression at all. Every "suppressed"
 unit is a drifting unit losing spikes below threshold, or the first half of a neuron the
 sorter split in two. The scan finds both causes, the multiverse shows the effect only
 appears when units with large amplitude cutoff are kept, and a more conservative re-sorting
-shrinks it fourfold. The condition effect itself (`mean_contrast_hz`) holds in all three.
+shrinks it fourfold, and `compare` traces the difference to units 9 and 34, two of the
+drifting units. The condition effect itself (`mean_contrast_hz`) holds in all three.
 
 On your own data:
 
@@ -136,12 +147,20 @@ times to random *unflagged* units.
 
 | detector | repair |
 |---|---|
-| `DUPLICATE_UNIT`, `SPLIT_UNIT` | merge the pair (duplicate spikes within ±0.25 ms counted once) |
+| `DUPLICATE_UNIT`, `SPLIT_UNIT` | merge the pair (copies within ±1.25 ms counted once) |
+| `DRIFT_CONFOUND` | restrict the unit to its **stable epoch** (the windows where it still detects ≥ 90 % of its spikes); remove it if that is under 30 % of the session |
 | `OVERLAP_HOLE` | remove one unit of the pair |
-| `CONTAMINATION`, `DRIFT_CONFOUND` | remove the unit |
+| `CONTAMINATION` | remove the unit |
 
-A random merge joins a unit with its nearest unflagged neighbour, so a merge is only blamed
-on the artifact if it moves the finding more than merging arbitrary neighbours does.
+A random merge joins a unit with its nearest unflagged neighbour, and a random restriction
+keeps a random block of an unflagged unit as long as the flagged unit's stable epoch, so a
+repair is only blamed on the artifact if it moves the finding more than the same repair on
+arbitrary units does.
+
+A restricted unit keeps only its spikes inside the epoch, and its rate is computed over the
+epoch. A finding that averages over trials should skip the trials outside it:
+`bundle.in_epochs(unit, trial_starts, trial_stops)` gives the mask, as
+`ayar.examples.condition_contrast` does.
 
 | verdict | meaning |
 |---|---|
@@ -160,7 +179,7 @@ on the artifact if it moves the finding more than merging arbitrary neighbours d
 | `SPLIT_UNIT` | spike times (amplitudes help) | *refractory*: a pair that never fires within ±1.5 ms of each other, out to the edge of that window, and merges into a clean train (double detections within ±0.25 ms are set aside); *handoff*: one unit fades out as a neighbour with matching rate and amplitude fades in | one neuron counted twice; a handoff looks like a cell switching off while another switches on (fake remapping, plasticity, cell loss) |
 | `OVERLAP_HOLE` | spike times (depths restrict to neighbours) | a gap within ±0.5 ms in a nearby pair's cross-correlogram, tested against the 2-10 ms flanks | the sorter dropped overlapping spikes: synchrony is underestimated |
 | `CONTAMINATION` | spike times | refractory violations implying that a share of a unit's spikes come from other neurons (Hill et al. 2011), and the likely source neighbour | the unit mixes neurons, so its tuning and correlations are partly another cell's |
-| `DRIFT_CONFOUND` | amplitudes or depths | firing rate that tracks spike amplitude, depth, or estimated detection loss over the session | apparent rate changes are spikes lost below threshold; an **error** when conditions are ordered in time, because the loss then looks like a condition effect |
+| `DRIFT_CONFOUND` | amplitudes or depths | firing rate that tracks spike amplitude, depth, or estimated detection loss over the session; or an amplitude that walks steadily down (or up) until the unit vanishes (or appears), which is how a template-matching sorter loses a drifting neuron | apparent rate changes are spikes lost below threshold, or a neuron lost to drift; an **error** when conditions are ordered in time, because the loss then looks like a condition effect |
 
 When two detectors see one cause, it is reported once: a unit that is handed off is not also
 reported as drifting, a contaminated unit's dip with its own source is not also reported as an
@@ -204,7 +223,11 @@ hand `ayar compare` the outputs. It
 2. recomputes the finding on **every sorting** and on the **consensus units**: reference units
    that every other sorting also found;
 3. reports per number the value in each sorting, the spread, whether the sign holds, and a
-   verdict.
+   verdict;
+4. for a number that is not consistent, **traces it to units**: each unit found by only some
+   sortings is left out of its own sorting in turn, and the units whose removal moves the
+   number most are listed. On the demo session, the two units it names first for the inflated
+   synchrony are exactly the two planted duplicates.
 
 | verdict | meaning |
 |---|---|
@@ -248,13 +271,68 @@ b = ayar.from_arrays(times_s, clusters, amplitudes=amps, spike_depths=depths,
 b.save("session.npz")                             # plain npz, readable with numpy alone
 ```
 
+* **IBL**: `ayar.from_ibl(spikes, clusters, trials)` takes `SpikeSortingLoader` output; trials
+  become events (`feedback`, `stimulus` or `choice`), and IBL's quality `label` is available to
+  the multiverse. `ayar.load()` also opens ALF folders (`spikes.times.npy`, ...).
 * **Phy / Kilosort**: keeps units labelled `good` or `mua` (curated labels win over
   Kilosort's), depths from `spike_positions.npy` (Kilosort 4) or `cluster_info.tsv`.
 * **SpikeInterface**: amplitudes from `spike_amplitudes`, depths from `spike_locations` and
   `unit_locations`, duration from the recording. String unit ids are mapped to integers
   (`bundle.meta["unit_id_map"]`).
 * **NWB**: the units table (`spike_times`, optional `spike_amplitudes`, depth from a `depth`
-  column or the unit's electrode) and the trials table for events.
+  column or the unit's electrode) and the trials table for events; `shift_negative=True` for
+  sessions whose spike times start before zero.
+
+## Acting on the flags: curation export
+
+```bash
+ayar scan sorting/ --export-curation curation.json --export-phy sorting/ --html report.html
+```
+
+`curation.json` is SpikeInterface's curation format (version 2): every flagged unit gets an
+`ayar` label listing its flags, error-level duplicates and splits become **merges**, units with
+error-level contamination or no stable epoch become **removed**, and drifting units' stable
+epochs go in an `ayar_epochs` field (SpikeInterface ignores it). Overlap holes are labelled but
+not acted on: they matter for synchrony analyses, not for keeping a unit. `--curate-warnings`
+also acts on warnings. `cluster_ayar.tsv` shows the labels as a column in Phy.
+
+It is a proposal: check it against the report's evidence, then apply it.
+
+```python
+from spikeinterface.curation import apply_curation
+curated = apply_curation(sorting_analyzer, json.load(open("curation.json")))
+```
+
+```bash
+ayar scan sorting/ --curation curation.json --finding my_analysis.py:main   # re-scan after
+```
+
+`ayar` applies the same file itself (merges, removals and stable epochs) with `--curation`,
+so the scan, the finding audit and the multiverse can be re-run on the curated units.
+
+## Is ayar right on my data? `ayar hybrid`
+
+The synthetic validation below shows the detectors work on clean, simulated artifacts. Real
+tissue is messier. `ayar hybrid` checks `ayar` on **your** recording, probe and sorter:
+
+```bash
+# inject 10 known units (3 of them fading over the session) and sort with your own pipeline
+ayar hybrid make my_recording/ hybrid/ --units 10 --fading 3
+#   ... sort hybrid/recording with Kilosort, the GUI, your cluster: anything ...
+ayar hybrid score hybrid/ hybrid_sorted/
+
+# or let SpikeInterface run the sorter
+ayar hybrid run raw/ hybrid/ --reader spikeglx --stream imec0.ap --sorter kilosort4 --max-duration 1800
+```
+
+The injected units come from SpikeInterface's hybrid generator. A *fading* unit's amplitude
+falls to a quarter by the end of the session, so the sorter loses its late spikes, the way a
+drifting neuron is lost. `score` then reports what the sorter did to each injected unit (found,
+split, merged with other spikes, missed), and checks every flag that touches an injected unit
+against the truth: a split or duplicate is right if both units hold the same injected unit, a
+drift flag is right if the unit fades, an overlap hole between two injected units is right
+because their spike trains are independent. Flags on the recording's own neurons have no known
+answer and are not scored.
 
 ## Evidence tiers
 
@@ -262,7 +340,8 @@ b.save("session.npz")                             # plain npz, readable with num
   pairs, capped at 20,000 pairs).
 * **Tier 1: plus amplitudes and/or depths.** Pair tests are restricted to neighbouring units
   (100 µm), handoff splits check amplitude continuity, and the drift detector runs.
-* **Tier 2: plus the raw recording** (hybrid ground truth, re-sorting). Planned.
+* **Tier 2: plus the raw recording.** `ayar hybrid` injects units with a known answer into the
+  recording and scores `ayar` against them (below).
 
 ## Self-validation
 
@@ -306,14 +385,53 @@ sorting, and checks each flag against which neuron each sorted unit really belon
 | spykingcircus2 | 15 | 11 | 2 contamination, 1 duplicate | the units are 59 % and 84 % one neuron; the duplicate is one neuron sorted twice at a 0.37 ms offset |
 | mountainsort5 | 28 | 2 | 6 splits, 1 duplicate, 45 overlap holes | all 6 splits correct; the duplicate warning is a 103-spike cluster of collision events (its shared spikes are real, it is not one neuron); every hole is between different neurons, where the sorter discarded near-simultaneous spikes |
 
+**Hybrid check.** The same 10-minute recording with 10 units injected by `ayar hybrid` (3 of
+them fading to a quarter of their amplitude), sorted by two of the sorters:
+
+| sorter | injected units | flags on injected units | caught |
+|---|---|---|---|
+| tridesclous2 | 6 found, 2 partly found, 1 split, 1 missed | 3, all correct (2 drift, 1 split) | the 1 split unit; all 3 fading units (2 as drifting, 1 as the split the sorter made as it faded) |
+| spykingcircus2 | 6 found, 1 partly found, 1 merged, 2 missed | 2, both correct (drift) | both fading units the sorter kept |
+
+Building the hybrid check exposed a drift pattern the detector had missed: tridesclous2 kept a
+fading unit's spikes whole while their amplitude fell, then lost the unit at once, so neither
+its rate nor its amplitude distribution showed gradual loss. The fade test (amplitude walking
+steadily one way, then the unit vanishing) was added for it.
+
 What it missed: the sorters split 13 neurons into pieces; `ayar` flagged 7 of them (6 as
 splits, 1 as a duplicate) and missed 6. In every miss one piece was a small fragment (23 to
 298 spikes) that is too sparse to test in 10 minutes, and `ayar` lists such units and pairs
 under *partly checked* rather than calling them clean. The sorters are not
 deterministic, so a re-run gives somewhat different sortings. This is one simulated recording;
-it is a check on real sorter behaviour, not a validation on real tissue.
+it is a check on real sorter behaviour, not a validation on real tissue. Run `ayar hybrid` on
+your own recordings for that.
 
-## Limitations (v0.3)
+## On public data
+
+`examples/public_sessions.py` downloads one public IBL probe insertion (from IBL's public
+server) and one session of the Steinmetz et al. 2019 Neuropixels dataset (DANDI 000017), runs
+`scan` with the finding audit and `multiverse` on each (feedback: correct vs error trials), and
+writes `RESULTS.md` with the reports, ready to read or share:
+
+```bash
+pip install "ayar[nwb]" ONE-api ibllib dandi
+export OPENALYX_USER=<user> OPENALYX_PASSWORD=<password>    # free account: openalyx.internationalbrainlab.org/signup
+python examples/public_sessions.py --out public_results      # about 0.5-1 GB, a few minutes
+```
+
+IBL's public server now asks every user to register (free); without credentials the script
+skips IBL, says why in `RESULTS.md`, and still runs the DANDI session, which needs no account.
+
+Pick another session with `--ibl-pid` or `--dandiset` / `--dandi-asset`; `--ibl-local` and
+`--nwb-local` reuse files already downloaded. IBL data is read with `ayar.from_ibl()` (the
+output of IBL's `SpikeSortingLoader`) or `ayar.from_alf()` (ALF files on disk), DANDI data
+with `ayar.from_nwb()`.
+
+This release has **not** yet been run on these sessions: the environment it was built in had no
+access to IBL or DANDI. The script was tested end to end on local files laid out the same way,
+and the IBL and DANDI calls follow those packages' own APIs and integration tests.
+
+## Limitations (v0.4)
 
 * Research prototype. Thresholds are calibrated on synthetic sessions, not yet on public
   datasets with ground truth.
@@ -322,8 +440,10 @@ it is a check on real sorter behaviour, not a validation on real tissue.
   or simply not flagged.
 * A handoff split is ambiguous with real biology (one cell silenced as a neighbour starts
   firing); it is a warning, and amplitude continuity is required when amplitudes exist.
-* The audit repairs units by merging or removing them. It does not yet restrict a drifting
-  unit to its stable epoch.
+* Restricting a drifting unit to its stable epoch only helps findings that respect epochs
+  (`bundle.in_epochs`); a finding that ignores them sees the unit as silent outside its epoch.
+* `ayar hybrid` injects stationary templates (only their amplitude fades); it does not move
+  injected units with the probe's own drift.
 * The audit calls your function about 20 times per detector, and the multiverse once per
   universe. Use `--set audit_controls=0`, or a smaller `--grid`, when it is slow.
 * Pair tests need enough coincidences: in short recordings, small fragments of a split neuron
@@ -333,11 +453,9 @@ it is a check on real sorter behaviour, not a validation on real tissue.
 
 ## Roadmap
 
-* **v0.4**: validation on public recordings (IBL, Allen, DANDI) and on hybrid ground truth
-  (known units injected into a real recording: tier 2); restricting drifting units to their
-  stable epoch in the audit.
-* **v0.5**: per-unit attribution in `compare` (which units drive a sorter-dependent number);
-  merging the scan, multiverse and compare reports into one session report.
+* **v0.5**: results on public sessions (DANDI, IBL, Allen) with `scan` and `hybrid`; injected
+  units that drift with the probe (SpikeInterface motion); one session report that merges
+  scan, multiverse and compare.
 
 See [CHANGELOG.md](CHANGELOG.md) for what changed in each release.
 

@@ -22,12 +22,12 @@ from ..flags import Flag, NotChecked, Severity
 from ..stats import windowed, windowed_completeness
 
 CODE = "DRIFT_CONFOUND"
-ACTION = "remove"
+ACTION = "restrict"
 TIER = 1
 FIX = (
     "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift "
-    "correction), restrict each unit to the epoch where its amplitude is stable, or exclude it; "
-    "interleave conditions in future designs"
+    "correction), restrict each unit to its stable epoch (listed in the evidence; written by "
+    "--export-curation), or exclude it; interleave conditions in future designs"
 )
 
 
@@ -66,6 +66,31 @@ def _trend(rates, values, th, min_change, relative):
     return float(rho), float(p), float(change), change >= min_change
 
 
+def _fade(t, amps, duration, window, th):
+    """A unit lost (or found) as its amplitude drifts: steady amplitude trend, then rate collapses."""
+    centres, rates, med = windowed(t, amps, duration, window, th.drift_min_spikes_per_window)
+    ok = np.isfinite(med)
+    if ok.sum() < 4 or np.ptp(med[ok]) == 0:
+        return None
+    rho, p = spearmanr(centres[ok], med[ok])
+    head, tail = med[ok][:2].mean(), med[ok][-2:].mean()
+    out = rho <= -th.drift_rho_time
+    if not (out or rho >= th.drift_rho_time) or p >= th.drift_alpha:
+        return None
+    change = (head - tail) / head if out else (tail - head) / tail
+    if change < th.drift_min_fade:
+        return None
+    # the rate where the amplitude was healthy, against the rate at the end it fades toward
+    healthy = rates[: max(len(rates) // 3, 1)] if out else rates[-max(len(rates) // 3, 1):]
+    ref = float(np.median(healthy))
+    edge = float(rates[-1] if out else rates[0])
+    if ref <= 0 or edge > th.drift_vanish * ref:
+        return None
+    good = rates >= (1 - th.drift_stable_loss) * ref * 0.8
+    return {"direction": "out" if out else "in", "rho_time": float(rho), "p": float(p),
+            "amp_change": float(change), "edge_rate_ratio": edge / ref, "good": good}
+
+
 def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
     if not bundle.has_amplitudes and bundle.spike_depths is None:
         return [], [NotChecked(CODE, "needs per-spike amplitudes or depths (tier 1)")]
@@ -95,11 +120,15 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
             skipped += 1
             continue
         evidence: dict = {}
+        stable_source = None  # (window edges, good-window mask) used to find the stable epoch
         reasons: list[str] = []
         amps = bundle.unit_amplitudes(u)
         if amps is not None:
             _, rates, med = windowed(t, amps, bundle.duration, window,
                                      th.drift_min_spikes_per_window)
+            if np.isfinite(med).sum() >= th.drift_min_windows:
+                good = med >= (1 - th.drift_stable_amp_drop) * np.nanmax(med)
+                stable_source = (window, good)
             res = _trend(rates, med, th, th.drift_min_amp_change, relative=True)
             if res is not None:
                 rho, p, change, big = res
@@ -112,6 +141,9 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
                 low_power += 1
             else:
                 rates_c, comp = windowed_completeness(t, amps, bundle.duration, n_win)
+                if np.isfinite(comp).sum() >= th.drift_min_windows:
+                    # detection completeness is the direct measure: prefer it to amplitude
+                    stable_source = (bundle.duration / n_win, comp >= 1 - th.drift_stable_loss)
                 ok = np.isfinite(comp)
                 if ok.sum() >= th.drift_min_windows and np.ptp(comp[ok]) > 0 and np.ptp(rates_c[ok]) > 0:
                     r, p = pearsonr(rates_c[ok], comp[ok])
@@ -133,6 +165,19 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
                             f"rate follows detection loss (r={r:.2f}; up to {lost:.0%} of spikes "
                             f"below threshold in the worst window)"
                         )
+            # fade-out / fade-in: a template-matching sorter keeps a fading unit's spikes whole,
+            # then loses the unit at once; its amplitude walks steadily one way and it vanishes
+            fade = _fade(t, amps, bundle.duration, window, th)
+            if fade is not None:
+                evidence["fade"] = {k: v for k, v in fade.items() if k != "good"}
+                reasons.append(
+                    f"amplitude {'fell' if fade['direction'] == 'out' else 'rose'} steadily "
+                    f"({fade['amp_change']:.0%}, rho={fade['rho_time']:.2f} over time) and the unit "
+                    f"{'vanished' if fade['direction'] == 'out' else 'appeared'} "
+                    f"({'last' if fade['direction'] == 'out' else 'first'} window at "
+                    f"{fade['edge_rate_ratio']:.0%} of its usual rate)"
+                )
+                stable_source = (window, fade["good"])
         depths = bundle.unit_spike_depths(u)
         if depths is not None:
             _, rates, med = windowed(t, depths, bundle.duration, window,
@@ -145,6 +190,16 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
                     reasons.append(f"rate follows depth (rho={rho:.2f}, moved {change:.0f} µm)")
         if not reasons:
             continue
+        if stable_source is not None:
+            w, good = stable_source
+            epochs = [(i * w, (i + 1) * w) for i in np.flatnonzero(good)]
+            from ..bundle import _normalise_epochs
+
+            ep = _normalise_epochs(epochs, bundle.duration)
+            frac = float(np.sum(ep[:, 1] - ep[:, 0]) / bundle.duration) if ep.size else 0.0
+            evidence["stable_fraction"] = round(frac, 3)
+            if frac >= th.drift_min_stable:
+                evidence["stable_epochs"] = [[round(float(a), 3), round(float(b), 3)] for a, b in ep]
         sev = Severity.ERROR if confounded else Severity.WARNING
         consequence = (
             "the unit's rate changes over the session because spikes are lost below the "

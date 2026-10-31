@@ -28,23 +28,27 @@ FindingFn = Callable[[Bundle], Any]
 
 @dataclass
 class Action:
-    """How the audit neutralises flags: units to remove and (keep, absorb) pairs to merge."""
+    """How the audit neutralises flags: units to remove, (keep, absorb) pairs to merge,
+    and units to restrict to epochs (``{unit: [(start, stop), ...]}``)."""
 
     removes: set[int] = field(default_factory=set)
     merges: list[tuple[int, int]] = field(default_factory=list)
+    restricts: dict[int, list[tuple[float, float]]] = field(default_factory=dict)
 
     @property
     def size(self) -> int:
-        return len(self.removes) + len(self.merges)
+        return len(self.removes) + len(self.merges) + len(self.restricts)
 
     @property
     def units(self) -> set[int]:
-        return set(self.removes) | {u for p in self.merges for u in p}
+        return set(self.removes) | {u for p in self.merges for u in p} | set(self.restricts)
 
     def describe(self) -> str:
         parts = []
         if self.merges:
             parts.append(f"merge {len(self.merges)}")
+        if self.restricts:
+            parts.append(f"restrict {len(self.restricts)}")
         if self.removes:
             parts.append(f"remove {len(self.removes)}")
         return ", ".join(parts)
@@ -52,10 +56,13 @@ class Action:
     def apply(self, bundle: Bundle, dedupe_s: float) -> Bundle:
         b = bundle.merge(self.merges, dedupe_s) if self.merges else bundle
         present = set(int(u) for u in b.unit_ids)
+        if self.restricts:
+            b = b.restrict({u: ep for u, ep in self.restricts.items() if u in present and u not in self.removes})
         return b.without(self.removes & present)
 
     def __or__(self, other: "Action") -> "Action":
-        return Action(self.removes | other.removes, self.merges + other.merges)
+        return Action(self.removes | other.removes, self.merges + other.merges,
+                      {**self.restricts, **other.restricts})
 
 
 def action_for(flag: Flag) -> Action:
@@ -63,6 +70,11 @@ def action_for(flag: Flag) -> Action:
     from .detectors import REGISTRY
 
     kind = getattr(REGISTRY.get(flag.code), "ACTION", "remove")
+    if kind == "restrict":
+        epochs = flag.evidence.get("stable_epochs")
+        if epochs:
+            return Action(restricts={int(flag.units[0]): [tuple(e) for e in epochs]})
+        return Action(removes={int(u) for u in flag.units})  # no stable epoch long enough
     if kind == "merge" and len(flag.units) >= 2:
         return Action(merges=[(int(flag.units[0]), int(flag.units[1]))])
     if len(flag.units) >= 2:
@@ -73,13 +85,17 @@ def action_for(flag: Flag) -> Action:
 def units_to_drop(flag: Flag) -> set[int]:
     """Units a flag implicates for removal (kept for backwards compatibility)."""
     a = action_for(flag)
-    return set(a.removes) | {p[1] for p in a.merges}
+    return set(a.removes) | {p[1] for p in a.merges} | set(a.restricts)
 
 
 def _random_action(template: Action, pool: np.ndarray, bundle: Bundle, rng,
                    depth: dict[int, float | None] | None = None) -> Action | None:
-    """Same operations as ``template`` on random unflagged units (merges pair near neighbours)."""
-    need = len(template.removes) + 2 * len(template.merges)
+    """Same operations as ``template`` on random unflagged units.
+
+    Merges pair a random unit with its nearest unflagged neighbour; restrictions keep a
+    random contiguous block as long as the flagged unit's stable epoch.
+    """
+    need = len(template.removes) + 2 * len(template.merges) + len(template.restricts)
     if pool.size < need:
         return None
     avail = list(rng.permutation(pool))
@@ -94,8 +110,14 @@ def _random_action(template: Action, pool: np.ndarray, bundle: Bundle, rng,
         else:
             b = avail.pop()
         merges.append((a, int(b)))
+    restricts = {}
+    T = bundle.duration
+    for ep in template.restricts.values():
+        length = float(sum(b - a for a, b in ep))
+        start = float(rng.uniform(0, max(T - length, 0.0)))
+        restricts[int(avail.pop())] = [(start, start + length)]
     removes = {int(avail.pop()) for _ in template.removes}
-    return Action(removes, merges)
+    return Action(removes, merges, restricts)
 
 
 def call_finding(fn: FindingFn, bundle: Bundle) -> dict[str, float]:

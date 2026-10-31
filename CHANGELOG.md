@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.4.0
+
+### New
+* **`ayar hybrid`: check ayar on your own recording.** `make` injects known units into a
+  recording with SpikeInterface's hybrid generator (some of them fading over the session, the
+  way a drifting neuron is lost); you sort it with your own pipeline; `score` reports what the
+  sorter did to each injected unit (found, partly found, split, merged, missed) and checks every
+  flag that touches an injected unit against the truth. `run` does all three with a
+  SpikeInterface sorter. Python: `ayar.hybrid.make / score / score_folder / run`.
+* **Stable epochs: drifting units are repaired, not discarded.** `DRIFT_CONFOUND` reports each
+  unit's stable epoch (windows where it still detects >= 90 % of its spikes); the finding audit
+  restricts the unit to it (`restrict` repair, with matching random controls), and removes the
+  unit only if the epoch covers under 30 % of the session.
+* **Epoch-aware bundles:** `Bundle.restrict()`, `unit_epochs()`, `in_epochs()`,
+  `observed_duration()`; rates and metrics use the observed time; epochs are saved in `.npz`.
+  `ayar.examples.condition_contrast` counts only the trials inside a unit's epochs.
+* **Curation export** (`ayar scan --export-curation`): SpikeInterface curation format v2
+  (merges for error-level duplicates and splits, removals, an `ayar` label per flagged unit,
+  stable epochs in `ayar_epochs`), validated and applied with SpikeInterface's own
+  `apply_curation`. `--export-phy` writes `cluster_ayar.tsv` for Phy; `--curation` applies a
+  curation file before scanning, so a session can be re-scanned after curation.
+* **Attribution in `compare`:** for a number that is not consistent across sorters, each unit
+  found by only some sortings is left out in turn and the units that move it most are listed
+  (text, JSON and HTML).
+* **Fade test in `DRIFT_CONFOUND`:** an amplitude that walks steadily down (or up) until the
+  unit vanishes (or appears), the way a template-matching sorter loses a drifting neuron.
+* **IBL readers:** `ayar.from_ibl()` (IBL `SpikeSortingLoader` output, with trials as
+  feedback / stimulus / choice events and IBL's cluster metrics for the multiverse) and
+  `ayar.from_alf()` (ALF files on disk; also through `ayar.load()`).
+* `ayar.from_nwb(..., shift_negative=True)` for sessions whose spike times start before zero.
+* **`examples/public_sessions.py`:** downloads a public IBL insertion (needs a free IBL account,
+  read from `OPENALYX_USER` / `OPENALYX_PASSWORD`) and a DANDI session (Steinmetz et al. 2019 by
+  default; no account), runs scan, the finding audit and the multiverse, and writes
+  `RESULTS.md` plus the HTML reports and curation files.
+
+### Changed
+* Merges in the audit and in curation count copies within ±1.25 ms once (time-shifted
+  duplicates).
+
 ## 0.3.0
 
 ### New

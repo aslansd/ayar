@@ -55,6 +55,17 @@ def presence_ratio(train: np.ndarray, duration: float, n_bins: int = 100) -> flo
     return float(np.unique(idx).size / n_bins)
 
 
+def _presence_in_epochs(train: np.ndarray, epochs: np.ndarray, n_bins: int = 100) -> float:
+    total = float(np.sum(epochs[:, 1] - epochs[:, 0]))
+    if total <= 0:
+        return float("nan")
+    # map observed time onto [0, total) so the bins cover only time the unit was recorded
+    offs = np.concatenate([[0.0], np.cumsum(epochs[:, 1] - epochs[:, 0])[:-1]])
+    i = np.clip(np.searchsorted(epochs[:, 0], train, side="right") - 1, 0, len(epochs) - 1)
+    mapped = train - epochs[i, 0] + offs[i]
+    return presence_ratio(mapped, total, n_bins)
+
+
 METRIC_NAMES = (
     "n_spikes", "firing_rate", "presence_ratio", "isi_violations", "isi_contamination",
     "amplitude_median", "amplitude_cutoff",
@@ -64,14 +75,14 @@ METRIC_NAMES = (
 def compute(bundle: Bundle) -> dict[str, dict[int, float]]:
     """Compute every metric for every unit: ``{metric: {unit_id: value}}``."""
     out: dict[str, dict[int, float]] = {m: {} for m in METRIC_NAMES}
-    T = bundle.duration
     for u in bundle.unit_ids:
         u = int(u)
         t = bundle.train(u)
+        T = bundle.observed_duration(u)  # a unit restricted to epochs is judged on its epochs
         nv = isi_violations(t)
         out["n_spikes"][u] = float(t.size)
         out["firing_rate"][u] = t.size / T if T > 0 else float("nan")
-        out["presence_ratio"][u] = presence_ratio(t, T)
+        out["presence_ratio"][u] = _presence_in_epochs(t, bundle.unit_epochs(u))
         out["isi_violations"][u] = float(nv)
         out["isi_contamination"][u] = hill_contamination(nv, t.size, T)
         a = bundle.unit_amplitudes(u)
