@@ -341,8 +341,8 @@ answer and are not scored.
 
 ## Evidence tiers
 
-* **Tier 0: spike times.** Duplicate, split, overlap and contamination detectors run (all
-  pairs, capped at 20,000 pairs).
+* **Tier 0: spike times.** Duplicate, split, overlap and contamination detectors run on all
+  pairs (counted in one sweep over the spike train; see `max_pairs` and `max_spike_pairs`).
 * **Tier 1: plus amplitudes and/or depths.** Pair tests are restricted to neighbouring units
   (100 µm), handoff splits check amplitude continuity, and the drift detector runs.
 * **Tier 2: plus the raw recording.** `ayar hybrid` injects units with a known answer into the
@@ -461,15 +461,18 @@ What it shows:
 * **Real data found two bugs**, fixed in this release: a truncated download that the script
   reused, and audit verdicts reported as `sensitive` when no random controls were possible.
 
-## Limitations (v0.4)
+## Limitations (v0.5)
 
 * Research prototype. Thresholds are calibrated on synthetic sessions; on public data (above)
   ayar has run, but without ground truth its flags there are unverified.
-* Speed: a 1143-unit, 40 M-spike session took 24 minutes for the scan and finding audit on a
-  laptop. Use `--set audit_controls=5`, or scan without `--finding`, for a quick look.
-* Without depths (tier 0), the pair detectors (duplicates, splits, overlap holes) test every
-  pair, and refuse to when there are more than 20,000 pairs (about 200 units); they then say so
-  under *not checked*. Many NWB files on DANDI have no spike depths.
+* Speed: since 0.5 the pair detectors count coincidences for all pairs in one sweep. On a
+  synthetic session of IBL size (1120 units, 31 M spikes, 72 min) the scan and finding audit
+  take under 4 minutes on two cores, where 0.4 needed about 20; the drift detector is now the
+  slowest part. The public-data run times below are from 0.4 and have not been re-measured.
+* Without depths (tier 0), the pair detectors test every pair: a DANDI-sized session (778
+  units, 4.7 M spikes, 302,253 pairs) scans in about 30 s. They refuse, and say so under
+  *not checked*, only beyond `max_pairs` (2,000,000 unit pairs) or `max_spike_pairs` (3e9
+  coincident spike pairs within 10 ms).
 * Units with few spikes (fewer than ~600) get only the weaker drift trend test, and
   contamination needs at least 5 refractory violations; both are reported as partly checked
   or simply not flagged.
@@ -488,12 +491,18 @@ What it shows:
 
 ## Roadmap
 
-* **v0.5**: speed (pair statistics for all units at once, cheaper audit controls), so large
-  sessions take minutes and tier-0 sessions get the pair detectors; reading unit depths from
-  more NWB layouts; `ayar hybrid` on a public raw recording; one session report that merges
-  scan, multiverse and compare.
+Next, in [ROADMAP.md](https://github.com/aslansd/ayar/blob/main/ROADMAP.md): pair statistics for all units at once (so a large session
+scans in minutes and sessions without spike depths get the pair detectors), scanning only
+curated units, unit depths from more NWB layouts, and one report per session; later,
+`ayar hybrid` on a public raw recording for a first accuracy number on real tissue.
 
-See [CHANGELOG.md](https://github.com/aslansd/ayar/blob/main/CHANGELOG.md) for what changed in each release.
+## More documentation
+
+- [INSTALL.md](https://github.com/aslansd/ayar/blob/main/INSTALL.md): the optional extras, sorters and public-data packages, and what each enables
+- [TESTING.md](https://github.com/aslansd/ayar/blob/main/TESTING.md): the test suites, the validation run, and what a skip means
+- [PUBLISHING.md](https://github.com/aslansd/ayar/blob/main/PUBLISHING.md): the release steps, and keeping the repository small
+- [ROADMAP.md](https://github.com/aslansd/ayar/blob/main/ROADMAP.md): where ayar stands, what the evidence shows, and what comes next
+- [CHANGELOG.md](https://github.com/aslansd/ayar/blob/main/CHANGELOG.md): what changed in each release
 
 ## Family
 

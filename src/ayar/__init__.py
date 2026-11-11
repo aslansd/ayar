@@ -12,7 +12,7 @@ choice of spike sorter.
     print(report)
 """
 
-__version__ = "0.4.0"
+__version__ = "0.5.0.dev0"
 
 from .bundle import Bundle, Events  # noqa: E402
 from .config import DEFAULTS, Thresholds  # noqa: E402

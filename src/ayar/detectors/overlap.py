@@ -12,8 +12,8 @@ from __future__ import annotations
 from ..bundle import Bundle
 from ..config import Thresholds
 from ..flags import Flag, NotChecked, Severity
-from ..stats import count_strictly_within, count_within, poisson_lower_p
-from ._pairs import candidate_pairs
+from ..stats import poisson_lower_p
+from ._pairs import candidate_pairs, pair_counts
 from .split import looks_refractory_split, refractory_stats
 
 CODE = "OVERLAP_HOLE"
@@ -27,7 +27,7 @@ FIX = (
 
 def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
     units = [int(u) for u in bundle.unit_ids if len(bundle.spike_indices(u)) >= th.min_spikes]
-    pairs, scope = candidate_pairs(bundle, units, th.overlap_max_distance_um, th.max_pairs)
+    pairs, scope = candidate_pairs(bundle, units, th.overlap_max_distance_um, th.max_pairs, th.max_spike_pairs)
     if pairs is None:
         return [], [NotChecked(CODE, scope)]
 
@@ -37,28 +37,28 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
     # flank covers f1 <= |lag| <= f2 on both sides: width 2*(f2-f1); centre width 2*c
     scale = c / (f2 - f1)
 
-    tested: list[tuple[int, int, int, float]] = []
+    counts = pair_counts(bundle, th, pairs)
+    tested: list[tuple[int, int, int, float, int]] = []
     underpowered = 0
-    for a, b in pairs:
-        ta, tb = bundle.train(a), bundle.train(b)
-        n_center = count_within(ta, tb, c)
-        n_flank = count_within(ta, tb, f2) - count_strictly_within(ta, tb, f1)
+    for i, (a, b) in enumerate(pairs):
+        n_center = int(counts[(True, c)][i])
+        n_flank = int(counts[(True, f2)][i] - counts[(False, f1)][i])
         expected = n_flank * scale
         if expected < th.overlap_min_expected:
             underpowered += 1
             continue
-        tested.append((a, b, n_center, expected))
+        tested.append((a, b, n_center, expected, i))
 
     alpha = th.overlap_alpha / max(len(tested), 1)  # Bonferroni over tested pairs
     flags: list[Flag] = []
-    for a, b, n_center, expected in tested:
+    for a, b, n_center, expected, i in tested:
         ratio = n_center / expected
         if ratio > th.overlap_ratio_warn:
             continue
         p = poisson_lower_p(n_center, expected)
         if p >= alpha:
             continue
-        if looks_refractory_split(refractory_stats(bundle, a, b, th), th, alpha):
+        if looks_refractory_split(refractory_stats(bundle, a, b, th, {w: v[i] for w, v in counts.items()}), th, alpha):
             continue  # the whole refractory period is empty: reported as SPLIT_UNIT
         sev = Severity.ERROR if ratio <= th.overlap_ratio_error else Severity.WARNING
         da, db = bundle.depth(a), bundle.depth(b)

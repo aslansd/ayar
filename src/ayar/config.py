@@ -11,8 +11,10 @@ class Thresholds:
     # shared
     min_spikes: int = 100
     """Units with fewer spikes are skipped by every detector."""
-    max_pairs: int = 20000
-    """Pair detectors refuse (and say so) to test more pairs than this without depths."""
+    max_pairs: int = 2_000_000
+    """Pair detectors refuse (and say so) to test more unit pairs than this without depths."""
+    max_spike_pairs: float = 3e9
+    """... or when the all-pairs sweep would visit more spike pairs (within 10 ms) than this."""
 
     # DUPLICATE_UNIT
     dup_window_ms: float = 0.25
@@ -98,6 +100,9 @@ class Thresholds:
     audit_controls: int = 20
     audit_control_quantile: float = 0.95
     audit_seed: int = 0
+    audit_controls_when_robust: int = 0
+    """1: run the random controls even for repairs whose every change is below audit_robust
+    (their verdict is robust either way; the controls only fill in control_q)."""
 
     def override(self, **kwargs: Any) -> "Thresholds":
         known = {f.name for f in fields(self)}
@@ -116,7 +121,7 @@ class Thresholds:
             k, v = (s.strip() for s in item.split("=", 1))
             if k not in types:
                 raise KeyError(f"unknown threshold: {k}")
-            kw[k] = int(v) if types[k] in (int, "int") else float(v)
+            kw[k] = int(float(v)) if types[k] in (int, "int") else float(v)
         return self.override(**kw)
 
     def to_dict(self) -> dict[str, Any]:

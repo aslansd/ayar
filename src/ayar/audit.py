@@ -207,16 +207,25 @@ def audit(
             pool = np.array([u for u in all_units if u not in action.units])
         controls: list[dict[str, float]] = []
         note = ""
+        # a repair that moves no key beyond audit_robust is robust whatever the controls show,
+        # so the controls are drawn (keeping the random stream, and so every other repair's
+        # controls, unchanged) but the finding is not re-run on them
+        all_robust = all(_rel(value.get(key, math.nan), base) < th.audit_robust for key, base in baseline.items())
+        skip = all_robust and not th.audit_controls_when_robust
         if th.audit_controls > 0:
             for _ in range(th.audit_controls):
                 ctrl = _random_action(action, pool, bundle, rng, depth)
                 if ctrl is None:
                     note = f"no random controls: only {pool.size} unflagged units for {action.describe()}"
                     break
+                if skip:
+                    continue
                 try:
                     controls.append(call_finding(finding, ctrl.apply(bundle, dedupe)))
                 except Exception:
                     pass
+            if skip and not note:
+                note = f"random controls not run: no change reaches audit_robust ({th.audit_robust:g})"
 
         for key, base in baseline.items():
             new = value.get(key, math.nan)

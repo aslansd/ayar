@@ -10,11 +10,12 @@ from ..bundle import Bundle
 
 
 def candidate_pairs(
-    bundle: Bundle, units: list[int], max_distance_um: float, max_pairs: int
+    bundle: Bundle, units: list[int], max_distance_um: float, max_pairs: int, max_spike_pairs: float = float("inf")
 ) -> tuple[list[tuple[int, int]] | None, str]:
     """Pairs within ``max_distance_um`` when depths are known, else all pairs.
 
-    Returns ``(None, reason)`` when testing every pair would exceed ``max_pairs``.
+    Returns ``(None, reason)`` when, without depths, there are more than ``max_pairs``
+    unit pairs or the all-pairs sweep would visit more than ``max_spike_pairs`` spike pairs.
     """
     if bundle.has_depths:
         depths = {u: bundle.depth(u) for u in units}
@@ -32,4 +33,20 @@ def candidate_pairs(
             f"{n} unit pairs and no depths to restrict them; add amplitudes/depths "
             f"(tier 1) or raise max_pairs"
         )
+    if max_spike_pairs != float("inf"):
+        from ..pairstats import estimate_spike_pairs
+
+        est = estimate_spike_pairs(bundle, units, 0.010)
+        if est > max_spike_pairs:
+            return None, (
+                f"about {est:.1e} coincident spike pairs to count across {n} unit pairs and no "
+                "depths to restrict them; add amplitudes/depths (tier 1) or raise max_spike_pairs"
+            )
     return list(combinations(units, 2)), "all pairs (no depths)"
+
+
+def pair_counts(bundle: Bundle, th, pairs: list[tuple[int, int]]):
+    """Coincidence counts per window for ordered ``pairs`` (shared all-pairs sweep)."""
+    from ..pairstats import for_detectors
+
+    return for_detectors(bundle, th).counts(pairs)

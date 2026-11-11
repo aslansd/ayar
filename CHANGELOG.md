@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.5.0 (in development)
+
+### Faster
+* **Pair statistics for all units at once** (`ayar.pairstats`). The duplicate, split,
+  overlap-hole and contamination-source tests used to search the spike trains of every unit
+  pair separately. They now read coincidence counts from one sweep over the time-sorted spike
+  train, which pairs each spike with its neighbours up to 10 ms and counts every unit pair in
+  every lag window the detectors use. With depths, the probe is cut into 100 µm bands and only
+  neighbouring bands are swept together. The costly per-pair steps (time-shift search and
+  partner counts for duplicates, merged-train contamination for splits, the handoff test) now
+  run only for pairs whose counts or rate profiles can still pass.
+  On a synthetic session of IBL size (1120 units, 31 M spikes, 72 min): duplicate, split and
+  overlap tests **36 s instead of 862 s**; scan and finding audit **222 s instead of about
+  20 minutes**.
+* **Results are unchanged, to the last spike.** The counts equal those of `count_within` /
+  `count_strictly_within` for every ordered pair, including lags that sit exactly on a window
+  bound (common with spike times on a sample grid, where `t + w` and `t - w` round
+  differently). Scans of 80 session variants (synthetic, 30 kHz-quantised, with and without
+  depths) give identical flags and messages before and after; `ayar validate --sessions 20
+  --seed 100` is unchanged (236/240 found, no false flags, 19/19 audits).
+* **Random controls are not re-run for robust repairs.** When repairing a detector's flags
+  moves no number of the finding by `audit_robust` or more, its verdict is `robust` whatever
+  the controls show; the controls are still drawn (so every other repair gets the same
+  controls as before) but the finding is not recomputed on them, and the row's note says so.
+  `--set audit_controls_when_robust=1` restores the old behaviour.
+
+### Coverage
+* **Tier-0 sessions get the pair detectors.** Without depths, all pairs are tested; the
+  20,000-pair cap is replaced by `max_pairs` (2,000,000 unit pairs) and a new
+  `max_spike_pairs` budget (3e9 coincident spike pairs within 10 ms, estimated before
+  sweeping). A DANDI-sized session (778 units, 4.7 M spikes, 302,253 pairs) now gets
+  duplicate, split and overlap checks in about 30 s; 0.4 skipped them.
+
+### Packaging
+* **One version number.** `pyproject.toml` reads the version from `src/ayar/__init__.py`
+  (`dynamic = ["version"]`); `tests/test_version.py` checks the installed metadata against
+  `ayar.__version__` and that no second number comes back.
+* `ROADMAP.md`, `INSTALL.md`, `TESTING.md` and `PUBLISHING.md`, shipped in the sdist.
+* `--set name=1e9` works for integer thresholds.
+
+
 ## 0.4.0
 
 ### New

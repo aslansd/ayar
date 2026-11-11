@@ -13,8 +13,8 @@ import math
 from ..bundle import Bundle
 from ..config import Thresholds
 from ..flags import Flag, NotChecked, Severity
-from ..stats import count_within, has_partner, peak_lag
-from ._pairs import candidate_pairs
+from ..stats import has_partner, peak_lag
+from ._pairs import candidate_pairs, pair_counts
 
 CODE = "DUPLICATE_UNIT"
 ACTION = "merge"
@@ -24,23 +24,30 @@ FIX = "merge each pair (Phy merge, or SpikeInterface remove_redundant_units) and
 
 def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
     units = [int(u) for u in bundle.unit_ids if len(bundle.spike_indices(u)) >= th.min_spikes]
-    pairs, scope = candidate_pairs(bundle, units, th.dup_max_distance_um, th.max_pairs)
+    pairs, scope = candidate_pairs(bundle, units, th.dup_max_distance_um, th.max_pairs, th.max_spike_pairs)
     if pairs is None:
         return [], [NotChecked(CODE, scope)]
     w = th.dup_window_ms / 1000.0
+    max_lag = th.dup_max_lag_ms / 1000.0
     T = bundle.duration
+    n_spk = {u: len(bundle.spike_indices(u)) for u in units}
+    # each pair from its smaller unit's side, as below
+    ordered = [(a, b) if n_spk[a] <= n_spk[b] else (b, a) for a, b in pairs]
+    counts = pair_counts(bundle, th, ordered)
+    n_lag, n_w = counts[(True, max_lag)], counts[(True, w)]
     flags: list[Flag] = []
-    for a, b in pairs:
-        ta, tb = bundle.train(a), bundle.train(b)
-        if ta.size <= tb.size:
-            small, big, ts, tbig = a, b, ta, tb
-        else:
-            small, big, ts, tbig = b, a, tb, ta
+    for i, (small, big) in enumerate(ordered):
+        # A spike with a partner within ±w is at least one coincidence within ±w, and the
+        # shifted search below only runs when coincidences within ±max_lag reach the warning
+        # share: pairs below both cannot reach it and are skipped without touching their trains.
+        if max(n_lag[i], n_w[i]) < th.dup_fraction_warn * n_spk[small]:
+            continue
+        ts, tbig = bundle.train(small), bundle.train(big)
         # duplicates may be time-shifted (two templates of one neuron aligned differently):
         # find where coincidences pile up within ±dup_max_lag, then count around that lag
         lag = 0.0
-        if count_within(ts, tbig, th.dup_max_lag_ms / 1000.0) >= th.dup_fraction_warn * ts.size:
-            lag, _ = peak_lag(ts, tbig, th.dup_max_lag_ms / 1000.0)
+        if n_lag[i] >= th.dup_fraction_warn * ts.size:
+            lag, _ = peak_lag(ts, tbig, max_lag)
         hits = int(has_partner(ts + lag, tbig, w).sum())
         frac = hits / ts.size
         if frac < th.dup_fraction_warn:

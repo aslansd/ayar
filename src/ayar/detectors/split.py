@@ -25,7 +25,7 @@ from ..config import Thresholds
 from ..flags import Flag, NotChecked, Severity
 from ..metrics import REFRACTORY_S, hill_contamination, isi_violations
 from ..stats import count_strictly_within, count_within, poisson_lower_p
-from ._pairs import candidate_pairs
+from ._pairs import candidate_pairs, pair_counts
 
 CODE = "SPLIT_UNIT"
 TIER = 0
@@ -36,7 +36,9 @@ FIX = (
 )
 
 
-def refractory_stats(bundle: Bundle, a: int, b: int, th: Thresholds) -> dict | None:
+def refractory_stats(
+    bundle: Bundle, a: int, b: int, th: Thresholds, counts: dict | None = None, alpha: float | None = None
+) -> dict | None:
     """Cross-refractory coincidences of a pair against the 2-10 ms flank expectation.
 
     Coincidences within ±``dup_window_ms`` are set aside as double detections of the
@@ -44,35 +46,52 @@ def refractory_stats(bundle: Bundle, a: int, b: int, th: Thresholds) -> dict | N
     refractory violations. The outer band (1.0-1.5 ms) is tested separately: a
     sorter that discards near-simultaneous spikes empties the centre of the
     correlogram, but only a shared refractory period also empties its edge.
+
+    ``counts`` are the pair's coincidence counts per window (from the all-pairs sweep);
+    without them they are counted here. With ``alpha``, the merged-train contamination,
+    the one costly number, is only computed when the counts already look like a split;
+    otherwise it is left as NaN.
     """
-    ta, tb = bundle.train(a), bundle.train(b)
     tr = REFRACTORY_S
     dw = th.dup_window_ms / 1000.0
     edge = th.split_outer_ms / 1000.0
     f1, f2 = th.overlap_flank_lo_ms / 1000.0, th.overlap_flank_hi_ms / 1000.0
-    n_flank = count_within(ta, tb, f2) - count_strictly_within(ta, tb, f1)
+    if counts is None:
+        ta, tb = bundle.train(a), bundle.train(b)
+        counts = {
+            (True, f2): count_within(ta, tb, f2), (False, f1): count_strictly_within(ta, tb, f1),
+            (False, tr): count_strictly_within(ta, tb, tr), (True, dw): count_within(ta, tb, dw),
+            (False, edge): count_strictly_within(ta, tb, edge),
+        }
+    n_flank = counts[(True, f2)] - counts[(False, f1)]
     per_s = n_flank / (2 * (f2 - f1))  # expected coincidences per second of lag
     expected = per_s * 2 * (tr - dw)
     if expected < th.overlap_min_expected:
         return None
-    n_ref = count_strictly_within(ta, tb, tr) - count_within(ta, tb, dw)
-    n_outer = count_strictly_within(ta, tb, tr) - count_strictly_within(ta, tb, edge)
+    n_double = counts[(True, dw)]
+    n_ref = counts[(False, tr)] - n_double
+    n_outer = counts[(False, tr)] - counts[(False, edge)]
     exp_outer = per_s * 2 * (tr - edge)
-    n_double = count_within(ta, tb, dw)
-    # merged train with double detections counted once
-    hi = np.searchsorted(ta, tb + dw, side="right")
-    lo = np.searchsorted(ta, tb - dw, side="left")
-    merged = np.sort(np.concatenate([ta, tb[hi <= lo]]))
-    c_merged = hill_contamination(isi_violations(merged), merged.size, bundle.duration)
-    return {
+    out = {
         "n_refractory": int(n_ref),
         "expected": float(expected),
         "ratio": float(n_ref / expected),
         "p": poisson_lower_p(n_ref, expected),
         "outer_ratio": float(n_outer / exp_outer) if exp_outer > 0 else float("nan"),
         "double_detections": int(n_double),
-        "merged_contamination": float(c_merged),
+        "merged_contamination": float("nan"),
     }
+    if alpha is not None and not (
+        out["ratio"] <= th.split_ratio and out["outer_ratio"] <= th.split_outer_ratio and out["p"] < alpha
+    ):
+        return out
+    # merged train with double detections counted once
+    ta, tb = bundle.train(a), bundle.train(b)
+    hi = np.searchsorted(ta, tb + dw, side="right")
+    lo = np.searchsorted(ta, tb - dw, side="left")
+    merged = np.sort(np.concatenate([ta, tb[hi <= lo]]))
+    out["merged_contamination"] = float(hill_contamination(isi_violations(merged), merged.size, bundle.duration))
+    return out
 
 
 def looks_refractory_split(stats: dict | None, th: Thresholds, alpha: float) -> bool:
@@ -137,20 +156,56 @@ def looks_handoff(s: dict | None, th: Thresholds) -> bool:
     return ok
 
 
+def _handoff_candidates(bundle: Bundle, units: list[int], pairs: list[tuple[int, int]], th: Thresholds) -> np.ndarray:
+    """Pairs that may pass the handoff test, from per-unit rate profiles computed once.
+
+    Necessary conditions of :func:`looks_handoff` checked for all pairs at once; only
+    pairs passing them get the exact :func:`handoff_stats`. The correlation gate has a
+    small margin, so rounding cannot drop a pair the exact test would keep.
+    """
+    keep = np.zeros(len(pairs), dtype=bool)
+    n_win = int(min(th.split_handoff_windows, bundle.duration // th.split_min_window_s))
+    if n_win < 6 or not pairs:
+        return keep
+    w = bundle.duration / n_win
+    pos = {u: i for i, u in enumerate(units)}
+    R = np.stack([
+        np.bincount(np.clip((bundle.train(u) // w).astype(int), 0, n_win - 1), minlength=n_win) / w for u in units
+    ])
+    peak = R.max(axis=1)
+    act = R >= th.split_active_fraction * peak[:, None]
+    n_act = act.sum(axis=1)
+    blocks = np.sum(np.diff(np.concatenate([np.zeros((len(units), 1), int), act.astype(int)], axis=1), axis=1) == 1, axis=1)
+    usable = (peak > 0) & (np.ptp(R, axis=1) > 0) & (n_act >= 2) & (n_act <= n_win - 2) & (blocks <= 2)
+    Z = R - R.mean(axis=1, keepdims=True)
+    norm = np.sqrt((Z ** 2).sum(axis=1))
+    Z = Z / np.where(norm > 0, norm, 1.0)[:, None]
+    ia = np.array([pos[a] for a, _ in pairs])
+    ib = np.array([pos[b] for _, b in pairs])
+    ok = usable[ia] & usable[ib]
+    both = (act[ia] & act[ib]).sum(axis=1)
+    ok &= both <= np.maximum(1, (0.3 * np.minimum(n_act[ia], n_act[ib])).astype(int))
+    r = (Z[ia] * Z[ib]).sum(axis=1)
+    ok &= r <= -th.split_handoff_r + 1e-6
+    return ok
+
+
 def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
     units = [int(u) for u in bundle.unit_ids if len(bundle.spike_indices(u)) >= th.min_spikes]
-    pairs, scope = candidate_pairs(bundle, units, th.split_max_distance_um, th.max_pairs)
+    pairs, scope = candidate_pairs(bundle, units, th.split_max_distance_um, th.max_pairs, th.max_spike_pairs)
     if pairs is None:
         return [], [NotChecked(CODE, scope)]
     alpha = th.overlap_alpha / max(len(pairs), 1)
+    counts = pair_counts(bundle, th, pairs)
+    may_hand = _handoff_candidates(bundle, units, pairs, th)
     candidates = []
     underpowered = 0
-    for a, b in pairs:
-        ref = refractory_stats(bundle, a, b, th)
+    for i, (a, b) in enumerate(pairs):
+        ref = refractory_stats(bundle, a, b, th, {w: v[i] for w, v in counts.items()}, alpha=alpha)
         if ref is None:
             underpowered += 1
         is_ref = looks_refractory_split(ref, th, alpha)
-        hand = handoff_stats(bundle, a, b, th)
+        hand = handoff_stats(bundle, a, b, th) if may_hand[i] else None
         is_hand = looks_handoff(hand, th)
         if is_ref or is_hand:
             candidates.append((a, b, ref, is_ref, hand, is_hand))

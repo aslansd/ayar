@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ayar"
-version = "0.4.0"
+dynamic = ["version"]
 description = "Assay your spike-sorted finding before you publish: detect sorting artifacts and test whether your result survives them."
 readme = "README.md"
 license = "Apache-2.0"
@@ -42,12 +42,17 @@ dev = ["pytest>=7", "spikeinterface>=0.101", "pynwb>=2.5", "daftar>=1.2"]
 [project.scripts]
 ayar = "ayar.cli:main"
 
+[tool.hatch.version]
+# the one place the version lives: src/ayar/__init__.py
+path = "src/ayar/__init__.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/ayar"]
 
 [tool.hatch.build.targets.sdist]
 # only what is needed to build, test and read about ayar: never downloaded data or local builds
-include = ["src", "tests", "examples", "docs", "README.md", "CHANGELOG.md", "LICENSE", "pyproject.toml"]
+include = ["src", "tests", "examples", "docs", "README.md", "CHANGELOG.md", "ROADMAP.md", "INSTALL.md",
+           "TESTING.md", "PUBLISHING.md", "LICENSE", "pyproject.toml"]
 exclude = ["public_results", "**/cache", "dist", "*.html", ".venv", "venv", "**/__pycache__", "**/.DS_Store"]
 
 [tool.pytest.ini_options]

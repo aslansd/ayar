@@ -17,8 +17,7 @@ from ..bundle import Bundle
 from ..config import Thresholds
 from ..flags import Flag, NotChecked, Severity
 from ..metrics import REFRACTORY_S, hill_contamination, isi_violations
-from ..stats import count_strictly_within, count_within
-from ._pairs import candidate_pairs
+from ._pairs import candidate_pairs, pair_counts
 
 CODE = "CONTAMINATION"
 TIER = 0
@@ -30,16 +29,16 @@ FIX = (
 
 
 def _likely_source(bundle: Bundle, u: int, neighbours: list[int], th: Thresholds) -> tuple[int, float] | None:
-    tu = bundle.train(u)
     f1, f2 = th.overlap_flank_lo_ms / 1000.0, th.overlap_flank_hi_ms / 1000.0
+    pairs = [(u, v) for v in neighbours]
+    counts = pair_counts(bundle, th, pairs)
     best = None
-    for v in neighbours:
-        tv = bundle.train(v)
-        n_flank = count_within(tu, tv, f2) - count_strictly_within(tu, tv, f1)
+    for i, v in enumerate(neighbours):
+        n_flank = int(counts[(True, f2)][i] - counts[(False, f1)][i])
         expected = n_flank * REFRACTORY_S / (f2 - f1)
         if expected < th.overlap_min_expected:
             continue
-        n = count_strictly_within(tu, tv, REFRACTORY_S)
+        n = int(counts[(False, REFRACTORY_S)][i])
         if poisson.cdf(n, expected) < th.drift_alpha:
             ratio = n / expected
             if best is None or ratio < best[1]:
@@ -52,7 +51,7 @@ def run(bundle: Bundle, th: Thresholds) -> tuple[list[Flag], list[NotChecked]]:
     T = bundle.duration
     flags: list[Flag] = []
     neighbours: dict[int, list[int]] = {}
-    pairs, _ = candidate_pairs(bundle, units, th.overlap_max_distance_um, th.max_pairs)
+    pairs, _ = candidate_pairs(bundle, units, th.overlap_max_distance_um, th.max_pairs, th.max_spike_pairs)
     if pairs is not None:
         for a, b in pairs:
             neighbours.setdefault(a, []).append(b)
