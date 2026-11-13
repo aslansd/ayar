@@ -1,0 +1,31 @@
+{
+  "key": "ibl",
+  "title": "IBL insertion da8dfec1-d265-44e8-84ce-6ae9c109b8bd",
+  "source": "IBL public data (https://openalyx.internationalbrainlab.org), insertion da8dfec1-d265-44e8-84ce-6ae9c109b8bd, session 4ecb5d24-f5cc-402c-be28-9d0f7cb14b3a, probe00",
+  "link": "https://openalyx.internationalbrainlab.org/insertions/da8dfec1-d265-44e8-84ce-6ae9c109b8bd",
+  "events": "feedback: correct (1) vs error (-1) trials",
+  "summary": {
+    "n_units": 1143,
+    "n_spikes": 39835238,
+    "duration_s": 4295.954,
+    "tier": 1,
+    "amplitudes": true,
+    "depths": true,
+    "events": {
+      "n": 528,
+      "labels": [
+        "-1",
+        "1"
+      ]
+    },
+    "units_with_epochs": 0,
+    "source": "ibl"
+  },
+  "finding": "condition_contrast (0-0.5 s after each event)",
+  "condition_counts": {
+    "-1": 85,
+    "1": 443
+  },
+  "scan_s": 300.7,
+  "multiverse_s": 483.2
+}

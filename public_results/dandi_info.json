@@ -1,0 +1,31 @@
+{
+  "key": "dandi",
+  "title": "DANDI 000017: sub-Richards/sub-Richards_ses-20171031T120000.nwb",
+  "source": "DANDI Archive, dandiset 000017, file sub-Richards/sub-Richards_ses-20171031T120000.nwb",
+  "link": "https://dandiarchive.org/dandiset/000017",
+  "events": "trials column 'feedback_type' at 'feedback_time'",
+  "summary": {
+    "n_units": 778,
+    "n_spikes": 4703292,
+    "duration_s": 2968.279,
+    "tier": 0,
+    "amplitudes": false,
+    "depths": false,
+    "events": {
+      "n": 260,
+      "labels": [
+        "-1",
+        "1"
+      ]
+    },
+    "units_with_epochs": 0,
+    "source": "nwb"
+  },
+  "finding": "condition_contrast (0-0.5 s after each event)",
+  "condition_counts": {
+    "-1": 74,
+    "1": 186
+  },
+  "scan_s": 54.4,
+  "multiverse_s": 8.3
+}

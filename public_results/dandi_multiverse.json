@@ -1,0 +1,545 @@
+{
+  "ayar_version": "0.5.0.dev0",
+  "finding": "condition_contrast (0-0.5 s after each event)",
+  "grid": [
+    "firing_rate>=0,0.1,0.5,1",
+    "presence_ratio>=0,0.5,0.9",
+    "isi_contamination<=1,0.25,0.1"
+  ],
+  "counts": {
+    "universes": 36,
+    "evaluated": 36,
+    "skipped_too_few_units": 0,
+    "failed": 0,
+    "units_total": 778
+  },
+  "summaries": [
+    {
+      "key": "mean_contrast_hz",
+      "baseline": 0.06612981668956461,
+      "n": 36,
+      "median": -0.01907942505605157,
+      "minimum": -0.13206996115036557,
+      "maximum": 0.07871441075999702,
+      "q05": -0.11582967234778427,
+      "q95": 0.06678410660628568,
+      "sign_agreement": 0.5555555555555556,
+      "spread": 9.571241188745827,
+      "influence": {
+        "firing_rate": 2.0776464708524958,
+        "presence_ratio": 1.52519390262283,
+        "isi_contamination": 8.208406077599067
+      },
+      "verdict": "sign_unstable"
+    },
+    {
+      "key": "frac_units_enhanced",
+      "baseline": 0.16066838046272494,
+      "n": 36,
+      "median": 0.13500261146846995,
+      "minimum": 0.11498257839721254,
+      "maximum": 0.17964071856287425,
+      "q05": 0.1164079822616408,
+      "q95": 0.17496730601569313,
+      "sign_agreement": 1.0,
+      "spread": 0.4337643777189373,
+      "influence": {
+        "firing_rate": 0.08302429885180236,
+        "presence_ratio": 0.05515847643560148,
+        "isi_contamination": 0.2872149153308759
+      },
+      "verdict": "stable"
+    },
+    {
+      "key": "frac_units_suppressed",
+      "baseline": 0.10282776349614396,
+      "n": 36,
+      "median": 0.15882463178644307,
+      "minimum": 0.09268292682926829,
+      "maximum": 0.21393034825870647,
+      "q05": 0.10166862623967904,
+      "q95": 0.20201342281879195,
+      "sign_agreement": 1.0,
+      "spread": 0.631796185833677,
+      "influence": {
+        "firing_rate": 0.5438245846290397,
+        "presence_ratio": 0.12586959018070823,
+        "isi_contamination": 0.1275570785418744
+      },
+      "verdict": "threshold_dependent"
+    }
+  ],
+  "universes": [
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 1.0
+      },
+      "n_units": 778,
+      "values": {
+        "mean_contrast_hz": 0.06612981668956461,
+        "frac_units_enhanced": 0.16066838046272494,
+        "frac_units_suppressed": 0.10282776349614396
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.25
+      },
+      "n_units": 470,
+      "values": {
+        "mean_contrast_hz": -0.028083746065901184,
+        "frac_units_enhanced": 0.13617021276595745,
+        "frac_units_suppressed": 0.10638297872340426
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1
+      },
+      "n_units": 410,
+      "values": {
+        "mean_contrast_hz": 0.024260531184213344,
+        "frac_units_enhanced": 0.14146341463414633,
+        "frac_units_suppressed": 0.09268292682926829
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 1.0
+      },
+      "n_units": 749,
+      "values": {
+        "mean_contrast_hz": 0.057058350395703415,
+        "frac_units_enhanced": 0.1588785046728972,
+        "frac_units_suppressed": 0.1068090787716956
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.25
+      },
+      "n_units": 446,
+      "values": {
+        "mean_contrast_hz": -0.04182614554377898,
+        "frac_units_enhanced": 0.13228699551569506,
+        "frac_units_suppressed": 0.11210762331838565
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1
+      },
+      "n_units": 387,
+      "values": {
+        "mean_contrast_hz": 0.013570209369159108,
+        "frac_units_enhanced": 0.13695090439276486,
+        "frac_units_suppressed": 0.09819121447028424
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 1.0
+      },
+      "n_units": 541,
+      "values": {
+        "mean_contrast_hz": 0.06090575698828038,
+        "frac_units_enhanced": 0.1534195933456562,
+        "frac_units_suppressed": 0.1367837338262477
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.25
+      },
+      "n_units": 287,
+      "values": {
+        "mean_contrast_hz": -0.09570591159890923,
+        "frac_units_enhanced": 0.11498257839721254,
+        "frac_units_suppressed": 0.1602787456445993
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1
+      },
+      "n_units": 231,
+      "values": {
+        "mean_contrast_hz": -0.02527831560089623,
+        "frac_units_enhanced": 0.11688311688311688,
+        "frac_units_suppressed": 0.1471861471861472
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.0,
+        "isi_contamination": 1.0
+      },
+      "n_units": 677,
+      "values": {
+        "mean_contrast_hz": 0.0687469763564489,
+        "frac_units_enhanced": 0.16100443131462333,
+        "frac_units_suppressed": 0.11816838995568685
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.25
+      },
+      "n_units": 387,
+      "values": {
+        "mean_contrast_hz": -0.045166697079675314,
+        "frac_units_enhanced": 0.1343669250645995,
+        "frac_units_suppressed": 0.12919896640826872
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1
+      },
+      "n_units": 327,
+      "values": {
+        "mean_contrast_hz": 0.01732925586136599,
+        "frac_units_enhanced": 0.14067278287461774,
+        "frac_units_suppressed": 0.1162079510703364
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.5,
+        "isi_contamination": 1.0
+      },
+      "n_units": 663,
+      "values": {
+        "mean_contrast_hz": 0.05920093206620719,
+        "frac_units_enhanced": 0.16289592760180996,
+        "frac_units_suppressed": 0.12066365007541478
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.25
+      },
+      "n_units": 376,
+      "values": {
+        "mean_contrast_hz": -0.057675125365585216,
+        "frac_units_enhanced": 0.1356382978723404,
+        "frac_units_suppressed": 0.13297872340425532
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1
+      },
+      "n_units": 317,
+      "values": {
+        "mean_contrast_hz": 0.007004052999779121,
+        "frac_units_enhanced": 0.14195583596214512,
+        "frac_units_suppressed": 0.11987381703470032
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.9,
+        "isi_contamination": 1.0
+      },
+      "n_units": 541,
+      "values": {
+        "mean_contrast_hz": 0.06090575698828038,
+        "frac_units_enhanced": 0.1534195933456562,
+        "frac_units_suppressed": 0.1367837338262477
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.25
+      },
+      "n_units": 287,
+      "values": {
+        "mean_contrast_hz": -0.09570591159890923,
+        "frac_units_enhanced": 0.11498257839721254,
+        "frac_units_suppressed": 0.1602787456445993
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1
+      },
+      "n_units": 231,
+      "values": {
+        "mean_contrast_hz": -0.02527831560089623,
+        "frac_units_enhanced": 0.11688311688311688,
+        "frac_units_suppressed": 0.1471861471861472
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.0,
+        "isi_contamination": 1.0
+      },
+      "n_units": 508,
+      "values": {
+        "mean_contrast_hz": 0.05794014741182637,
+        "frac_units_enhanced": 0.1673228346456693,
+        "frac_units_suppressed": 0.15551181102362205
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.25
+      },
+      "n_units": 284,
+      "values": {
+        "mean_contrast_hz": -0.08914048078064428,
+        "frac_units_enhanced": 0.12323943661971831,
+        "frac_units_suppressed": 0.17253521126760563
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1
+      },
+      "n_units": 224,
+      "values": {
+        "mean_contrast_hz": -0.009686241541080252,
+        "frac_units_enhanced": 0.12946428571428573,
+        "frac_units_suppressed": 0.16517857142857142
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.5,
+        "isi_contamination": 1.0
+      },
+      "n_units": 502,
+      "values": {
+        "mean_contrast_hz": 0.04231548088378831,
+        "frac_units_enhanced": 0.16733067729083664,
+        "frac_units_suppressed": 0.15737051792828685
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.25
+      },
+      "n_units": 280,
+      "values": {
+        "mean_contrast_hz": -0.10982895337734044,
+        "frac_units_enhanced": 0.12142857142857143,
+        "frac_units_suppressed": 0.175
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1
+      },
+      "n_units": 221,
+      "values": {
+        "mean_contrast_hz": -0.03097726247631368,
+        "frac_units_enhanced": 0.12669683257918551,
+        "frac_units_suppressed": 0.167420814479638
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.9,
+        "isi_contamination": 1.0
+      },
+      "n_units": 444,
+      "values": {
+        "mean_contrast_hz": 0.062018426447371496,
+        "frac_units_enhanced": 0.16891891891891891,
+        "frac_units_suppressed": 0.16441441441441443
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.25
+      },
+      "n_units": 237,
+      "values": {
+        "mean_contrast_hz": -0.11116874326347581,
+        "frac_units_enhanced": 0.12658227848101267,
+        "frac_units_suppressed": 0.189873417721519
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1
+      },
+      "n_units": 181,
+      "values": {
+        "mean_contrast_hz": -0.026070090764441115,
+        "frac_units_enhanced": 0.13259668508287292,
+        "frac_units_suppressed": 0.18232044198895028
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 1.0
+      },
+      "n_units": 372,
+      "values": {
+        "mean_contrast_hz": 0.0609647108086234,
+        "frac_units_enhanced": 0.17473118279569894,
+        "frac_units_suppressed": 0.1827956989247312
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.25
+      },
+      "n_units": 232,
+      "values": {
+        "mean_contrast_hz": -0.11274288749260941,
+        "frac_units_enhanced": 0.125,
+        "frac_units_suppressed": 0.19827586206896552
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1
+      },
+      "n_units": 177,
+      "values": {
+        "mean_contrast_hz": -0.013772109999556616,
+        "frac_units_enhanced": 0.12994350282485875,
+        "frac_units_suppressed": 0.192090395480226
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 1.0
+      },
+      "n_units": 370,
+      "values": {
+        "mean_contrast_hz": 0.054228421970357446,
+        "frac_units_enhanced": 0.17567567567567569,
+        "frac_units_suppressed": 0.1837837837837838
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.25
+      },
+      "n_units": 230,
+      "values": {
+        "mean_contrast_hz": -0.12509002691330884,
+        "frac_units_enhanced": 0.12608695652173912,
+        "frac_units_suppressed": 0.2
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1
+      },
+      "n_units": 176,
+      "values": {
+        "mean_contrast_hz": -0.02438674011254652,
+        "frac_units_enhanced": 0.13068181818181818,
+        "frac_units_suppressed": 0.19318181818181818
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 1.0
+      },
+      "n_units": 334,
+      "values": {
+        "mean_contrast_hz": 0.07871441075999702,
+        "frac_units_enhanced": 0.17964071856287425,
+        "frac_units_suppressed": 0.18862275449101795
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.25
+      },
+      "n_units": 201,
+      "values": {
+        "mean_contrast_hz": -0.13206996115036557,
+        "frac_units_enhanced": 0.12935323383084577,
+        "frac_units_suppressed": 0.21393034825870647
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1
+      },
+      "n_units": 149,
+      "values": {
+        "mean_contrast_hz": -0.02525214107807732,
+        "frac_units_enhanced": 0.1342281879194631,
+        "frac_units_suppressed": 0.2080536912751678
+      }
+    }
+  ],
+  "notes": [
+    "dropped rule amplitude_cutoff<=0.5,0.1: metric 'amplitude_cutoff' unavailable (have: firing_rate, isi_contamination, isi_violations, n_spikes, presence_ratio)"
+  ]
+}
