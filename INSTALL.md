@@ -89,10 +89,13 @@ python examples/public_sessions.py --out public_results
   <https://openalyx.internationalbrainlab.org/signup>. IBL's public server no longer has a
   shared login. Without credentials the script skips IBL and says why in `RESULTS.md`.
 - **DANDI needs no account.**
-- **Expect about 1.5 GB of downloads** (most of it the IBL spike arrays) and about 30
-  minutes on a laptop, almost all of it scanning the IBL insertion.
-- **Keep `public_results/` out of git.** It holds the download cache; see
-  [PUBLISHING.md](PUBLISHING.md).
+- **Expect about 1.5 GB of downloads** (most of it the IBL spike arrays) and, with 0.5,
+  about 15 minutes on a laptop besides the downloads (IBL: scan and audit 5 minutes,
+  multiverse 8).
+- **Commit the results, never the downloads.** The reports, JSON files and `RESULTS.md` in
+  `public_results/` are small (about 3.5 MB) and are what [docs/public_sessions.md](docs/public_sessions.md)
+  links to. The downloads go to `public_results/cache/` and `public_results/ONE/`, which
+  `.gitignore` excludes; see [PUBLISHING.md](PUBLISHING.md).
 
 Tested with ONE-api 3.6.2, ibllib 4.1.0 and dandi 0.81.0.
 

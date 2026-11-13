@@ -78,17 +78,21 @@ ayar --version
 
 ## Keeping the repository small
 
-**Never commit downloaded data or build output.** `.gitignore` should contain at least:
+**Never commit downloaded data or build output.** `.gitignore` contains:
 
 ```
-public_results/
-dist/
+public_results/cache/      # DANDI downloads (over a gigabyte)
+public_results/ONE/        # IBL downloads
+dist/                      # wheels and sdists live on PyPI, not in git
 build/
 *.egg-info/
-.venv/
-__pycache__/
-*.npz
+*.npz                      # sessions from ayar synth and friends
 ```
+
+The rest of `public_results/` (reports, JSON, `RESULTS.md`, about 3.5 MB) is committed on
+purpose: `docs/public_sessions.md` links to it. Each re-run replaces those files, and git
+keeps the old ones in history, so re-run and commit them when the results change, not on
+every run.
 
 Removing a large file in a later commit does not shrink the repository: git keeps it in
 history. That is how `.git` reached about 800 MB during 0.4.0. If it happens again, find
@@ -101,7 +105,7 @@ git rev-list --objects --all \
 
 cp -r ayar ayar-backup                       # a safety copy, outside git
 pip install git-filter-repo
-git filter-repo --path public_results --path dist --invert-paths
+git filter-repo --path public_results/cache --path public_results/ONE --path dist --invert-paths
 git remote add origin https://github.com/aslansd/ayar.git
 git push --force --all && git push --force --tags
 ```

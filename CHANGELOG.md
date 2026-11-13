@@ -26,12 +26,18 @@
   controls as before) but the finding is not recomputed on them, and the row's note says so.
   `--set audit_controls_when_robust=1` restores the old behaviour.
 
+* **On the public IBL insertion** (1143 units, 40 M spikes, laptop): scan and finding audit
+  **300.7 s instead of 1438.7 s**, with the same 1315 flags, message for message
+  ([docs/public_sessions.md](docs/public_sessions.md)).
+
 ### Coverage
 * **Tier-0 sessions get the pair detectors.** Without depths, all pairs are tested; the
   20,000-pair cap is replaced by `max_pairs` (2,000,000 unit pairs) and a new
   `max_spike_pairs` budget (3e9 coincident spike pairs within 10 ms, estimated before
   sweeping). A DANDI-sized session (778 units, 4.7 M spikes, 302,253 pairs) now gets
-  duplicate, split and overlap checks in about 30 s; 0.4 skipped them.
+  duplicate, split and overlap checks in about 30 s; 0.4 skipped them. On the public DANDI
+  session they found 7 possible duplicates, 112 possible splits and 240 overlap holes (54 s);
+  without depths these are leads, not verdicts (see docs/public_sessions.md).
 
 ### Packaging
 * **One version number.** `pyproject.toml` reads the version from `src/ayar/__init__.py`
@@ -39,6 +45,17 @@
   `ayar.__version__` and that no second number comes back.
 * `ROADMAP.md`, `INSTALL.md`, `TESTING.md` and `PUBLISHING.md`, shipped in the sdist.
 * `--set name=1e9` works for integer thresholds.
+* `python -m ayar` works like the `ayar` command.
+
+### Repository
+* **Sample reports in `docs/reports/`** (`scan.html`, `multiverse.html`, `compare.html`),
+  made with the current version by `python examples/sample_reports.py` and linked from the
+  README; they replace `ayar-0.3.0-sample-report.html` and `ayar-0.4.0-sample-compare.html`
+  at the top level (both stay in git history).
+* **`public_results/` is committed, without its downloads**: the reports, JSON files and
+  `RESULTS.md` of the latest public-data run, linked from `docs/public_sessions.md`;
+  `public_results/cache/` and `public_results/ONE/` are ignored.
+* `dist/` is no longer tracked; releases live on PyPI.
 
 
 ## 0.4.0

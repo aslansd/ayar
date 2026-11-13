@@ -120,6 +120,7 @@ ayar hybrid run real_sorters/recording hybrid --sorter tridesclous2 --units 10 -
 ```bash
 python examples/public_sessions.py --out public_results
 python examples/public_sessions.py --out public_results --rebuild   # rewrite RESULTS.md only
+python examples/sample_reports.py                                    # docs/reports/*.html, seconds
 ```
 
 There is no ground truth here: this checks that ayar runs end to end on real data and that

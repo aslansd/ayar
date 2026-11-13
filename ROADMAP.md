@@ -1,6 +1,6 @@
 # Roadmap
 
-*Last revised 11 November 2026, against ayar 0.4.0 and 0.5.0.dev0 (§3.1 and §3.2 done).*
+*Last revised 13 November 2026, against ayar 0.4.0 and 0.5.0.dev0 (§3.1 and §3.2 done).*
 
 Every number below was read from the published package, the PyPI API or a run whose output
 is in this repository. Where a number comes from synthetic data, it says so.
@@ -116,14 +116,19 @@ releases that reported the wrong version for exactly this reason. Add a test ass
 `ayar.__version__ == importlib.metadata.version("ayar")`.
 *Done when:* the test exists and fails if either number is bumped alone.
 
-### 3.2 Pair statistics for all units at once — done (0.5.0.dev0), to confirm on real data
+### 3.2 Pair statistics for all units at once — done (0.5.0.dev0)
 
 `ayar.pairstats` counts all pairs in one sweep, exactly as the per-pair searches did.
-Measured on synthetic sessions of the two public sessions' size (two cores): IBL-sized scan
-and audit 222 s (was about 20 min); DANDI-sized tier-0 scan 28 s with all pair detectors
-(was: skipped). *Still to do:* re-run `examples/public_sessions.py` on a laptop and put the
-real times in `docs/public_sessions.md`. The drift detector (about 60 s on the IBL-sized
-session, 370,000 small histograms) is now the slowest part.
+Re-run on the laptop on 11 November ([docs/public_sessions.md](docs/public_sessions.md)):
+the IBL insertion scans with the finding audit in **300.7 s** (was 1438.7 s) with the same
+1315 flags, message for message, and the DANDI session gets the duplicate, split and
+overlap checks on all 302,253 pairs (54 s). Both tests of done are met; the IBL time is
+right at the 5-minute line.
+
+What it showed: tier-0 pair flags need context ayar does not have at tier 0 (which units
+are neighbours, which probe), so §3.4 matters more than it did. The drift detector (about
+60 s on an IBL-sized session, 370,000 small histograms) is now the slowest part of a scan,
+and the multiverse (8 minutes on IBL) the slowest command.
 
 
 The pair detectors loop over unit pairs. On the IBL insertion the scan and audit took
@@ -215,7 +220,7 @@ criticism, not stars; reply to everyone, especially the sceptical.
 ## 8. The order
 
 1. ~~§3.1, the version test~~ (done).
-2. ~~§3.2, all-pairs statistics~~ (done; real-data times pending).
+2. ~~§3.2, all-pairs statistics~~ (done; re-run on public data 11 November).
 3. §3.3 and §3.4, then re-run `examples/public_sessions.py` and update
    `docs/public_sessions.md`.
 4. Post the IBL introduction, if it is not posted yet.

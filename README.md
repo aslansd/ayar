@@ -259,6 +259,13 @@ and amplitude over time for drift), and the finding audit as change-versus-rando
 charts. The multiverse report draws a specification curve per number; the compare report draws
 each number across sorters and the agreement of matched units.
 
+Samples, made from the synthetic session above with the current version:
+[scan](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/scan.html), [multiverse](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/multiverse.html),
+[compare](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/compare.html) (files in
+[`docs/reports/`](https://github.com/aslansd/ayar/tree/main/docs/reports); regenerate them with
+`python examples/sample_reports.py`). Reports on real data are in
+[`public_results/`](https://github.com/aslansd/ayar/tree/main/public_results).
+
 `--daftar` records the run with [daftar](https://pypi.org/project/daftar/): input hashes,
 thresholds, ayar's version and environment, every flag, the finding's numbers and verdicts, and
 the report files. `daftar diff` then shows what changed between two runs, for example before and
@@ -439,10 +446,10 @@ The full report is in [docs/public_sessions.md](https://github.com/aslansd/ayar/
 | | IBL insertion `da8dfec1` (probe00) | DANDI 000017 (Steinmetz et al. 2019), `sub-Richards` 2017-10-31 |
 |---|---|---|
 | data | 1143 units, 39.8 M spikes, 72 min; amplitudes and depths (tier 1) | 778 units, 4.7 M spikes, 49 min; spike times only (tier 0) |
-| flags | 456 contamination, 80 duplicates, 15 splits, 136 drift (warnings), 628 overlap holes; 746 units in at least one flag | 192 contamination; pair detectors and drift not run (no depths or amplitudes) |
-| finding audit (feedback: correct vs error) | `nonspecific`, `robust`, `nonspecific` | `robust` for the mean contrast; `shifted` for the fractions of enhanced and suppressed units |
+| flags | 456 contamination, 80 duplicates, 15 splits, 136 drift (warnings), 628 overlap holes; 746 units in at least one flag | 192 contamination, 7 duplicates, 112 splits (85 of them weak handoff warnings), 240 overlap holes; drift not run (no amplitudes or depths); 428 units in at least one flag |
+| finding audit (feedback: correct vs error) | `nonspecific`, `robust`, `nonspecific` | `nonspecific` for the mean contrast; `shifted` for the fractions of enhanced and suppressed units |
 | curation multiverse | the mean contrast is `threshold_dependent` (-0.20 Hz with all units, -0.69 median, down to -0.95), driven most by IBL's quality label | the mean contrast is `sign_unstable` (+0.07 Hz with all units, negative in 20 of 36 universes), driven most by the ISI-contamination threshold |
-| run time (laptop) | scan + audit 24 min, multiverse 6 min | 4 s and 5 s |
+| run time (laptop, 0.5.0.dev0) | scan + audit 5 min (24 min with 0.4.0), multiverse 8 min | 54 s and 8 s |
 
 What it shows:
 
@@ -458,21 +465,21 @@ What it shows:
   few clean units left to compare with, and is reported as not comparable.
 * **The multiverse finds the fragility.** Both mean contrasts depend on curation thresholds;
   in the DANDI session its sign does.
-* **Real data found two bugs**, fixed in this release: a truncated download that the script
+* **Real data found two bugs**, fixed in 0.4.0: a truncated download that the script
   reused, and audit verdicts reported as `sensitive` when no random controls were possible.
 
 ## Limitations (v0.5)
 
 * Research prototype. Thresholds are calibrated on synthetic sessions; on public data (above)
   ayar has run, but without ground truth its flags there are unverified.
-* Speed: since 0.5 the pair detectors count coincidences for all pairs in one sweep. On a
-  synthetic session of IBL size (1120 units, 31 M spikes, 72 min) the scan and finding audit
-  take under 4 minutes on two cores, where 0.4 needed about 20; the drift detector is now the
-  slowest part. The public-data run times below are from 0.4 and have not been re-measured.
-* Without depths (tier 0), the pair detectors test every pair: a DANDI-sized session (778
-  units, 4.7 M spikes, 302,253 pairs) scans in about 30 s. They refuse, and say so under
-  *not checked*, only beyond `max_pairs` (2,000,000 unit pairs) or `max_spike_pairs` (3e9
-  coincident spike pairs within 10 ms).
+* Speed: since 0.5 the pair detectors count coincidences for all pairs in one sweep. The IBL
+  insertion above (1143 units, 40 M spikes) scans with the finding audit in 5 minutes on a
+  laptop, where 0.4 took 24, with identical flags; the drift detector is now the slowest part.
+* Without depths (tier 0), the pair detectors test every pair (the DANDI session above: 302,253
+  pairs), but cannot tell neighbours from units far apart or on another probe, and handoff
+  splits get no amplitude check. Treat tier-0 pair flags as leads to check. The detectors
+  refuse, and say so under *not checked*, only beyond `max_pairs` (2,000,000 unit pairs) or
+  `max_spike_pairs` (3e9 coincident spike pairs within 10 ms).
 * Units with few spikes (fewer than ~600) get only the weaker drift trend test, and
   contamination needs at least 5 refractory violations; both are reported as partly checked
   or simply not flagged.
@@ -491,9 +498,9 @@ What it shows:
 
 ## Roadmap
 
-Next, in [ROADMAP.md](https://github.com/aslansd/ayar/blob/main/ROADMAP.md): pair statistics for all units at once (so a large session
-scans in minutes and sessions without spike depths get the pair detectors), scanning only
-curated units, unit depths from more NWB layouts, and one report per session; later,
+Done in 0.5.0.dev0: pair statistics for all units at once (a large session scans in minutes,
+and sessions without spike depths get the pair detectors). Next, in
+[ROADMAP.md](https://github.com/aslansd/ayar/blob/main/ROADMAP.md): scanning only curated units, unit depths from more NWB layouts, and one report per session; later,
 `ayar hybrid` on a public raw recording for a first accuracy number on real tissue.
 
 ## More documentation
@@ -503,6 +510,20 @@ curated units, unit depths from more NWB layouts, and one report per session; la
 - [PUBLISHING.md](https://github.com/aslansd/ayar/blob/main/PUBLISHING.md): the release steps, and keeping the repository small
 - [ROADMAP.md](https://github.com/aslansd/ayar/blob/main/ROADMAP.md): where ayar stands, what the evidence shows, and what comes next
 - [CHANGELOG.md](https://github.com/aslansd/ayar/blob/main/CHANGELOG.md): what changed in each release
+- [docs/public_sessions.md](https://github.com/aslansd/ayar/blob/main/docs/public_sessions.md): ayar on one IBL and one DANDI session
+
+The repository:
+
+```
+src/ayar/            the package
+tests/               pytest suites (TESTING.md)
+examples/            public_sessions.py (real data), real_sorters.py (sorters on a simulation),
+                     sample_reports.py (regenerates docs/reports/)
+docs/                public_sessions.md, the write-up of the public-data run
+docs/reports/        sample HTML reports from a synthetic session, current version
+public_results/      output of examples/public_sessions.py: RESULTS.md, HTML, JSON
+                     (its downloads, cache/ and ONE/, are not committed)
+```
 
 ## Family
 

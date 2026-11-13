@@ -1,10 +1,21 @@
+# downloads from examples/public_sessions.py (the rest of public_results/ is committed)
+public_results/cache/
+public_results/ONE/
+
+# build output: releases live on PyPI
+dist/
+build/
+*.egg-info/
+
+# sessions written by `ayar synth` and similar
+*.npz
+
+# Python and editors
 .venv/
 venv/
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
 .DS_Store
 .env
-.ipynb_checkpoints/
-public_results/cache/
-public_results/ONE/
-
