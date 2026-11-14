@@ -225,13 +225,20 @@ def multiverse(
     """Recompute ``finding`` for every combination of curation thresholds in ``grid``.
 
     ``metrics`` (``{metric: {unit_id: value}}``) adds to or overrides the metrics ayar
-    computes itself (see :mod:`ayar.metrics`), e.g. a SpikeInterface or Bombcell table.
+    computes itself (see :mod:`ayar.metrics`) and those the reader found (IBL's ``label``,
+    an NWB file's numeric unit columns), e.g. a SpikeInterface or Bombcell table.
     Rules on metrics that are unavailable are dropped with a note.
     """
     th = thresholds or DEFAULTS
     rules = [r if isinstance(r, Rule) else Rule.parse(r) for r in (grid if grid is not None else DEFAULT_GRID)]
-    table = merge_tables(compute_metrics(bundle), metrics or {})
+    from .keep import unit_metrics
+
+    table = merge_tables(compute_metrics(bundle), unit_metrics(bundle), metrics or {})
     notes: list[str] = []
+    if bundle.meta.get("kept"):
+        from .keep import describe
+
+        notes.append(describe(bundle))
     units = [int(u) for u in bundle.unit_ids]
     usable = []
     for r in rules:

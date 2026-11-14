@@ -1,6 +1,6 @@
 # Roadmap
 
-*Last revised 13 November 2026, against ayar 0.4.0 and 0.5.0.dev0 (§3.1 and §3.2 done).*
+*Last revised 14 November 2026, against ayar 0.5.0 (§3 done and confirmed on the public sessions).*
 
 Every number below was read from the published package, the PyPI API or a run whose output
 is in this repository. Where a number comes from synthetic data, it says so.
@@ -9,8 +9,8 @@ is in this repository. Where a number comes from synthetic data, it says so.
 
 ## Where this stands
 
-**0.4.0** on PyPI; **0.5.0.dev0** in the repository. Apache 2.0, two runtime dependencies
-(**numpy, scipy**), **93 tests** (80 in 0.4.0), Python 3.10+.
+**0.5.0** in the repository (0.4.0 on PyPI until it is published). Apache 2.0, two runtime
+dependencies (**numpy, scipy**), **105 tests** (80 in 0.4.0), Python 3.10+.
 First release 30 October 2026.
 
 | release | published (UTC) | what it added |
@@ -24,7 +24,8 @@ First release 30 October 2026.
 |---|---|
 | Five detectors: duplicate, split, overlap hole, contamination, drift | shipped |
 | Finding audit with matched random controls; `uncontrolled` when no controls are possible | shipped |
-| `scan` · `multiverse` · `compare` · `hybrid` · `synth` · `validate` · `info` · `doctor` | shipped |
+| `scan` · `multiverse` · `compare` · `session` · `hybrid` · `synth` · `validate` · `info` · `doctor` | shipped |
+| `--keep` curated units · all-pairs statistics · probes | shipped in 0.5.0 |
 | Readers: Phy/Kilosort, SpikeInterface, NWB, IBL (ONE and ALF), plain arrays | shipped |
 | HTML reports · SpikeInterface curation export · daftar provenance | shipped |
 | Results on public data (one IBL insertion, one DANDI session) | shipped, see [docs/public_sessions.md](docs/public_sessions.md) |
@@ -39,8 +40,9 @@ tests/test_split_contamination.py  9    tests/test_adapters.py            6
 tests/test_detectors.py            7    tests/test_public_readers.py      4
                                         tests/test_stats.py               2
 tests/test_pairstats.py           10    tests/test_version.py             3
+tests/test_v05.py                 12
                                                                          --
-                                                                         93
+                                                                        105
 ```
 
 ---
@@ -104,7 +106,7 @@ grew to about 800 MB from committed public data. Both were fixed before the PyPI
 
 Ordered by how much each one unblocks. Each has a test of done.
 
-### 3.1 A test that the two version numbers agree — done (0.5.0.dev0)
+### 3.1 A test that the two version numbers agree — done (0.5.0)
 
 *Done differently:* there is now only one number. `pyproject.toml` reads it from
 `src/ayar/__init__.py`, and `tests/test_version.py` checks the installed metadata and that
@@ -116,7 +118,7 @@ releases that reported the wrong version for exactly this reason. Add a test ass
 `ayar.__version__ == importlib.metadata.version("ayar")`.
 *Done when:* the test exists and fails if either number is bumped alone.
 
-### 3.2 Pair statistics for all units at once — done (0.5.0.dev0)
+### 3.2 Pair statistics for all units at once — done (0.5.0)
 
 `ayar.pairstats` counts all pairs in one sweep, exactly as the per-pair searches did.
 Re-run on the laptop on 11 November ([docs/public_sessions.md](docs/public_sessions.md)):
@@ -139,7 +141,15 @@ between two sortings) fixes both, and cheaper audit controls fix the rest of the
 *Done when:* the IBL insertion scans with the finding audit in under 5 minutes on a laptop,
 and the DANDI session gets duplicate, split and overlap checks.
 
-### 3.3 Restrict a scan to curated units
+### 3.3 Restrict a scan to curated units — done (0.5.0)
+
+`--keep RULE` on every command, `ayar.keep()` in Python; rules on ayar's metrics, the
+reader's (IBL `label`, NWB `phy_annotations`) or a table. `examples/public_sessions.py`
+scans IBL `label>=1` and Steinmetz `phy_annotations>=2` units next to all units. Run on 14
+November ([docs/public_sessions.md](docs/public_sessions.md)): of IBL's 298 good units 64 are
+flagged (746 of all 1143), with no contamination errors but 8 duplicate pairs, and on the good
+units the audit finds the mean contrast `shifted` (20 % against 15 % for random repairs).
+
 
 IBL analyses keep units with `label == 1`; most labs curate first. ayar scanned all 1143
 clusters, so its headline count mixes units nobody would analyse with units everybody
@@ -147,14 +157,31 @@ would. A `--keep "label>=1"` option (reusing the multiverse's rule syntax and th
 table) makes the result answer the question a lab actually has.
 *Done when:* `docs/public_sessions.md` reports flags among IBL-good units next to all units.
 
-### 3.4 Unit depths from more NWB layouts
+### 3.4 Unit depths from more NWB layouts — done (0.5.0)
+
+The Steinmetz files were written by
+[SteinmetzLab/dataToNWB](https://github.com/SteinmetzLab/dataToNWB): `cluster_depths` per
+unit, ragged `spike_amps` and `spike_depths`, the probe as `electrode_group`, curation in
+`phy_annotations`. ayar 0.4 looked for none of these names. 0.5 reads them (tested on a file
+written the same way), keeps units on different probes apart, and `ayar info file.nwb` shows
+any file's columns. Confirmed on 14 November: the DANDI file reads at tier 1 with two probes,
+and its pair flags fall from 240 overlap holes and 112 splits (tier 0) to 9 and 20.
+*Not done:* a check for near-simultaneous spikes shared across probes. ayar never compares
+units on different probes now, so shared noise events, which the tier-0 run hinted at, go
+unflagged.
+
 
 The Steinmetz NWB file gave ayar spike times only (tier 0). Its units table probably holds
 depth in a column the reader does not know. List the columns of one file, then teach
 `from_nwb` the layouts in use on DANDI.
 *Done when:* the DANDI session in `docs/public_sessions.md` runs at tier 1.
 
-### 3.5 One session report
+### 3.5 One session report — done (0.5.0)
+
+`ayar session` (and `ayar.session()`): scans of all and kept units, the multiverse and the
+comparison across sorters on one page, with a summary that links to each part. The public
+sessions now produce one `ibl.html` and one `dandi.html`.
+
 
 `scan`, `multiverse` and `compare` each write their own HTML file. One page per session,
 with the three as sections, is what a reader wants to open.
@@ -221,10 +248,10 @@ criticism, not stars; reply to everyone, especially the sceptical.
 
 1. ~~§3.1, the version test~~ (done).
 2. ~~§3.2, all-pairs statistics~~ (done; re-run on public data 11 November).
-3. §3.3 and §3.4, then re-run `examples/public_sessions.py` and update
-   `docs/public_sessions.md`.
+3. ~~§3.3, §3.4, §3.5~~ (done in 0.5.0, confirmed on the public sessions 14 November);
+   publish 0.5.0.
 4. Post the IBL introduction, if it is not posted yet.
-5. §3.5, the session report.
+5. A faster drift detector (now the slowest part of a scan) and multiverse.
 6. §4, hybrid on a public raw recording.
 7. 30 January 2027: pyOpenSci.
 

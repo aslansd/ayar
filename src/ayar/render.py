@@ -36,6 +36,11 @@ def format_text(report: Report, verbose: bool = False) -> str:
         f"bundle: {b['n_units']} units, {b['n_spikes']:,} spikes, {b['duration_s']:g} s, "
         f"tier {b['tier']}" + (f" ({', '.join(extras)})" if extras else "") + ev_txt
     )
+    if b.get("probes"):
+        lines.append(f"probes: {b['probes']} (units on different probes are never paired)")
+    if b.get("kept"):
+        k = b["kept"]
+        lines.append(f"kept: {k['units_after']} of {k['units_before']} units ({' and '.join(k['rules'])})")
     lines.append("")
 
     if not report.flags:

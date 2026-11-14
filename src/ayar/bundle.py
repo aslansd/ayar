@@ -4,6 +4,8 @@ A bundle is the output of *any* spike sorter reduced to what ayar needs:
 
 * ``spike_times`` (seconds) and ``spike_clusters`` (unit id per spike): tier 0
 * ``amplitudes`` and/or ``spike_depths`` / ``unit_depths``: tier 1
+* ``unit_probes`` (optional): which probe each unit is on, so that units on different
+  probes are never treated as neighbours, whatever their depths
 * ``events`` (trial times, optional condition labels): needed for confound checks
 
 Bundles are saved as plain ``.npz`` files that numpy can read without ayar.
@@ -53,6 +55,11 @@ class Events:
         return f"Events(n={len(self)}, labels={n_lab if self.labels is not None else None})"
 
 
+#: added to the depth of each further probe in ``Bundle.position``: far beyond any distance
+#: a detector uses, so units on different probes never pair up
+PROBE_GAP_UM = 1.0e6
+
+
 class Bundle:
     """Sorted spikes plus whatever extra evidence the sorter provides."""
 
@@ -66,6 +73,7 @@ class Bundle:
         spike_depths: Iterable[float] | None = None,
         unit_ids: Iterable[int] | None = None,
         unit_depths: Iterable[float] | Mapping[int, float] | None = None,
+        unit_probes: Iterable[Any] | Mapping[int, Any] | None = None,
         events: Events | tuple | Mapping | None = None,
         meta: Mapping[str, Any] | None = None,
         epochs: Mapping[int, Iterable[tuple[float, float]]] | None = None,
@@ -98,6 +106,7 @@ class Bundle:
                 raise ValueError(f"spikes belong to units not in unit_ids: {missing[:10].tolist()}")
 
         self.unit_depths = self._unit_depths(unit_depths)
+        self.unit_probes = self._unit_probes(unit_probes)
 
         last = float(self.spike_times[-1]) if self.spike_times.size else 0.0
         if duration is None:
@@ -135,6 +144,18 @@ class Bundle:
                     f"unit_depths has {d.shape[0]} values for {self.unit_ids.shape[0]} units"
                 )
         return d
+
+    def _unit_probes(self, unit_probes):
+        if unit_probes is None:
+            return None
+        if isinstance(unit_probes, Mapping):
+            p = [unit_probes.get(int(u), "") for u in self.unit_ids]
+        else:
+            p = list(unit_probes)
+            if len(p) != self.unit_ids.shape[0]:
+                raise ValueError(f"unit_probes has {len(p)} values for {self.unit_ids.shape[0]} units")
+        p = np.asarray(["" if v is None else str(v) for v in p], dtype=str)
+        return p if np.unique(p).size > 1 else None  # one probe: nothing to separate
 
     @staticmethod
     def _events(events):
@@ -190,6 +211,24 @@ class Bundle:
         if d is not None and d.size:
             return float(np.median(d))
         return None
+
+    def probe(self, unit: int) -> str | None:
+        """The probe a unit is on, when ``unit_probes`` names more than one."""
+        if self.unit_probes is None:
+            return None
+        return str(self.unit_probes[int(np.searchsorted(self.unit_ids, int(unit)))])
+
+    @property
+    def probes(self) -> list[str]:
+        return [] if self.unit_probes is None else sorted(set(self.unit_probes.tolist()))
+
+    def position(self, unit: int) -> float | None:
+        """Where a unit is, for distances between units: its depth, with each probe moved
+        ``PROBE_GAP_UM`` further along, so no two units on different probes are close."""
+        d = self.depth(unit)
+        if d is None or self.unit_probes is None:
+            return d
+        return d + PROBE_GAP_UM * self.probes.index(self.probe(unit))
 
     def rate(self, unit: int) -> float:
         """Spikes per second over the time the unit was observed (its epochs, if any)."""
@@ -262,6 +301,7 @@ class Bundle:
         child.spike_depths = None if self.spike_depths is None else self.spike_depths[keep_spk]
         child.unit_ids = self.unit_ids[keep_unit]
         child.unit_depths = None if self.unit_depths is None else self.unit_depths[keep_unit]
+        child.unit_probes = None if self.unit_probes is None else self.unit_probes[keep_unit]
         child.duration = self.duration
         child.events = self.events
         child.meta = self.meta
@@ -355,6 +395,7 @@ class Bundle:
         child.spike_depths = None if self.spike_depths is None else self.spike_depths[keep_spk]
         child.unit_ids = self.unit_ids[keep_unit]
         child.unit_depths = None if self.unit_depths is None else self.unit_depths[keep_unit]
+        child.unit_probes = None if self.unit_probes is None else self.unit_probes[keep_unit]
         child.duration = self.duration
         child.events = self.events
         child.meta = self.meta
@@ -392,9 +433,11 @@ class Bundle:
             "tier": self.tier,
             "amplitudes": self.has_amplitudes,
             "depths": self.has_depths,
+            "probes": len(self.probes) or None,
             "events": ev,
             "units_with_epochs": len(self.epochs),
             "source": self.meta.get("source"),
+            **({"kept": self.meta["kept"]} if self.meta.get("kept") else {}),
         }
 
     def __repr__(self) -> str:
@@ -422,6 +465,8 @@ class Bundle:
             arrays["spike_depths"] = self.spike_depths
         if self.unit_depths is not None:
             arrays["unit_depths"] = self.unit_depths
+        if self.unit_probes is not None:
+            arrays["unit_probes"] = self.unit_probes
         if self.epochs:
             units = [u for u in sorted(self.epochs) for _ in range(len(self.epochs[u]))]
             arrays["epoch_units"] = np.asarray(units, dtype=np.int64)
@@ -462,6 +507,7 @@ class Bundle:
                 spike_depths=get("spike_depths"),
                 unit_ids=get("unit_ids"),
                 unit_depths=get("unit_depths"),
+                unit_probes=get("unit_probes"),
                 events=events,
                 meta=meta,
                 epochs=epochs,

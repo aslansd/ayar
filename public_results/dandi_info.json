@@ -1,5 +1,11 @@
 {
   "key": "dandi",
+  "nwb_columns": {
+    "amplitudes": "spike_amps",
+    "spike_depths": "spike_depths",
+    "unit_depths": "cluster_depths",
+    "probes": "electrode_group"
+  },
   "title": "DANDI 000017: sub-Richards/sub-Richards_ses-20171031T120000.nwb",
   "source": "DANDI Archive, dandiset 000017, file sub-Richards/sub-Richards_ses-20171031T120000.nwb",
   "link": "https://dandiarchive.org/dandiset/000017",
@@ -8,9 +14,10 @@
     "n_units": 778,
     "n_spikes": 4703292,
     "duration_s": 2968.279,
-    "tier": 0,
-    "amplitudes": false,
-    "depths": false,
+    "tier": 1,
+    "amplitudes": true,
+    "depths": true,
+    "probes": 2,
     "events": {
       "n": 260,
       "labels": [
@@ -26,6 +33,21 @@
     "-1": 74,
     "1": 186
   },
-  "scan_s": 54.4,
-  "multiverse_s": 8.3
+  "scan_s": 35.2,
+  "kept_scan_s": 27.2,
+  "kept": {
+    "rules": [
+      "phy_annotations>=2"
+    ],
+    "units_before": 778,
+    "units_after": 522,
+    "steps": [
+      {
+        "rule": "phy_annotations>=2",
+        "removed": 256,
+        "missing": 0
+      }
+    ]
+  },
+  "multiverse_s": 12.0
 }

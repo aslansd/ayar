@@ -206,6 +206,109 @@ def _first_column(table, names):
     return None
 
 
+#: column names tried, in order, when the caller does not name one
+NWB_AMPLITUDE_COLUMNS = ("spike_amplitudes", "amplitudes", "spike_amps", "amps")
+NWB_SPIKE_DEPTH_COLUMNS = ("spike_depths", "spike_depth")
+NWB_DEPTH_COLUMNS = ("depth", "depths", "peak_channel_depth", "cluster_depths", "cluster_depth", "unit_depth",
+                     "depth_um", "y")
+NWB_PROBE_COLUMNS = ("electrode_group", "probe", "probe_id", "probe_name", "shank")
+NWB_ELECTRODE_Y = ("rel_y", "y", "probe_vertical_position", "depth")
+NWB_PEAK_CHANNEL_COLUMNS = ("peak_channel", "peak_channel_index", "max_channel", "peak_electrode")
+#: unit columns that are never curation metrics
+_NOT_METRICS = {"spike_times", "obs_intervals", "electrodes", "electrode_group", "waveform_mean", "waveform_sd",
+                "waveforms", "sampling_rate", "id", *NWB_PEAK_CHANNEL_COLUMNS, *NWB_DEPTH_COLUMNS,
+                *NWB_PROBE_COLUMNS}
+
+
+def _is_ragged(units, col) -> bool:
+    """A column with a list of values per unit (one per spike, say)."""
+    try:
+        return type(units[col]).__name__ == "VectorIndex"
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def _ragged(units, col, n):
+    return [np.asarray(units[col][i], dtype=float).ravel() for i in range(n)]
+
+
+def _probe_name(v) -> str:
+    name = getattr(v, "name", None)  # an ElectrodeGroup
+    return str(name if name is not None else v)
+
+
+def _scalar_columns(units) -> dict[str, np.ndarray]:
+    """Numeric one-value-per-unit columns (curation labels and quality metrics)."""
+    out = {}
+    for c in units.colnames:
+        if c in _NOT_METRICS or _is_ragged(units, c):
+            continue
+        try:
+            col = units[c]
+            if getattr(col, "__class__", type(None)).__name__ in ("VectorIndex", "DynamicTableRegion"):
+                continue
+            v = np.asarray(col[:])
+        except Exception:
+            continue
+        if v.ndim != 1 or v.shape[0] != len(units):
+            continue
+        if v.dtype.kind in "biuf":
+            out[c] = v.astype(float)
+        elif v.dtype.kind in "OSU":  # labels such as 'good' / 'mua'
+            labels = sorted({str(x) for x in v})
+            if 1 < len(labels) <= 10:
+                order = {"noise": 0, "mua": 1, "good": 2}
+                if set(labels) <= set(order):
+                    out[c] = np.array([order[str(x)] for x in v], dtype=float)
+    return out
+
+
+def nwb_layout(path: str | Path) -> dict:
+    """What an NWB file's units and electrodes tables hold, and what ayar would read from them.
+
+    ``ayar nwb-info file.nwb`` prints this; it is what to look at when a file reads as tier 0.
+    """
+    try:
+        from pynwb import NWBHDF5IO
+    except ImportError as e:  # pragma: no cover - depends on environment
+        raise ImportError("reading NWB needs pynwb: pip install 'ayar[nwb]'") from e
+    with NWBHDF5IO(str(path), "r") as io:
+        nwb = io.read()
+        units = nwb.units
+        out: dict = {"path": str(path), "n_units": 0 if units is None else len(units)}
+        if units is None:
+            return out
+        cols = {}
+        for c in units.colnames:
+            kind = "per spike" if _is_ragged(units, c) else "per unit"
+            try:
+                first = units[c][0]
+                if hasattr(first, "name") and not isinstance(first, str):
+                    ex = _probe_name(first)
+                elif hasattr(first, "columns"):
+                    kind, ex = "electrodes", f"{len(first)} rows"
+                else:
+                    a = np.asarray(first)
+                    ex = a.ravel()[:3].tolist() if a.ndim else a.item()
+            except Exception as e:  # noqa: BLE001
+                ex = f"unreadable: {type(e).__name__}"
+            cols[c] = {"kind": kind, "example": ex}
+        out["units_columns"] = cols
+        el = nwb.electrodes
+        out["electrodes_columns"] = [] if el is None else list(el.colnames)
+        out["trials_columns"] = [] if nwb.trials is None else list(nwb.trials.colnames)
+        out["ayar_reads"] = {
+            "amplitudes": _first_column(units, NWB_AMPLITUDE_COLUMNS),
+            "spike_depths": _first_column(units, NWB_SPIKE_DEPTH_COLUMNS),
+            "unit_depths": _first_column(units, NWB_DEPTH_COLUMNS)
+            or (f"electrodes ({_first_column(el, NWB_ELECTRODE_Y)})" if el is not None and "electrodes" in units.colnames
+                and _first_column(el, NWB_ELECTRODE_Y) else None),
+            "probes": _first_column(units, NWB_PROBE_COLUMNS),
+            "metrics": sorted(_scalar_columns(units)),
+        }
+    return out
+
+
 def from_nwb(
     path: str | Path,
     *,
@@ -213,52 +316,101 @@ def from_nwb(
     event_time_column: str = "start_time",
     amplitude_column: str | None = None,
     depth_column: str | None = None,
+    spike_depth_column: str | None = None,
+    probe_column: str | None = None,
     shift_negative: bool = False,
 ) -> Bundle:
     """Read the units table (and optionally the trials table) of an NWB file.
 
     ``trial_label`` names a trials-table column to use as the condition label;
     event times come from ``event_time_column`` (default ``start_time``).
-    Per-spike amplitudes are read from ``amplitude_column`` (auto-detected:
-    ``spike_amplitudes``, ``amplitudes``). Unit depths come from ``depth_column``
-    (auto: ``depth``, ``peak_channel_depth``) or the y coordinate of each unit's
-    first electrode.
+    Columns found automatically (see ``ayar nwb-info``) unless named:
+
+    * per-spike amplitudes: ``spike_amplitudes``, ``amplitudes``, ``spike_amps``, ``amps``
+    * per-spike depths: ``spike_depths``
+    * unit depths: ``depth``, ``peak_channel_depth``, ``cluster_depths`` (Steinmetz et al.
+      2019), ... or the y coordinate of the unit's peak channel or first electrode
+    * probe per unit: ``electrode_group``, ``probe``, ... (units on different probes are
+      never compared as neighbours)
+
+    Numeric per-unit columns (``phy_annotations``, ``quality``, metrics) are kept in
+    ``meta['unit_metrics']`` for ``--keep`` and ``ayar multiverse``.
     """
     try:
         from pynwb import NWBHDF5IO
     except ImportError as e:  # pragma: no cover - depends on environment
         raise ImportError("reading NWB needs pynwb: pip install 'ayar[nwb]'") from e
 
+    read: dict[str, str] = {}
     with NWBHDF5IO(str(path), "r") as io:
         nwb = io.read()
         units = nwb.units
         if units is None or len(units) == 0:
             raise ValueError(f"{path} has no units table")
+        n = len(units)
         uid, id_map = _int_unit_ids(units.id[:])
-        trains = [np.asarray(units["spike_times"][i], dtype=float) for i in range(len(units))]
+        trains = [np.asarray(units["spike_times"][i], dtype=float).ravel() for i in range(n)]
         times = np.concatenate(trains) if trains else np.zeros(0)
         clusters = np.concatenate([np.full(t.size, u) for t, u in zip(trains, uid)]) if trains else np.zeros(0)
 
-        amp_col = amplitude_column or _first_column(units, ["spike_amplitudes", "amplitudes"])
-        amps = None
-        if amp_col:
-            amps = np.abs(np.concatenate([np.asarray(units[amp_col][i], dtype=float) for i in range(len(units))]))
+        def per_spike(col, what):
+            if not col:
+                return None
+            vals = _ragged(units, col, n)
+            if any(v.size != t.size for v, t in zip(vals, trains)):
+                raise ValueError(f"column {col!r} does not have one {what} per spike")
+            read[what] = col
+            return np.concatenate(vals) if vals else np.zeros(0)
+
+        amps = per_spike(amplitude_column or _first_column(units, NWB_AMPLITUDE_COLUMNS), "amplitudes")
+        if amps is not None:
+            amps = np.abs(amps)
+        spike_depths = per_spike(spike_depth_column or _first_column(units, NWB_SPIKE_DEPTH_COLUMNS), "spike_depths")
 
         unit_depths = None
-        dcol = depth_column or _first_column(units, ["depth", "peak_channel_depth"])
-        if dcol:
+        dcol = depth_column or _first_column(units, NWB_DEPTH_COLUMNS)
+        el = nwb.electrodes
+        if dcol and not _is_ragged(units, dcol):
             unit_depths = np.asarray(units[dcol][:], dtype=float)
-        elif "electrodes" in units.colnames:
-            ys = []
-            for i in range(len(units)):
-                el = units["electrodes"][i]
-                try:
-                    col = "rel_y" if "rel_y" in el.columns else "y"
-                    ys.append(float(np.asarray(el[col])[0]))
-                except Exception:
-                    ys.append(np.nan)
+            read["unit_depths"] = dcol
+        elif el is not None and _first_column(el, NWB_ELECTRODE_Y):
+            ycol = _first_column(el, NWB_ELECTRODE_Y)
+            y_all = np.asarray(el[ycol][:], dtype=float)
+            pcol = _first_column(units, NWB_PEAK_CHANNEL_COLUMNS)
+            if pcol and "group" in el.colnames and len({_probe_name(g) for g in el["group"][:]}) > 1:
+                pcol = None  # with several probes a channel number need not be a row of the table
+            ys = np.full(n, np.nan)
+            if pcol:
+                # a peak channel indexes the electrodes table (its row, or its channel id)
+                peak = np.asarray(units[pcol][:]).astype(int)
+                if peak.min() >= 0 and peak.max() < y_all.size:
+                    ys = y_all[peak]
+                    read["unit_depths"] = f"electrodes.{ycol} at {pcol}"
+            if not np.isfinite(ys).any() and "electrodes" in units.colnames:
+                for i in range(n):
+                    try:
+                        ys[i] = float(np.asarray(units["electrodes"][i][ycol])[0])
+                    except Exception:  # noqa: BLE001
+                        pass
+                if np.isfinite(ys).any():
+                    read["unit_depths"] = f"electrodes.{ycol} (first electrode)"
             if np.isfinite(ys).any():
-                unit_depths = np.asarray(ys)
+                unit_depths = ys
+
+        probes = None
+        prcol = probe_column or _first_column(units, NWB_PROBE_COLUMNS)
+        if prcol:
+            try:
+                probes = [_probe_name(units[prcol][i]) for i in range(n)]
+                read["probes"] = prcol
+            except Exception:  # noqa: BLE001
+                probes = None
+
+        metrics = {
+            c: {str(u): (None if not np.isfinite(x) else float(x)) for u, x in zip(uid, v)}
+            for c, v in _scalar_columns(units).items()
+            if c not in (dcol, prcol)
+        }
 
         events = None
         if nwb.trials is not None and len(nwb.trials):
@@ -268,7 +420,10 @@ def from_nwb(
         elif trial_label:
             raise ValueError(f"{path} has no trials table for trial_label={trial_label!r}")
 
-        meta = {"source": "nwb", "path": str(path), "session_id": getattr(nwb, "session_id", None)}
+        meta = {"source": "nwb", "path": str(path), "session_id": getattr(nwb, "session_id", None),
+                "nwb_columns": read}
+        if metrics:
+            meta["unit_metrics"] = metrics
         if id_map:
             meta["unit_id_map"] = id_map
     if times.size and times.min() < 0:
@@ -280,8 +435,8 @@ def from_nwb(
         if events is not None:
             events = Events(events.times + offset, events.labels)
         meta["time_offset_s"] = offset
-    return Bundle(times, clusters, amplitudes=amps, unit_ids=uid, unit_depths=unit_depths,
-                  events=events, meta=meta)
+    return Bundle(times, clusters, amplitudes=amps, spike_depths=spike_depths, unit_ids=uid,
+                  unit_depths=unit_depths, unit_probes=probes, events=events, meta=meta)
 
 
 _IBL_EVENTS = {

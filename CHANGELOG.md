@@ -1,6 +1,38 @@
 # Changelog
 
-## 0.5.0 (in development)
+## 0.5.0
+
+### New
+* **`--keep RULE`: scan only the units you analyse** (`ayar.keep`). On `scan`, `multiverse`,
+  `compare` and `session`; repeatable. Drops every other unit and its spikes before anything
+  runs, so the detectors, the finding, the audit and its random controls all see only the
+  kept units. Rules are `metric op value` (`>=`, `<=`, `>`, `<`, `==`, `!=`) on any metric:
+  ayar's own (`presence_ratio`, `isi_contamination`, ...), the reader's (IBL `label`, NWB
+  `phy_annotations`, `quality`, ...) or a `--metrics` table. Units without the metric are
+  dropped; reports say how many units were kept and by which rules.
+* **One report per session: `ayar session`** (`ayar.session`). The scan of all units, with
+  `--keep` a second scan of the kept units, the multiverse, and with `--compare` the other
+  sortings, on one HTML page under a summary table that links to each part; `--json`
+  writes all of it. `examples/public_sessions.py` now writes `<session>.html` this way
+  (replacing `<session>_scan.html` and `_multiverse.html`) and scans each dataset's curated
+  units too (IBL `label>=1`; Steinmetz et al. `phy_annotations>=2`).
+* **More NWB layouts.** `from_nwb` finds per-spike amplitudes (`spike_amps`, ...), per-spike
+  depths (`spike_depths`), unit depths (`cluster_depths`, ..., or the y coordinate of the
+  peak channel) and each unit's probe (`electrode_group`, ...), and keeps numeric unit
+  columns as metrics. The Steinmetz et al. 2019 files on DANDI (000017), written by
+  SteinmetzLab/dataToNWB, now read at tier 1 with their probes; 0.4 read them at tier 0.
+  `ayar info file.nwb` lists the units table's columns and what ayar reads from each.
+* **Probes.** `Bundle(..., unit_probes=...)`: units on different probes are never compared
+  as neighbours, whatever their depths (`Bundle.position`); saved in the `.npz` bundle.
+* `docs/reports/session.html`, a sample session report.
+
+### On public data (14 November, [docs/public_sessions.md](docs/public_sessions.md))
+* IBL insertion: of 298 good units (`label>=1`) 64 are flagged (746 of all 1143 clusters):
+  no contamination errors, 8 duplicate pairs; on the good units the mean contrast is `shifted`
+  by repairing them. All-unit results unchanged; scan and audit 258.6 s.
+* DANDI session: read at tier 1 with two probes; pair flags fall from 240 overlap holes and
+  112 splits (tier 0) to 9 and 20, and the drift detector runs (78 warnings).
+
 
 ### Faster
 * **Pair statistics for all units at once** (`ayar.pairstats`). The duplicate, split,
@@ -46,6 +78,7 @@
 * `ROADMAP.md`, `INSTALL.md`, `TESTING.md` and `PUBLISHING.md`, shipped in the sdist.
 * `--set name=1e9` works for integer thresholds.
 * `python -m ayar` works like the `ayar` command.
+* `ayar info` lists the metrics a reader found (usable in `--keep` and `--grid`).
 
 ### Repository
 * **Sample reports in `docs/reports/`** (`scan.html`, `multiverse.html`, `compare.html`),

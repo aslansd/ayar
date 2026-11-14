@@ -33,7 +33,7 @@ font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);ba
 --grid:#2c2c2a;--axis:#383835;--ring:rgba(255,255,255,.10);--s1:#3987e5;--s2:#d95926;--band:#383835}
 .ayar main{max-width:1120px;margin:0 auto;padding:28px 24px 64px}
 .ayar h1{font-size:22px;margin:0 0 4px}.ayar h2{font-size:17px;margin:32px 0 10px}
-.ayar h3{font-size:14px;margin:0 0 6px}.ayar .sub{color:var(--ink2);margin:0 0 18px}
+.ayar h3{font-size:14px;margin:0 0 6px}.ayar section.part{margin-top:40px;padding-top:6px;border-top:2px solid var(--ring)}.ayar h2.part{font-size:20px;margin:18px 0 2px}.ayar a{color:inherit}.ayar .sub{color:var(--ink2);margin:0 0 18px}
 .ayar .tiles{display:flex;gap:12px;flex-wrap:wrap}
 .ayar .tile{background:var(--surface);border:1px solid var(--ring);border-radius:10px;padding:12px 16px;min-width:130px}
 .ayar .tile b{display:block;font-size:26px;font-weight:600}.ayar .tile span{color:var(--ink2);font-size:13px}
@@ -380,7 +380,7 @@ def _evidence(bundle, flag) -> tuple[str, str] | None:
 
 
 # ------------------------------------------------------------------ reports
-def scan_html(report, bundle=None) -> str:
+def _scan_parts(report, bundle=None) -> tuple[str, str, str]:
     b = report.bundle
     tiles = [
         (report.n_errors, "errors"), (report.n_warnings, "warnings"),
@@ -455,10 +455,19 @@ def scan_html(report, bundle=None) -> str:
         ["name", "value"], sorted(report.thresholds.items()), [1]) + "</details>")
     src = b.get("source") or "bundle"
     sub = f"{b['n_units']} units · {b['n_spikes']:,} spikes · {b['duration_s']:g} s · tier {b['tier']} · {src}"
-    return _page("ayar scan", sub, "".join(body))
+    if b.get("probes"):
+        sub += f" · {b['probes']} probes"
+    if b.get("kept"):
+        k = b["kept"]
+        sub += f" · kept {k['units_after']} of {k['units_before']} units ({' and '.join(k['rules'])})"
+    return "ayar scan", sub, "".join(body)
 
 
-def multiverse_html(mv) -> str:
+def scan_html(report, bundle=None) -> str:
+    return _page(*_scan_parts(report, bundle))
+
+
+def _multiverse_parts(mv) -> tuple[str, str, str]:
     tiles = [(mv.n_evaluated, f"of {mv.n_universes} universes evaluated"),
              (mv.units_total, "units before curation"),
              (sum(v != "stable" for v in mv.verdicts.values()), "numbers not stable")]
@@ -484,10 +493,14 @@ def multiverse_html(mv) -> str:
                 _table([*metrics, "units", *keys], rows, range(len(metrics) + len(keys) + 1)) + "</details>")
     for n in mv.notes:
         body.append(f"<p class=\"note\">note: {_e(n)}</p>")
-    return _page("ayar multiverse", mv.finding_name or "finding", "".join(body))
+    return "ayar multiverse", mv.finding_name or "finding", "".join(body)
 
 
-def compare_html(cr) -> str:
+def multiverse_html(mv) -> str:
+    return _page(*_multiverse_parts(mv))
+
+
+def _compare_parts(cr) -> tuple[str, str, str]:
     tiles = [(len(cr.names), "sortings"), (len(cr.consensus_units), f"consensus units of {cr.n_units[cr.reference]}"),
              (sum(v != "consistent" for v in cr.verdicts.values()), "numbers not consistent")]
     body = ["<div class=\"tiles\">" + "".join(
@@ -536,7 +549,58 @@ def compare_html(cr) -> str:
         body.append(f"<p class=\"note\">failed on {_e(name)}: {_e(err)}</p>")
     for n in cr.notes:
         body.append(f"<p class=\"note\">note: {_e(n)}</p>")
-    return _page("ayar compare", ", ".join(cr.names), "".join(body))
+    return "ayar compare", ", ".join(cr.names), "".join(body)
+
+
+def compare_html(cr) -> str:
+    return _page(*_compare_parts(cr))
+
+
+def _verdict_chips(verdicts: dict) -> str:
+    return " ".join(f"{_e(k)} {_chip(v)}" for k, v in verdicts.items()) or "n/a"
+
+
+def session_html(*, title: str = "ayar session", subtitle: str = "", scans=(), multiverse=None,
+                 compare=None) -> str:
+    """One page for a session: any number of scans (e.g. all units, curated units), the
+    multiverse and the comparison across sorters, as sections under one summary.
+
+    ``scans`` is a list of ``(label, report, bundle)``.
+    """
+    sections: list[tuple[str, str, str, str]] = []  # (anchor, heading, sub, body)
+    summary_rows = []
+    for i, (label, report, bundle) in enumerate(scans):
+        _, sub, body = _scan_parts(report, bundle)
+        anchor = f"scan-{i + 1}"
+        sections.append((anchor, f"Scan: {label}", sub, body))
+        b = report.bundle
+        flagged = len({u for f in report.flags for u in f.units})
+        res = (f"{report.n_errors} error{'s' * (report.n_errors != 1)}, {report.n_warnings} "
+               f"warning{'s' * (report.n_warnings != 1)}; {flagged} of {b['n_units']} units flagged")
+        summary_rows.append((anchor, f"Scan: {label}", res,
+                             _verdict_chips(report.finding_verdicts) if report.audit is not None else "no finding"))
+    if multiverse is not None:
+        _, sub, body = _multiverse_parts(multiverse)
+        sections.append(("multiverse", "Multiverse: curation thresholds", sub, body))
+        summary_rows.append(("multiverse", "Multiverse", f"{multiverse.n_evaluated} of {multiverse.n_universes} "
+                             "universes evaluated", _verdict_chips(multiverse.verdicts)))
+    if compare is not None:
+        _, sub, body = _compare_parts(compare)
+        sections.append(("compare", "Across sorters", sub, body))
+        summary_rows.append(("compare", "Across sorters", f"{len(compare.names)} sortings, "
+                             f"{len(compare.consensus_units)} consensus units", _verdict_chips(compare.verdicts)))
+    if not sections:
+        raise ValueError("a session report needs at least one scan, multiverse or comparison")
+    head = ["<h2>Summary</h2><table><thead><tr><th>part</th><th>result</th>"
+            "<th>finding</th></tr></thead><tbody>"]
+    for anchor, name, res, verdicts in summary_rows:
+        head.append(f"<tr><td><a href=\"#{anchor}\">{_e(name)}</a></td><td>{_e(res)}</td><td>{verdicts}</td></tr>")
+    head.append("</tbody></table>")
+    parts = []
+    for anchor, heading, sub, body in sections:
+        parts.append(f"<section class=\"part\" id=\"{anchor}\"><h2 class=\"part\">{_e(heading)}</h2>"
+                     f"<p class=\"sub\">{_e(sub)}</p>{body}</section>")
+    return _page(title, subtitle or "session report", "".join(head) + "".join(parts))
 
 
 def write(path: str | Path, page: str) -> Path:

@@ -101,7 +101,7 @@ def _random_action(template: Action, pool: np.ndarray, bundle: Bundle, rng,
     avail = list(rng.permutation(pool))
     merges = []
     if depth is None and bundle.has_depths and template.merges:
-        depth = {int(u): bundle.depth(int(u)) for u in pool}
+        depth = {int(u): bundle.position(int(u)) for u in pool}
     for _ in template.merges:
         a = int(avail.pop())
         if depth is not None and depth[a] is not None:
@@ -185,7 +185,7 @@ def audit(
     flagged_any = set().union(*(a.units for a in groups.values())) if groups else set()
     rng = np.random.default_rng(th.audit_seed)
     all_units = [int(u) for u in bundle.unit_ids]
-    depth = {u: bundle.depth(u) for u in all_units} if bundle.has_depths else None
+    depth = {u: bundle.position(u) for u in all_units} if bundle.has_depths else None
 
     rows: list[AuditRow] = []
     for name, action in groups.items():

@@ -1,0 +1,4978 @@
+{
+  "ayar_version": "0.5.0",
+  "bundle": {
+    "n_units": 522,
+    "n_spikes": 4015271,
+    "duration_s": 2968.279,
+    "tier": 1,
+    "amplitudes": true,
+    "depths": true,
+    "probes": 2,
+    "events": {
+      "n": 260,
+      "labels": [
+        "-1",
+        "1"
+      ]
+    },
+    "units_with_epochs": 0,
+    "source": "nwb",
+    "kept": {
+      "rules": [
+        "phy_annotations>=2"
+      ],
+      "units_before": 778,
+      "units_after": 522,
+      "steps": [
+        {
+          "rule": "phy_annotations>=2",
+          "removed": 256,
+          "missing": 0
+        }
+      ]
+    }
+  },
+  "summary": {
+    "errors": 108,
+    "warnings": 88,
+    "finding_verdicts": {
+      "mean_contrast_hz": "nonspecific",
+      "frac_units_enhanced": "robust",
+      "frac_units_suppressed": "robust"
+    },
+    "uncontrolled": {}
+  },
+  "flags": [
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        0
+      ],
+      "message": "unit 0: 34 refractory violations (<1.5 ms) imply 34% of its spikes come from other neurons; likely source: unit 86 (shared refractory dip, ratio 0.59)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 34,
+        "contamination": 0.3352,
+        "p": 5.358226285455137e-13,
+        "n_spikes": 12287,
+        "likely_source": 86,
+        "source_ratio": 0.59
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        2
+      ],
+      "message": "unit 2: 29 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 29,
+        "contamination": 0.5,
+        "p": 8.185615493121598e-33,
+        "n_spikes": 4431
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        12
+      ],
+      "message": "unit 12: 11 refractory violations (<1.5 ms) imply 38% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 11,
+        "contamination": 0.3779,
+        "p": 2.1686949734580597e-05,
+        "n_spikes": 6804
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        19
+      ],
+      "message": "unit 19: 6 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 6,
+        "contamination": 0.5,
+        "p": 1.0765382434575904e-06,
+        "n_spikes": 2570
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        25
+      ],
+      "message": "unit 25: 9 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 88 (shared refractory dip, ratio 0.46)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 9,
+        "contamination": 0.5,
+        "p": 1.6131157092969645e-09,
+        "n_spikes": 3088,
+        "likely_source": 88,
+        "source_ratio": 0.459
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        26
+      ],
+      "message": "unit 26: 6 refractory violations (<1.5 ms) imply 38% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 6,
+        "contamination": 0.3819,
+        "p": 0.0015470003930501224,
+        "n_spikes": 5015
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        27
+      ],
+      "message": "unit 27: 51 refractory violations (<1.5 ms) imply 37% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 51,
+        "contamination": 0.3732,
+        "p": 1.5202146546675858e-19,
+        "n_spikes": 14687
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        28
+      ],
+      "message": "unit 28: 20 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 310 (shared refractory dip, ratio 0.32)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 20,
+        "contamination": 0.5,
+        "p": 5.619715233279156e-13,
+        "n_spikes": 6855,
+        "likely_source": 310,
+        "source_ratio": 0.317
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        32
+      ],
+      "message": "unit 32: 9 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 9,
+        "contamination": 0.5,
+        "p": 1.7488572518134388e-05,
+        "n_spikes": 5425
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        34
+      ],
+      "message": "unit 34: 6 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 622 (shared refractory dip, ratio 0.37)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 6,
+        "contamination": 0.5,
+        "p": 0.0009849137740816868,
+        "n_spikes": 4795,
+        "likely_source": 622,
+        "source_ratio": 0.37
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        49
+      ],
+      "message": "unit 49: 7 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 7,
+        "contamination": 0.5,
+        "p": 1.7373947765465943e-07,
+        "n_spikes": 2827
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        51
+      ],
+      "message": "unit 51: 10 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 10,
+        "contamination": 0.5,
+        "p": 1.035345987071789e-11,
+        "n_spikes": 2789
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        52
+      ],
+      "message": "unit 52: 8 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 8,
+        "contamination": 0.5,
+        "p": 4.9762227859279735e-08,
+        "n_spikes": 3180
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        58
+      ],
+      "message": "unit 58: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 730 (shared refractory dip, ratio 0.36)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 0.00014141506874380412,
+        "n_spikes": 3159,
+        "likely_source": 730,
+        "source_ratio": 0.356
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        60
+      ],
+      "message": "unit 60: 17 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 17,
+        "contamination": 0.5,
+        "p": 1.0622781845480525e-12,
+        "n_spikes": 5672
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        64
+      ],
+      "message": "unit 64: 13 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 13,
+        "contamination": 0.5,
+        "p": 7.629458401311187e-21,
+        "n_spikes": 1840
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        68
+      ],
+      "message": "unit 68: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 0.0028693440977095985,
+        "n_spikes": 4434
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        71
+      ],
+      "message": "unit 71: 11 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 11,
+        "contamination": 0.5,
+        "p": 2.930370898062637e-09,
+        "n_spikes": 4295
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        74
+      ],
+      "message": "unit 74: 43 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 43,
+        "contamination": 0.5,
+        "p": 1.5529649706443513e-24,
+        "n_spikes": 10531
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        85
+      ],
+      "message": "unit 85: 26 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 26,
+        "contamination": 0.5,
+        "p": 8.882722419200588e-27,
+        "n_spikes": 4773
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        112
+      ],
+      "message": "unit 112: 13 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 13,
+        "contamination": 0.5,
+        "p": 2.892096061813072e-14,
+        "n_spikes": 3339
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        116
+      ],
+      "message": "unit 116: 30 refractory violations (<1.5 ms) imply 35% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 30,
+        "contamination": 0.3519,
+        "p": 6.7877856966489924e-12,
+        "n_spikes": 11408
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        118
+      ],
+      "message": "unit 118: 7 refractory violations (<1.5 ms) imply 21% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 7,
+        "contamination": 0.2122,
+        "p": 0.004405207366107724,
+        "n_spikes": 6437
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        124
+      ],
+      "message": "unit 124: 8 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 8,
+        "contamination": 0.5,
+        "p": 2.999229186548891e-05,
+        "n_spikes": 4925
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        125
+      ],
+      "message": "unit 125: 14 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 589 (shared refractory dip, ratio 0.55)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 14,
+        "contamination": 0.5,
+        "p": 2.723132104208708e-08,
+        "n_spikes": 6435,
+        "likely_source": 589,
+        "source_ratio": 0.546
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        126
+      ],
+      "message": "unit 126: 10 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 10,
+        "contamination": 0.5,
+        "p": 9.994921091785528e-07,
+        "n_spikes": 5157
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        132
+      ],
+      "message": "unit 132: 20 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 20,
+        "contamination": 0.5,
+        "p": 4.186665066337573e-27,
+        "n_spikes": 2909
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        137
+      ],
+      "message": "unit 137: 7 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 422 (shared refractory dip, ratio 0.65)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 7,
+        "contamination": 0.5,
+        "p": 1.2989555841257579e-05,
+        "n_spikes": 3934,
+        "likely_source": 422,
+        "source_ratio": 0.653
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        139
+      ],
+      "message": "unit 139: 26 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 26,
+        "contamination": 0.5,
+        "p": 3.1185112092934325e-16,
+        "n_spikes": 7884
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        142
+      ],
+      "message": "unit 142: 9 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 9,
+        "contamination": 0.5,
+        "p": 1.0165584438811716e-11,
+        "n_spikes": 2307
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        143
+      ],
+      "message": "unit 143: 30 refractory violations (<1.5 ms) imply 21% of its spikes come from other neurons; likely source: unit 329 (shared refractory dip, ratio 0.72)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 30,
+        "contamination": 0.2062,
+        "p": 1.3547690247345344e-08,
+        "n_spikes": 13467,
+        "likely_source": 329,
+        "source_ratio": 0.719
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        147
+      ],
+      "message": "unit 147: 16 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 16,
+        "contamination": 0.5,
+        "p": 7.869773066275121e-09,
+        "n_spikes": 7136
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        155
+      ],
+      "message": "unit 155: 6 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 6,
+        "contamination": 0.5,
+        "p": 4.281553279457414e-07,
+        "n_spikes": 2372
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        164
+      ],
+      "message": "unit 164: 9 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 9,
+        "contamination": 0.5,
+        "p": 1.0182865618857198e-06,
+        "n_spikes": 4536
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        169
+      ],
+      "message": "unit 169: 17 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 17,
+        "contamination": 0.5,
+        "p": 1.7774149085583814e-11,
+        "n_spikes": 6215
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        173
+      ],
+      "message": "unit 173: 11 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 11,
+        "contamination": 0.5,
+        "p": 8.115949390959776e-09,
+        "n_spikes": 4516
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        185
+      ],
+      "message": "unit 185: 24 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 24,
+        "contamination": 0.5,
+        "p": 1.540721116062427e-13,
+        "n_spikes": 8249
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        194
+      ],
+      "message": "unit 194: 30 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 30,
+        "contamination": 0.5,
+        "p": 6.242415999046019e-13,
+        "n_spikes": 10861
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        196
+      ],
+      "message": "unit 196: 11 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 11,
+        "contamination": 0.5,
+        "p": 1.184763921507506e-09,
+        "n_spikes": 4109
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        199
+      ],
+      "message": "unit 199: 9 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 9,
+        "contamination": 0.5,
+        "p": 3.866942728076936e-07,
+        "n_spikes": 4275
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        224
+      ],
+      "message": "unit 224: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 9.651076457682133e-06,
+        "n_spikes": 2374
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        234
+      ],
+      "message": "unit 234: 35 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 507 (shared refractory dip, ratio 0.69)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 35,
+        "contamination": 0.5,
+        "p": 1.5967981656804757e-24,
+        "n_spikes": 8131,
+        "likely_source": 507,
+        "source_ratio": 0.687
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        247
+      ],
+      "message": "unit 247: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 8.004460505482337e-06,
+        "n_spikes": 2328
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        250
+      ],
+      "message": "unit 250: 30 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 30,
+        "contamination": 0.5,
+        "p": 3.8028181409378826e-35,
+        "n_spikes": 4288
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        265
+      ],
+      "message": "unit 265: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 0.001765201360795532,
+        "n_spikes": 4189
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        271
+      ],
+      "message": "unit 271: 10 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 10,
+        "contamination": 0.5,
+        "p": 9.971966057323023e-06,
+        "n_spikes": 5887
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        290
+      ],
+      "message": "unit 290: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 0.00019202756585398663,
+        "n_spikes": 3266
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        300
+      ],
+      "message": "unit 300: 10 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 10,
+        "contamination": 0.5,
+        "p": 6.70890637088696e-06,
+        "n_spikes": 5752
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        306
+      ],
+      "message": "unit 306: 33 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 33,
+        "contamination": 0.5,
+        "p": 1.6493293842339359e-18,
+        "n_spikes": 9487
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        310
+      ],
+      "message": "unit 310: 5 refractory violations (<1.5 ms) imply 39% of its spikes come from other neurons; likely source: unit 28 (shared refractory dip, ratio 0.32)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.3863,
+        "p": 0.0036868454700488247,
+        "n_spikes": 4568,
+        "likely_source": 28,
+        "source_ratio": 0.317
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        323
+      ],
+      "message": "unit 323: 20 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 20,
+        "contamination": 0.5,
+        "p": 3.913067914643763e-11,
+        "n_spikes": 7734
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        326
+      ],
+      "message": "unit 326: 13 refractory violations (<1.5 ms) imply 31% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 13,
+        "contamination": 0.3118,
+        "p": 1.0504265175436044e-05,
+        "n_spikes": 7742
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        339
+      ],
+      "message": "unit 339: 27 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 27,
+        "contamination": 0.5,
+        "p": 1.9096693625409397e-18,
+        "n_spikes": 7429
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        343
+      ],
+      "message": "unit 343: 36 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 36,
+        "contamination": 0.5,
+        "p": 7.652006473027312e-18,
+        "n_spikes": 10752
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        372
+      ],
+      "message": "unit 372: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 1.7691944175210903e-05,
+        "n_spikes": 2530
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        380
+      ],
+      "message": "unit 380: 10 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 10,
+        "contamination": 0.5,
+        "p": 1.5295004369658087e-12,
+        "n_spikes": 2527
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        387
+      ],
+      "message": "unit 387: 9 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 9,
+        "contamination": 0.5,
+        "p": 2.0201924784224838e-10,
+        "n_spikes": 2738
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        389
+      ],
+      "message": "unit 389: 60 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 60,
+        "contamination": 0.5,
+        "p": 2.847033846363056e-54,
+        "n_spikes": 8071
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        391
+      ],
+      "message": "unit 391: 13 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 183 (shared refractory dip, ratio 0.35)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 13,
+        "contamination": 0.5,
+        "p": 5.488992382896092e-20,
+        "n_spikes": 1987,
+        "likely_source": 183,
+        "source_ratio": 0.351
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        398
+      ],
+      "message": "unit 398: 7 refractory violations (<1.5 ms) imply 30% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 7,
+        "contamination": 0.3041,
+        "p": 0.001205892583331725,
+        "n_spikes": 5721
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        400
+      ],
+      "message": "unit 400: 33 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 33,
+        "contamination": 0.5,
+        "p": 7.436525083574785e-16,
+        "n_spikes": 10567
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        401
+      ],
+      "message": "unit 401: 14 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 14,
+        "contamination": 0.5,
+        "p": 4.204961515583956e-15,
+        "n_spikes": 3509
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        416
+      ],
+      "message": "unit 416: 119 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 119,
+        "contamination": 0.5,
+        "p": 1.07183534585783e-182,
+        "n_spikes": 5295
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        417
+      ],
+      "message": "unit 417: 27 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 27,
+        "contamination": 0.5,
+        "p": 7.404896168970422e-43,
+        "n_spikes": 2516
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        418
+      ],
+      "message": "unit 418: 8 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 775 (shared refractory dip, ratio 0.70)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 8,
+        "contamination": 0.5,
+        "p": 4.3801290262969947e-05,
+        "n_spikes": 5061,
+        "likely_source": 775,
+        "source_ratio": 0.703
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        420
+      ],
+      "message": "unit 420: 20 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 20,
+        "contamination": 0.5,
+        "p": 3.803696639439001e-19,
+        "n_spikes": 4670
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        425
+      ],
+      "message": "unit 425: 33 refractory violations (<1.5 ms) imply 23% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 33,
+        "contamination": 0.2341,
+        "p": 2.917772521419527e-10,
+        "n_spikes": 13494
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        426
+      ],
+      "message": "unit 426: 39 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 39,
+        "contamination": 0.5,
+        "p": 4.139922582861975e-43,
+        "n_spikes": 5209
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        433
+      ],
+      "message": "unit 433: 8 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 8,
+        "contamination": 0.5,
+        "p": 6.419832047259066e-08,
+        "n_spikes": 3234
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        434
+      ],
+      "message": "unit 434: 118 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 118,
+        "contamination": 0.5,
+        "p": 3.3775129422169103e-161,
+        "n_spikes": 6425
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        455
+      ],
+      "message": "unit 455: 6 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 6,
+        "contamination": 0.5,
+        "p": 3.552101485271007e-12,
+        "n_spikes": 880
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        476
+      ],
+      "message": "unit 476: 45 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 45,
+        "contamination": 0.5,
+        "p": 2.219631604358534e-65,
+        "n_spikes": 3691
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        503
+      ],
+      "message": "unit 503: 12 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 474 (shared refractory dip, ratio 0.54)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 12,
+        "contamination": 0.5,
+        "p": 3.0914075026420383e-09,
+        "n_spikes": 4844,
+        "likely_source": 474,
+        "source_ratio": 0.539
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        509
+      ],
+      "message": "unit 509: 9 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 9,
+        "contamination": 0.5,
+        "p": 1.7940574204523867e-11,
+        "n_spikes": 2383
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        511
+      ],
+      "message": "unit 511: 14 refractory violations (<1.5 ms) imply 40% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 14,
+        "contamination": 0.4029,
+        "p": 1.3433315264375253e-06,
+        "n_spikes": 7588
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        525
+      ],
+      "message": "unit 525: 15 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 15,
+        "contamination": 0.5,
+        "p": 2.9031441099295006e-24,
+        "n_spikes": 1910
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        527
+      ],
+      "message": "unit 527: 6 refractory violations (<1.5 ms) imply 21% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 6,
+        "contamination": 0.2149,
+        "p": 0.007771000758623845,
+        "n_spikes": 5932
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        534
+      ],
+      "message": "unit 534: 13 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 776 (shared refractory dip, ratio 0.54)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 13,
+        "contamination": 0.5,
+        "p": 1.5490611228246371e-16,
+        "n_spikes": 2713,
+        "likely_source": 776,
+        "source_ratio": 0.541
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        536
+      ],
+      "message": "unit 536: 11 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 11,
+        "contamination": 0.5,
+        "p": 1.4572244191795276e-08,
+        "n_spikes": 4649
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        538
+      ],
+      "message": "unit 538: 13 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 13,
+        "contamination": 0.5,
+        "p": 1.1768753222081427e-19,
+        "n_spikes": 2047
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        545
+      ],
+      "message": "unit 545: 46 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 46,
+        "contamination": 0.5,
+        "p": 1.417294088093168e-59,
+        "n_spikes": 4485
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        550
+      ],
+      "message": "unit 550: 203 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 203,
+        "contamination": 0.5,
+        "p": 0.0,
+        "n_spikes": 2144
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        569
+      ],
+      "message": "unit 569: 16 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 16,
+        "contamination": 0.5,
+        "p": 3.40297428525535e-15,
+        "n_spikes": 4314
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        572
+      ],
+      "message": "unit 572: 18 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 18,
+        "contamination": 0.5,
+        "p": 3.3960452356923336e-15,
+        "n_spikes": 5140
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        580
+      ],
+      "message": "unit 580: 87 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 266 (shared refractory dip, ratio 0.51)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 87,
+        "contamination": 0.5,
+        "p": 3.5813079147481505e-137,
+        "n_spikes": 4344,
+        "likely_source": 266,
+        "source_ratio": 0.51
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        581
+      ],
+      "message": "unit 581: 45 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 45,
+        "contamination": 0.5,
+        "p": 2.600749320662925e-55,
+        "n_spikes": 4799
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        586
+      ],
+      "message": "unit 586: 6 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 6,
+        "contamination": 0.5,
+        "p": 0.0005278165432803674,
+        "n_spikes": 4512
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        589
+      ],
+      "message": "unit 589: 29 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 125 (shared refractory dip, ratio 0.55)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 29,
+        "contamination": 0.5,
+        "p": 1.4749472949241024e-33,
+        "n_spikes": 4298,
+        "likely_source": 125,
+        "source_ratio": 0.546
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        622
+      ],
+      "message": "unit 622: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 34 (shared refractory dip, ratio 0.37)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 4.3505284865160877e-05,
+        "n_spikes": 2783,
+        "likely_source": 34,
+        "source_ratio": 0.37
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        630
+      ],
+      "message": "unit 630: 5 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 5,
+        "contamination": 0.5,
+        "p": 0.0014689150769546483,
+        "n_spikes": 4101
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        635
+      ],
+      "message": "unit 635: 11 refractory violations (<1.5 ms) imply 36% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 11,
+        "contamination": 0.3555,
+        "p": 2.7310353789076697e-05,
+        "n_spikes": 6892
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        642
+      ],
+      "message": "unit 642: 20 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons; likely source: unit 619 (shared refractory dip, ratio 0.67)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 20,
+        "contamination": 0.5,
+        "p": 1.4037035253694423e-11,
+        "n_spikes": 7509,
+        "likely_source": 619,
+        "source_ratio": 0.669
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        668
+      ],
+      "message": "unit 668: 8 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 8,
+        "contamination": 0.5,
+        "p": 1.1386528270318395e-14,
+        "n_spikes": 1195
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        671
+      ],
+      "message": "unit 671: 119 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 119,
+        "contamination": 0.5,
+        "p": 2.6748958805597027e-138,
+        "n_spikes": 8200
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        677
+      ],
+      "message": "unit 677: 11 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 11,
+        "contamination": 0.5,
+        "p": 4.948319898633795e-16,
+        "n_spikes": 2055
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        681
+      ],
+      "message": "unit 681: 18 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 18,
+        "contamination": 0.5,
+        "p": 2.8238711856238686e-23,
+        "n_spikes": 2999
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        683
+      ],
+      "message": "unit 683: 173 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 173,
+        "contamination": 0.5,
+        "p": 3.777706485787081e-262,
+        "n_spikes": 6495
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        694
+      ],
+      "message": "unit 694: 15 refractory violations (<1.5 ms) imply 26% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 15,
+        "contamination": 0.2569,
+        "p": 9.017903429875184e-06,
+        "n_spikes": 8817
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        696
+      ],
+      "message": "unit 696: 86 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 86,
+        "contamination": 0.5,
+        "p": 3.545601965442503e-201,
+        "n_spikes": 1788
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        703
+      ],
+      "message": "unit 703: 185 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 185,
+        "contamination": 0.5,
+        "p": 1.0258973533032091e-176,
+        "n_spikes": 12994
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        711
+      ],
+      "message": "unit 711: 25 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 25,
+        "contamination": 0.5,
+        "p": 2.0423324707898567e-12,
+        "n_spikes": 9185
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        719
+      ],
+      "message": "unit 719: 22 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 22,
+        "contamination": 0.5,
+        "p": 7.533059289860443e-32,
+        "n_spikes": 2715
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        726
+      ],
+      "message": "unit 726: 28 refractory violations (<1.5 ms) imply 50%+ of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 28,
+        "contamination": 0.5,
+        "p": 2.679072334559094e-18,
+        "n_spikes": 7836
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        746
+      ],
+      "message": "unit 746: 68 refractory violations (<1.5 ms) imply 23% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 68,
+        "contamination": 0.2266,
+        "p": 6.207472473145053e-19,
+        "n_spikes": 19594
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "error",
+      "units": [
+        770
+      ],
+      "message": "unit 770: 77 refractory violations (<1.5 ms) imply 28% of its spikes come from other neurons; likely source: unit 279 (shared refractory dip, ratio 0.46)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 77,
+        "contamination": 0.28,
+        "p": 9.848693333050566e-25,
+        "n_spikes": 19440,
+        "likely_source": 279,
+        "source_ratio": 0.459
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "error",
+      "units": [
+        136,
+        75
+      ],
+      "message": "units 136 and 75 fire within \u00b10.5 ms 0% as often as expected from the 2-10 ms flanks (0 vs 23, p=1.5e-10)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 0,
+        "expected": 22.62,
+        "ratio": 0.0,
+        "p_value": 1.4930946761971628e-10,
+        "alpha_bonferroni": 5.963029218843172e-07,
+        "distance_um": 99.3,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "error",
+      "units": [
+        1,
+        76
+      ],
+      "message": "units 1 and 76 look like one neuron: they almost never fire within \u00b11.5 ms of each other (2 vs 34 expected) and the merged train has 10% refractory contamination",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 76 into unit 1 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "refractory": {
+          "n_refractory": 2,
+          "expected": 33.75,
+          "ratio": 0.05925925925925926,
+          "p": 1.329842948171243e-12,
+          "outer_ratio": 0.07407407407407407,
+          "double_detections": 0,
+          "merged_contamination": 0.09673863670470112
+        },
+        "mode": "refractory"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "error",
+      "units": [
+        187,
+        285
+      ],
+      "message": "units 187 and 285 look like one neuron: they almost never fire within \u00b11.5 ms of each other (1 vs 206 expected) and the merged train has 3% refractory contamination",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 285 into unit 187 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "refractory": {
+          "n_refractory": 1,
+          "expected": 206.09375,
+          "ratio": 0.0048521607278241095,
+          "p": 6.46827703716205e-88,
+          "outer_ratio": 0.0,
+          "double_detections": 0,
+          "merged_contamination": 0.03421447079060169
+        },
+        "mode": "refractory"
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        33
+      ],
+      "message": "unit 33: 40 refractory violations (<1.5 ms) imply 12% of its spikes come from other neurons; likely source: unit 31 (shared refractory dip, ratio 0.71)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 40,
+        "contamination": 0.1152,
+        "p": 1.1672929975972352e-05,
+        "n_spikes": 19704,
+        "likely_source": 31,
+        "source_ratio": 0.715
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        211
+      ],
+      "message": "unit 211: 14 refractory violations (<1.5 ms) imply 12% of its spikes come from other neurons; likely source: unit 17 (shared refractory dip, ratio 0.08)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 14,
+        "contamination": 0.1243,
+        "p": 0.004235264208449304,
+        "n_spikes": 11281,
+        "likely_source": 17,
+        "source_ratio": 0.081
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        345
+      ],
+      "message": "unit 345: 21 refractory violations (<1.5 ms) imply 15% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 21,
+        "contamination": 0.1502,
+        "p": 6.836015962414987e-05,
+        "n_spikes": 12759
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        348
+      ],
+      "message": "unit 348: 295 refractory violations (<1.5 ms) imply 17% of its spikes come from other neurons; likely source: unit 329 (shared refractory dip, ratio 0.64)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 295,
+        "contamination": 0.1744,
+        "p": 2.0845018817774033e-58,
+        "n_spikes": 45026,
+        "likely_source": 329,
+        "source_ratio": 0.642
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        350
+      ],
+      "message": "unit 350: 33 refractory violations (<1.5 ms) imply 12% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 33,
+        "contamination": 0.1164,
+        "p": 5.3843317328284796e-05,
+        "n_spikes": 17816
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        566
+      ],
+      "message": "unit 566: 15 refractory violations (<1.5 ms) imply 17% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 15,
+        "contamination": 0.1674,
+        "p": 0.00028411265042353057,
+        "n_spikes": 10318
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        725
+      ],
+      "message": "unit 725: 9 refractory violations (<1.5 ms) imply 18% of its spikes come from other neurons; likely source: unit 707 (shared refractory dip, ratio 0.30)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 9,
+        "contamination": 0.1771,
+        "p": 0.0032881299486176825,
+        "n_spikes": 7816,
+        "likely_source": 707,
+        "source_ratio": 0.305
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        751
+      ],
+      "message": "unit 751: 162 refractory violations (<1.5 ms) imply 12% of its spikes come from other neurons; likely source: unit 431 (shared refractory dip, ratio 0.46)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 162,
+        "contamination": 0.1169,
+        "p": 1.3034023248004713e-18,
+        "n_spikes": 39397,
+        "likely_source": 431,
+        "source_ratio": 0.462
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        10
+      ],
+      "message": "unit 10: rate follows depth (rho=0.62, moved 13 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.353,
+          "p": 0.012773011214992828,
+          "rel_change": 0.116
+        },
+        "completeness": {
+          "r": 0.342,
+          "p": 0.018508121742265234,
+          "max_lost": 0.5,
+          "range": 0.231,
+          "windows": 47,
+          "rate_drop": 0.781
+        },
+        "depth": {
+          "rho": 0.618,
+          "p": 2.1955898834559528e-06,
+          "range_um": 12.6
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        27
+      ],
+      "message": "unit 27: rate follows detection loss (r=0.79; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.261,
+          "p": 0.07033688486905261,
+          "rel_change": 0.095
+        },
+        "completeness": {
+          "r": 0.785,
+          "p": 2.3787827409467847e-11,
+          "max_lost": 0.5,
+          "range": 0.412,
+          "windows": 49,
+          "rate_drop": 0.676
+        },
+        "depth": {
+          "rho": 0.588,
+          "p": 9.079041430732457e-06,
+          "range_um": 4.2
+        },
+        "stable_fraction": 0.041
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        34
+      ],
+      "message": "unit 34: rate follows amplitude (rho=0.67, amplitude range 24%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.672,
+          "p": 1.2605608959395073e-07,
+          "rel_change": 0.241
+        },
+        "completeness": {
+          "r": 0.454,
+          "p": 0.00908366261101048,
+          "max_lost": 0.5,
+          "range": 0.277,
+          "windows": 32,
+          "rate_drop": 0.854
+        },
+        "depth": {
+          "rho": -0.343,
+          "p": 0.01689000613627078,
+          "range_um": 6.8
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        50
+      ],
+      "message": "unit 50: rate follows amplitude (rho=0.77, amplitude range 15%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.766,
+          "p": 8.370747581450954e-05,
+          "rel_change": 0.152
+        },
+        "depth": {
+          "rho": -0.778,
+          "p": 5.4631969855942436e-05,
+          "range_um": 6.1
+        },
+        "stable_fraction": 0.344,
+        "stable_epochs": [
+          [
+            0.0,
+            900.0
+          ],
+          [
+            960.0,
+            1080.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        110
+      ],
+      "message": "unit 110: rate follows detection loss (r=0.71; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.318,
+          "p": 0.025781188747965877,
+          "rel_change": 0.252
+        },
+        "completeness": {
+          "r": 0.715,
+          "p": 0.0060332491025982095,
+          "max_lost": 0.5,
+          "range": 0.288,
+          "windows": 13,
+          "rate_drop": 0.784
+        },
+        "depth": {
+          "rho": -0.229,
+          "p": 0.11404261143865031,
+          "range_um": 8.8
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        157
+      ],
+      "message": "unit 157: rate follows amplitude (rho=0.74, amplitude range 25%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.741,
+          "p": 1.1147736119385338e-09,
+          "rel_change": 0.25
+        },
+        "completeness": {
+          "r": 0.339,
+          "p": 0.017069773484745063,
+          "max_lost": 0.164,
+          "range": 0.155,
+          "windows": 49,
+          "rate_drop": 0.69
+        },
+        "depth": {
+          "rho": -0.652,
+          "p": 3.947840385076275e-07,
+          "range_um": 4.0
+        },
+        "stable_fraction": 0.898,
+        "stable_epochs": [
+          [
+            60.577,
+            484.617
+          ],
+          [
+            545.194,
+            1029.811
+          ],
+          [
+            1090.388,
+            1211.543
+          ],
+          [
+            1272.12,
+            1635.583
+          ],
+          [
+            1696.16,
+            2968.279
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        178
+      ],
+      "message": "unit 178: rate follows amplitude (rho=0.74, amplitude range 30%); amplitude rose steadily (35%, rho=0.95 over time) and the unit appeared (first window at 0% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.742,
+          "p": 1.468517329326121e-07,
+          "rel_change": 0.301
+        },
+        "completeness": {
+          "r": 0.668,
+          "p": 0.14695744317832873,
+          "max_lost": 0.425,
+          "range": 0.329,
+          "windows": 6,
+          "rate_drop": 0.735
+        },
+        "fade": {
+          "direction": "in",
+          "rho_time": 0.9497392128971075,
+          "p": 3.119142119281034e-19,
+          "amp_change": 0.3481213736976882,
+          "edge_rate_ratio": 0.0
+        },
+        "depth": {
+          "rho": -0.609,
+          "p": 6.23860474832922e-05,
+          "range_um": 4.3
+        },
+        "stable_fraction": 0.364,
+        "stable_epochs": [
+          [
+            1500.0,
+            1560.0
+          ],
+          [
+            1680.0,
+            1980.0
+          ],
+          [
+            2100.0,
+            2160.0
+          ],
+          [
+            2220.0,
+            2280.0
+          ],
+          [
+            2340.0,
+            2940.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        199
+      ],
+      "message": "unit 199: rate follows amplitude (rho=0.72, amplitude range 21%); rate follows detection loss (r=0.78; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.722,
+          "p": 4.781571542612921e-09,
+          "rel_change": 0.215
+        },
+        "completeness": {
+          "r": 0.783,
+          "p": 9.898163750670308e-09,
+          "max_lost": 0.5,
+          "range": 0.347,
+          "windows": 37,
+          "rate_drop": 0.772
+        },
+        "depth": {
+          "rho": 0.457,
+          "p": 0.0009770183785801625,
+          "range_um": 2.6
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        211
+      ],
+      "message": "unit 211: rate follows amplitude (rho=0.63, amplitude range 18%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.63,
+          "p": 1.2067088359612947e-06,
+          "rel_change": 0.177
+        },
+        "completeness": {
+          "r": 0.565,
+          "p": 0.0002204355837711313,
+          "max_lost": 0.5,
+          "range": 0.289,
+          "windows": 38,
+          "rate_drop": 0.941
+        },
+        "depth": {
+          "rho": 0.535,
+          "p": 7.38588780510416e-05,
+          "range_um": 10.6
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        216
+      ],
+      "message": "unit 216: rate follows amplitude (rho=0.67, amplitude range 19%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.667,
+          "p": 1.6564597833691373e-07,
+          "rel_change": 0.191
+        },
+        "completeness": {
+          "r": 0.235,
+          "p": 0.19633653635968693,
+          "max_lost": 0.5,
+          "range": 0.461,
+          "windows": 32,
+          "rate_drop": 0.501
+        },
+        "depth": {
+          "rho": -0.27,
+          "p": 0.06035344108349832,
+          "range_um": 172.2
+        },
+        "stable_fraction": 0.25
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        223
+      ],
+      "message": "unit 223: rate follows depth (rho=-0.72, moved 13 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.327,
+          "p": 0.03703670695003914,
+          "rel_change": 0.346
+        },
+        "completeness": {
+          "r": 0.147,
+          "p": 0.7813871228066396,
+          "max_lost": 0.483,
+          "range": 0.383,
+          "windows": 6,
+          "rate_drop": 0.685
+        },
+        "depth": {
+          "rho": -0.722,
+          "p": 1.0066319599580994e-07,
+          "range_um": 13.0
+        },
+        "stable_fraction": 0.143
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        243
+      ],
+      "message": "unit 243: rate follows detection loss (r=0.79; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.431,
+          "p": 0.0019859519432907707,
+          "rel_change": 0.116
+        },
+        "completeness": {
+          "r": 0.787,
+          "p": 6.504512382902575e-05,
+          "max_lost": 0.5,
+          "range": 0.397,
+          "windows": 19,
+          "rate_drop": 0.671
+        },
+        "depth": {
+          "rho": 0.241,
+          "p": 0.09554175404947257,
+          "range_um": 5.7
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        353
+      ],
+      "message": "unit 353: amplitude fell steadily (44%, rho=-0.99 over time) and the unit vanished (last window at 15% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.51,
+          "p": 0.0001794892191668311,
+          "rel_change": 0.473
+        },
+        "completeness": {
+          "r": 0.364,
+          "p": 0.0191430015506168,
+          "max_lost": 0.5,
+          "range": 0.431,
+          "windows": 41,
+          "rate_drop": 0.662
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.988469387755102,
+          "p": 3.4445720426458845e-40,
+          "amp_change": 0.4402849519690772,
+          "edge_rate_ratio": 0.15454545454545454
+        },
+        "depth": {
+          "rho": 0.702,
+          "p": 1.8662185397787128e-08,
+          "range_um": 9.0
+        },
+        "stable_fraction": 0.546,
+        "stable_epochs": [
+          [
+            240.0,
+            1200.0
+          ],
+          [
+            1260.0,
+            1620.0
+          ],
+          [
+            1680.0,
+            1740.0
+          ],
+          [
+            1920.0,
+            2040.0
+          ],
+          [
+            2160.0,
+            2280.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        361
+      ],
+      "message": "unit 361: amplitude fell steadily (31%, rho=-0.90 over time) and the unit vanished (last window at 18% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": -0.386,
+          "p": 0.10218687888890281,
+          "rel_change": 0.36
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9,
+          "p": 1.5497934468685772e-07,
+          "amp_change": 0.31431850767779257,
+          "edge_rate_ratio": 0.1818181818181818
+        },
+        "depth": {
+          "rho": 0.413,
+          "p": 0.0789575419517302,
+          "range_um": 6.5
+        },
+        "stable_fraction": 0.485,
+        "stable_epochs": [
+          [
+            60.0,
+            120.0
+          ],
+          [
+            240.0,
+            300.0
+          ],
+          [
+            480.0,
+            1200.0
+          ],
+          [
+            1380.0,
+            1920.0
+          ],
+          [
+            2460.0,
+            2520.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        370
+      ],
+      "message": "unit 370: rate follows amplitude (rho=0.70, amplitude range 27%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.697,
+          "p": 0.005628677002967547,
+          "rel_change": 0.265
+        },
+        "depth": {
+          "rho": -0.754,
+          "p": 0.0018447252892572188,
+          "range_um": 2.5
+        },
+        "stable_fraction": 0.202
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        372
+      ],
+      "message": "unit 372: rate follows depth (rho=0.80, moved 24 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": -0.299,
+          "p": 0.043823354128814065,
+          "rel_change": 0.842
+        },
+        "completeness": {
+          "r": 0.027,
+          "p": 0.9181983084597062,
+          "max_lost": 0.5,
+          "range": 0.462,
+          "windows": 17,
+          "rate_drop": 0.878
+        },
+        "depth": {
+          "rho": 0.802,
+          "p": 3.6329154675578693e-11,
+          "range_um": 24.0
+        },
+        "stable_fraction": 0.12
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        382
+      ],
+      "message": "unit 382: rate follows amplitude (rho=0.61, amplitude range 25%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.607,
+          "p": 0.0007965744774586004,
+          "rel_change": 0.251
+        },
+        "depth": {
+          "rho": -0.01,
+          "p": 0.9601679410201847,
+          "range_um": 4.8
+        },
+        "stable_fraction": 0.101
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        400
+      ],
+      "message": "unit 400: rate follows amplitude (rho=0.70, amplitude range 18%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.703,
+          "p": 1.839207112133741e-08,
+          "rel_change": 0.183
+        },
+        "completeness": {
+          "r": 0.059,
+          "p": 0.6874156282197639,
+          "max_lost": 0.5,
+          "range": 0.362,
+          "windows": 49,
+          "rate_drop": 0.768
+        },
+        "depth": {
+          "rho": 0.8,
+          "p": 5.184278393999851e-12,
+          "range_um": 4.4
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        403
+      ],
+      "message": "unit 403: rate follows amplitude (rho=0.73, amplitude range 34%); rate follows detection loss (r=0.71; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.727,
+          "p": 3.3097015409920883e-09,
+          "rel_change": 0.342
+        },
+        "completeness": {
+          "r": 0.705,
+          "p": 1.5300935279217673e-08,
+          "max_lost": 0.5,
+          "range": 0.478,
+          "windows": 49,
+          "rate_drop": 0.719
+        },
+        "depth": {
+          "rho": 0.713,
+          "p": 9.262196950606124e-09,
+          "range_um": 2.9
+        },
+        "stable_fraction": 0.306,
+        "stable_epochs": [
+          [
+            0.0,
+            181.731
+          ],
+          [
+            242.309,
+            969.234
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        413
+      ],
+      "message": "unit 413: rate follows depth (rho=-0.63, moved 10 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": -0.091,
+          "p": 0.5771383515866824,
+          "rel_change": 0.059
+        },
+        "completeness": {
+          "r": -0.362,
+          "p": 0.038197293742310325,
+          "max_lost": 0.5,
+          "range": 0.293,
+          "windows": 33,
+          "rate_drop": 0.635
+        },
+        "depth": {
+          "rho": -0.632,
+          "p": 1.2258250498319392e-05,
+          "range_um": 10.5
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        415
+      ],
+      "message": "unit 415: rate follows detection loss (r=0.96; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.318,
+          "p": 0.06306809949164448,
+          "rel_change": 0.217
+        },
+        "completeness": {
+          "r": 0.963,
+          "p": 0.002032914096545104,
+          "max_lost": 0.5,
+          "range": 0.348,
+          "windows": 6,
+          "rate_drop": 0.788
+        },
+        "depth": {
+          "rho": -0.444,
+          "p": 0.007508784452354413,
+          "range_um": 6.1
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        432
+      ],
+      "message": "unit 432: rate follows amplitude (rho=0.80, amplitude range 16%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.798,
+          "p": 5.159277054505822e-06,
+          "rel_change": 0.159
+        },
+        "depth": {
+          "rho": 0.346,
+          "p": 0.10543870150059499,
+          "range_um": 8.5
+        },
+        "stable_fraction": 0.303,
+        "stable_epochs": [
+          [
+            0.0,
+            660.0
+          ],
+          [
+            780.0,
+            900.0
+          ],
+          [
+            1080.0,
+            1200.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        457
+      ],
+      "message": "unit 457: rate follows amplitude (rho=0.84, amplitude range 27%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.841,
+          "p": 4.4857998278206926e-05,
+          "rel_change": 0.275
+        },
+        "depth": {
+          "rho": -0.172,
+          "p": 0.523382197583504,
+          "range_um": 0.8
+        },
+        "stable_fraction": 0.182
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        505
+      ],
+      "message": "unit 505: rate follows amplitude (rho=0.63, amplitude range 20%); rate follows detection loss (r=0.63; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.629,
+          "p": 5.180405765076465e-05,
+          "rel_change": 0.202
+        },
+        "completeness": {
+          "r": 0.63,
+          "p": 0.0012723133348059047,
+          "max_lost": 0.5,
+          "range": 0.358,
+          "windows": 23,
+          "rate_drop": 0.821
+        },
+        "depth": {
+          "rho": -0.184,
+          "p": 0.2897861972001118,
+          "range_um": 4.9
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        507
+      ],
+      "message": "unit 507: rate follows amplitude (rho=0.72, amplitude range 26%); rate follows detection loss (r=0.72; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.716,
+          "p": 7.1739401276719354e-09,
+          "rel_change": 0.258
+        },
+        "completeness": {
+          "r": 0.72,
+          "p": 1.1393471521163278e-08,
+          "max_lost": 0.5,
+          "range": 0.481,
+          "windows": 47,
+          "rate_drop": 0.795
+        },
+        "depth": {
+          "rho": 0.661,
+          "p": 2.33781373224812e-07,
+          "range_um": 7.8
+        },
+        "stable_fraction": 0.041
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        511
+      ],
+      "message": "unit 511: rate follows amplitude (rho=0.72, amplitude range 19%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.718,
+          "p": 6.230321510031835e-09,
+          "rel_change": 0.186
+        },
+        "completeness": {
+          "r": 0.569,
+          "p": 2.4366581426573097e-05,
+          "max_lost": 0.5,
+          "range": 0.476,
+          "windows": 48,
+          "rate_drop": 0.664
+        },
+        "depth": {
+          "rho": -0.273,
+          "p": 0.06063684800335371,
+          "range_um": 3.5
+        },
+        "stable_fraction": 0.02
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        517
+      ],
+      "message": "unit 517: rate follows amplitude (rho=0.84, amplitude range 22%); rate follows detection loss (r=0.74; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.837,
+          "p": 6.824202731509985e-14,
+          "rel_change": 0.216
+        },
+        "completeness": {
+          "r": 0.741,
+          "p": 6.570841321006588e-06,
+          "max_lost": 0.5,
+          "range": 0.372,
+          "windows": 28,
+          "rate_drop": 0.743
+        },
+        "depth": {
+          "rho": 0.424,
+          "p": 0.002376180960001535,
+          "range_um": 8.5
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        519
+      ],
+      "message": "unit 519: rate follows depth (rho=-0.86, moved 18 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.436,
+          "p": 0.0017340448779724399,
+          "rel_change": 0.09
+        },
+        "completeness": {
+          "r": 0.278,
+          "p": 0.08605307999539066,
+          "max_lost": 0.5,
+          "range": 0.277,
+          "windows": 39,
+          "rate_drop": 0.752
+        },
+        "depth": {
+          "rho": -0.859,
+          "p": 2.6830685593917554e-15,
+          "range_um": 17.7
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        525
+      ],
+      "message": "unit 525: rate follows depth (rho=-0.63, moved 14 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.49,
+          "p": 0.0004791291084870093,
+          "rel_change": 0.208
+        },
+        "completeness": {
+          "r": -0.267,
+          "p": 0.3359611520756399,
+          "max_lost": 0.296,
+          "range": 0.272,
+          "windows": 15,
+          "rate_drop": 0.727
+        },
+        "depth": {
+          "rho": -0.631,
+          "p": 1.972751044472609e-06,
+          "range_um": 13.6
+        },
+        "stable_fraction": 0.158
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        536
+      ],
+      "message": "unit 536: rate follows amplitude (rho=0.73, amplitude range 15%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.731,
+          "p": 2.4205900599299697e-09,
+          "rel_change": 0.151
+        },
+        "completeness": {
+          "r": 0.488,
+          "p": 0.0005881227079664313,
+          "max_lost": 0.5,
+          "range": 0.28,
+          "windows": 46,
+          "rate_drop": 0.722
+        },
+        "depth": {
+          "rho": -0.331,
+          "p": 0.020074458234779928,
+          "range_um": 5.1
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        544
+      ],
+      "message": "unit 544: rate follows amplitude (rho=0.67, amplitude range 30%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.668,
+          "p": 4.581757992687321e-06,
+          "rel_change": 0.303
+        },
+        "completeness": {
+          "r": -0.131,
+          "p": 0.7573382931229179,
+          "max_lost": 0.226,
+          "range": 0.212,
+          "windows": 8,
+          "rate_drop": 0.671
+        },
+        "depth": {
+          "rho": 0.064,
+          "p": 0.7014658502543173,
+          "range_um": 5.2
+        },
+        "stable_fraction": 0.5,
+        "stable_epochs": [
+          [
+            0.0,
+            247.357
+          ],
+          [
+            494.713,
+            1236.783
+          ],
+          [
+            1484.14,
+            1978.853
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        558
+      ],
+      "message": "unit 558: rate follows amplitude (rho=0.67, amplitude range 20%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.671,
+          "p": 6.277861019328865e-07,
+          "rel_change": 0.199
+        },
+        "completeness": {
+          "r": 0.41,
+          "p": 0.015954535072455468,
+          "max_lost": 0.5,
+          "range": 0.322,
+          "windows": 34,
+          "rate_drop": 0.906
+        },
+        "depth": {
+          "rho": -0.155,
+          "p": 0.3159745678733043,
+          "range_um": 6.3
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        569
+      ],
+      "message": "unit 569: amplitude fell steadily (35%, rho=-0.94 over time) and the unit vanished (last window at 1% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.545,
+          "p": 0.0001596805185541577,
+          "rel_change": 0.405
+        },
+        "completeness": {
+          "r": 0.423,
+          "p": 0.02210846439513155,
+          "max_lost": 0.5,
+          "range": 0.414,
+          "windows": 29,
+          "rate_drop": 0.722
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9355179704016913,
+          "p": 3.919720189405246e-20,
+          "amp_change": 0.35275700064432464,
+          "edge_rate_ratio": 0.007299270072992701
+        },
+        "depth": {
+          "rho": 0.373,
+          "p": 0.013736760195621806,
+          "range_um": 6.6
+        },
+        "stable_fraction": 0.485,
+        "stable_epochs": [
+          [
+            180.0,
+            1620.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        571
+      ],
+      "message": "unit 571: rate follows detection loss (r=0.62; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.794,
+          "p": 9.790973242102897e-12,
+          "rel_change": 0.139
+        },
+        "completeness": {
+          "r": 0.62,
+          "p": 1.9849641671383723e-06,
+          "max_lost": 0.5,
+          "range": 0.298,
+          "windows": 49,
+          "rate_drop": 0.68
+        },
+        "depth": {
+          "rho": 0.577,
+          "p": 1.4457226068997128e-05,
+          "range_um": 7.8
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        574
+      ],
+      "message": "unit 574: rate follows depth (rho=0.67, moved 12 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.045,
+          "p": 0.7606871380765384,
+          "rel_change": 0.037
+        },
+        "completeness": {
+          "r": 0.26,
+          "p": 0.3143188087115186,
+          "max_lost": 0.5,
+          "range": 0.103,
+          "windows": 17,
+          "rate_drop": 0.705
+        },
+        "depth": {
+          "rho": 0.666,
+          "p": 1.776160436986025e-07,
+          "range_um": 11.9
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        578
+      ],
+      "message": "unit 578: rate follows amplitude (rho=0.82, amplitude range 17%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.815,
+          "p": 3.7809149741868165e-06,
+          "rel_change": 0.17
+        },
+        "completeness": {
+          "r": 0.646,
+          "p": 0.16576531383533832,
+          "max_lost": 0.445,
+          "range": 0.405,
+          "windows": 6,
+          "rate_drop": 0.941
+        },
+        "depth": {
+          "rho": 0.051,
+          "p": 0.820102992717884,
+          "range_um": 9.3
+        },
+        "stable_fraction": 0.105
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        582
+      ],
+      "message": "unit 582: rate follows amplitude (rho=0.89, amplitude range 39%); amplitude fell steadily (36%, rho=-0.96 over time) and the unit vanished (last window at 0% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.892,
+          "p": 2.3792817976452214e-15,
+          "rel_change": 0.385
+        },
+        "completeness": {
+          "r": 0.536,
+          "p": 0.001894882353219618,
+          "max_lost": 0.5,
+          "range": 0.439,
+          "windows": 31,
+          "rate_drop": 0.664
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9589984604164979,
+          "p": 1.6299136060135058e-23,
+          "amp_change": 0.35749812366730666,
+          "edge_rate_ratio": 0.0049504950495049506
+        },
+        "depth": {
+          "rho": 0.494,
+          "p": 0.0008850534700706622,
+          "range_um": 6.4
+        },
+        "stable_fraction": 0.344,
+        "stable_epochs": [
+          [
+            0.0,
+            720.0
+          ],
+          [
+            840.0,
+            1140.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        584
+      ],
+      "message": "unit 584: rate follows detection loss (r=0.74; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.605,
+          "p": 0.0003135687140816324,
+          "rel_change": 0.079
+        },
+        "completeness": {
+          "r": 0.736,
+          "p": 9.5770525874068e-05,
+          "max_lost": 0.5,
+          "range": 0.155,
+          "windows": 22,
+          "rate_drop": 0.983
+        },
+        "depth": {
+          "rho": -0.184,
+          "p": 0.32111145061858976,
+          "range_um": 107.1
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        589
+      ],
+      "message": "unit 589: rate follows amplitude (rho=0.85, amplitude range 23%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.849,
+          "p": 1.258187511516207e-14,
+          "rel_change": 0.231
+        },
+        "completeness": {
+          "r": 0.368,
+          "p": 0.04922752979348361,
+          "max_lost": 0.408,
+          "range": 0.283,
+          "windows": 29,
+          "rate_drop": 0.807
+        },
+        "depth": {
+          "rho": 0.538,
+          "p": 6.780935727940107e-05,
+          "range_um": 10.4
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        590
+      ],
+      "message": "unit 590: rate follows amplitude (rho=0.81, amplitude range 21%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.813,
+          "p": 6.901527120015412e-12,
+          "rel_change": 0.206
+        },
+        "completeness": {
+          "r": 0.379,
+          "p": 0.032615925531475395,
+          "max_lost": 0.5,
+          "range": 0.244,
+          "windows": 32,
+          "rate_drop": 0.814
+        },
+        "depth": {
+          "rho": -0.308,
+          "p": 0.03724486101709506,
+          "range_um": 11.6
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        609
+      ],
+      "message": "unit 609: rate follows amplitude (rho=0.69, amplitude range 19%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.689,
+          "p": 6.256834729922974e-08,
+          "rel_change": 0.194
+        },
+        "completeness": {
+          "r": 0.303,
+          "p": 0.09210255799154013,
+          "max_lost": 0.5,
+          "range": 0.281,
+          "windows": 32,
+          "rate_drop": 0.809
+        },
+        "depth": {
+          "rho": -0.378,
+          "p": 0.008109936157583665,
+          "range_um": 11.1
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        630
+      ],
+      "message": "unit 630: rate follows depth (rho=-0.62, moved 10 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.424,
+          "p": 0.002387123696258897,
+          "rel_change": 0.062
+        },
+        "completeness": {
+          "r": 0.174,
+          "p": 0.27520304248639244,
+          "max_lost": 0.5,
+          "range": 0.212,
+          "windows": 41,
+          "rate_drop": 0.725
+        },
+        "depth": {
+          "rho": -0.621,
+          "p": 1.918416498495961e-06,
+          "range_um": 10.1
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        635
+      ],
+      "message": "unit 635: rate follows amplitude (rho=0.70, amplitude range 19%); rate follows detection loss (r=0.75; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.695,
+          "p": 2.918918018345308e-08,
+          "rel_change": 0.191
+        },
+        "completeness": {
+          "r": 0.748,
+          "p": 6.464406510801934e-10,
+          "max_lost": 0.5,
+          "range": 0.448,
+          "windows": 49,
+          "rate_drop": 0.691
+        },
+        "depth": {
+          "rho": -0.315,
+          "p": 0.027584318149179266,
+          "range_um": 6.0
+        },
+        "stable_fraction": 0.122
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        637
+      ],
+      "message": "unit 637: rate follows amplitude (rho=0.86, amplitude range 17%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.864,
+          "p": 1.298928325210559e-08,
+          "rel_change": 0.172
+        },
+        "completeness": {
+          "r": 0.136,
+          "p": 0.7272689193065424,
+          "max_lost": 0.348,
+          "range": 0.296,
+          "windows": 9,
+          "rate_drop": 0.816
+        },
+        "depth": {
+          "rho": 0.281,
+          "p": 0.16501389198600194,
+          "range_um": 5.3
+        },
+        "stable_fraction": 0.158
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        641
+      ],
+      "message": "unit 641: rate follows amplitude (rho=0.84, amplitude range 16%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.844,
+          "p": 2.5474141534803536e-14,
+          "rel_change": 0.158
+        },
+        "completeness": {
+          "r": 0.585,
+          "p": 1.0166880300617412e-05,
+          "max_lost": 0.5,
+          "range": 0.309,
+          "windows": 49,
+          "rate_drop": 0.646
+        },
+        "depth": {
+          "rho": 0.511,
+          "p": 0.00017623567936167554,
+          "range_um": 8.6
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        643
+      ],
+      "message": "unit 643: rate follows detection loss (r=0.66; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.274,
+          "p": 0.056586960045496286,
+          "rel_change": 0.159
+        },
+        "completeness": {
+          "r": 0.664,
+          "p": 1.9959354897752418e-07,
+          "max_lost": 0.5,
+          "range": 0.459,
+          "windows": 49,
+          "rate_drop": 0.607
+        },
+        "depth": {
+          "rho": -0.537,
+          "p": 6.883621715557739e-05,
+          "range_um": 3.0
+        },
+        "stable_fraction": 0.082
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        648
+      ],
+      "message": "unit 648: rate follows depth (rho=0.80, moved 14 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": -0.055,
+          "p": 0.7261017968468612,
+          "rel_change": 0.087
+        },
+        "completeness": {
+          "r": -0.696,
+          "p": 0.08265875647406858,
+          "max_lost": 0.307,
+          "range": 0.211,
+          "windows": 7,
+          "rate_drop": 0.836
+        },
+        "depth": {
+          "rho": 0.802,
+          "p": 1.0285567544031131e-10,
+          "range_um": 14.4
+        },
+        "stable_fraction": 0.111
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        685
+      ],
+      "message": "unit 685: rate follows detection loss (r=0.62; up to 50% of spikes below threshold in the worst window); amplitude fell steadily (36%, rho=-0.99 over time) and the unit vanished (last window at 1% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.567,
+          "p": 2.1837685879888886e-05,
+          "rel_change": 0.348
+        },
+        "completeness": {
+          "r": 0.618,
+          "p": 7.782038826780378e-06,
+          "max_lost": 0.5,
+          "range": 0.439,
+          "windows": 44,
+          "rate_drop": 0.819
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9898979591836734,
+          "p": 1.562958364554e-41,
+          "amp_change": 0.36110658220592196,
+          "edge_rate_ratio": 0.006134969325153374
+        },
+        "depth": {
+          "rho": 0.573,
+          "p": 3.0992928633107224e-05,
+          "range_um": 6.5
+        },
+        "stable_fraction": 0.707,
+        "stable_epochs": [
+          [
+            0.0,
+            180.0
+          ],
+          [
+            240.0,
+            2160.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        688
+      ],
+      "message": "unit 688: rate follows amplitude (rho=0.94, amplitude range 37%); rate follows detection loss (r=0.80; up to 50% of spikes below threshold in the worst window); amplitude fell steadily (38%, rho=-0.98 over time) and the unit vanished (last window at 1% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.936,
+          "p": 6.117861319886705e-18,
+          "rel_change": 0.372
+        },
+        "completeness": {
+          "r": 0.802,
+          "p": 2.1157818112488325e-05,
+          "max_lost": 0.5,
+          "range": 0.405,
+          "windows": 20,
+          "rate_drop": 0.722
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9809607178028231,
+          "p": 3.20738140577598e-27,
+          "amp_change": 0.37526426072477603,
+          "edge_rate_ratio": 0.013422818791946308
+        },
+        "depth": {
+          "rho": 0.603,
+          "p": 6.161198925223279e-05,
+          "range_um": 7.7
+        },
+        "stable_fraction": 0.283
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        691
+      ],
+      "message": "unit 691: rate follows amplitude (rho=0.95, amplitude range 33%); amplitude fell steadily (32%, rho=-0.98 over time) and the unit vanished (last window at 1% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.949,
+          "p": 3.545512243990421e-18,
+          "rel_change": 0.325
+        },
+        "completeness": {
+          "r": 0.622,
+          "p": 0.030789269557030666,
+          "max_lost": 0.5,
+          "range": 0.432,
+          "windows": 12,
+          "rate_drop": 0.798
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9764705882352942,
+          "p": 1.4551394187755784e-23,
+          "amp_change": 0.3184099371131778,
+          "edge_rate_ratio": 0.010050251256281407
+        },
+        "depth": {
+          "rho": 0.379,
+          "p": 0.024642365267820664,
+          "range_um": 6.8
+        },
+        "stable_fraction": 0.263
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        697
+      ],
+      "message": "unit 697: rate follows depth (rho=0.68, moved 12 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.423,
+          "p": 0.0024893090958998157,
+          "rel_change": 0.068
+        },
+        "completeness": {
+          "r": 0.034,
+          "p": 0.8233920106147755,
+          "max_lost": 0.5,
+          "range": 0.278,
+          "windows": 45,
+          "rate_drop": 0.75
+        },
+        "depth": {
+          "rho": 0.68,
+          "p": 7.67861076545105e-08,
+          "range_um": 11.5
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        698
+      ],
+      "message": "unit 698: rate follows amplitude (rho=0.66, amplitude range 19%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.657,
+          "p": 2.9939721810698276e-07,
+          "rel_change": 0.189
+        },
+        "completeness": {
+          "r": 0.306,
+          "p": 0.03253676535380979,
+          "max_lost": 0.5,
+          "range": 0.408,
+          "windows": 49,
+          "rate_drop": 0.624
+        },
+        "depth": {
+          "rho": 0.423,
+          "p": 0.0024728787931236327,
+          "range_um": 4.4
+        },
+        "stable_fraction": 0.02
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        706
+      ],
+      "message": "unit 706: rate follows depth (rho=0.77, moved 11 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.46,
+          "p": 0.0011429914243531012,
+          "rel_change": 0.086
+        },
+        "completeness": {
+          "r": -0.073,
+          "p": 0.7667469821883466,
+          "max_lost": 0.5,
+          "range": 0.167,
+          "windows": 19,
+          "rate_drop": 0.843
+        },
+        "depth": {
+          "rho": 0.773,
+          "p": 1.9575804099535084e-10,
+          "range_um": 10.9
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        750
+      ],
+      "message": "unit 750: rate follows amplitude (rho=0.97, amplitude range 98%); amplitude fell steadily (48%, rho=-0.94 over time) and the unit vanished (last window at 8% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.969,
+          "p": 2.389164357318355e-30,
+          "rel_change": 0.975
+        },
+        "completeness": {
+          "r": 0.865,
+          "p": 1.195574411349723e-15,
+          "max_lost": 0.231,
+          "range": 0.226,
+          "windows": 49,
+          "rate_drop": 0.935
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9443877551020408,
+          "p": 2.428092378118121e-24,
+          "amp_change": 0.47685320025744377,
+          "edge_rate_ratio": 0.08193595054908924
+        },
+        "depth": {
+          "rho": 0.816,
+          "p": 3.598441737777745e-05,
+          "range_um": 2.4
+        },
+        "stable_fraction": 0.465,
+        "stable_epochs": [
+          [
+            0.0,
+            1320.0
+          ],
+          [
+            1380.0,
+            1440.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        752
+      ],
+      "message": "unit 752: rate follows amplitude (rho=0.63, amplitude range 50%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.625,
+          "p": 1.5674107640393484e-06,
+          "rel_change": 0.502
+        },
+        "completeness": {
+          "r": 0.454,
+          "p": 0.0010487216937038542,
+          "max_lost": 0.485,
+          "range": 0.466,
+          "windows": 49,
+          "rate_drop": 0.966
+        },
+        "depth": {
+          "rho": 0.091,
+          "p": 0.5353318749413414,
+          "range_um": 31.5
+        },
+        "stable_fraction": 0.306,
+        "stable_epochs": [
+          [
+            0.0,
+            424.04
+          ],
+          [
+            484.617,
+            545.194
+          ],
+          [
+            605.771,
+            969.234
+          ],
+          [
+            2847.125,
+            2907.702
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        754
+      ],
+      "message": "unit 754: rate follows amplitude (rho=0.78, amplitude range 29%); rate follows detection loss (r=0.78; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.781,
+          "p": 3.700716479355359e-11,
+          "rel_change": 0.293
+        },
+        "completeness": {
+          "r": 0.776,
+          "p": 5.54618334718483e-11,
+          "max_lost": 0.5,
+          "range": 0.491,
+          "windows": 49,
+          "rate_drop": 0.535
+        },
+        "stable_fraction": 0.51,
+        "stable_epochs": [
+          [
+            0.0,
+            1453.851
+          ],
+          [
+            2907.702,
+            2968.279
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        758
+      ],
+      "message": "unit 758: rate follows depth (rho=0.71, moved 13 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": -0.115,
+          "p": 0.4322022589785292,
+          "rel_change": 0.143
+        },
+        "completeness": {
+          "r": 0.043,
+          "p": 0.7698429403594768,
+          "max_lost": 0.347,
+          "range": 0.299,
+          "windows": 49,
+          "rate_drop": 0.869
+        },
+        "depth": {
+          "rho": 0.712,
+          "p": 9.451219749389797e-09,
+          "range_um": 12.8
+        },
+        "stable_fraction": 0.163
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        760
+      ],
+      "message": "unit 760: rate follows amplitude (rho=0.70, amplitude range 32%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.698,
+          "p": 2.5004026138387752e-08,
+          "rel_change": 0.32
+        },
+        "completeness": {
+          "r": 0.701,
+          "p": 2.093423530276631e-08,
+          "max_lost": 0.132,
+          "range": 0.124,
+          "windows": 49,
+          "rate_drop": 0.4
+        },
+        "depth": {
+          "rho": 0.173,
+          "p": 0.611542384851237,
+          "range_um": 2.8
+        },
+        "stable_fraction": 0.918,
+        "stable_epochs": [
+          [
+            0.0,
+            2362.508
+          ],
+          [
+            2423.085,
+            2544.24
+          ],
+          [
+            2604.817,
+            2665.394
+          ],
+          [
+            2725.971,
+            2786.548
+          ],
+          [
+            2847.125,
+            2968.279
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        762
+      ],
+      "message": "unit 762: rate follows amplitude (rho=0.71, amplitude range 17%); rate follows depth (rho=0.74, moved 14 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.712,
+          "p": 9.929895039695119e-09,
+          "rel_change": 0.169
+        },
+        "completeness": {
+          "r": 0.536,
+          "p": 7.261280626705148e-05,
+          "max_lost": 0.053,
+          "range": 0.04,
+          "windows": 49,
+          "rate_drop": 0.367
+        },
+        "depth": {
+          "rho": 0.744,
+          "p": 8.672748545962602e-10,
+          "range_um": 13.9
+        },
+        "stable_fraction": 1.0,
+        "stable_epochs": [
+          [
+            0.0,
+            2968.279
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        765
+      ],
+      "message": "unit 765: rate follows depth (rho=0.88, moved 21 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": -0.122,
+          "p": 0.40548572034567265,
+          "rel_change": 0.071
+        },
+        "completeness": {
+          "r": -0.613,
+          "p": 2.781523628351766e-06,
+          "max_lost": 0.496,
+          "range": 0.432,
+          "windows": 49,
+          "rate_drop": 0.781
+        },
+        "depth": {
+          "rho": 0.876,
+          "p": 1.7196863240470914e-16,
+          "range_um": 20.8
+        },
+        "stable_fraction": 0.102
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        768
+      ],
+      "message": "unit 768: rate follows depth (rho=-0.88, moved 12 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.89,
+          "p": 4.83308988588163e-11,
+          "rel_change": 0.14
+        },
+        "completeness": {
+          "r": 0.377,
+          "p": 0.03680721065365266,
+          "max_lost": 0.463,
+          "range": 0.373,
+          "windows": 31,
+          "rate_drop": 0.935
+        },
+        "depth": {
+          "rho": -0.88,
+          "p": 1.422271582318498e-10,
+          "range_um": 11.8
+        },
+        "stable_fraction": 0.061
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        771
+      ],
+      "message": "unit 771: rate follows depth (rho=0.65, moved 32 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.595,
+          "p": 6.595801480405965e-06,
+          "rel_change": 0.954
+        },
+        "completeness": {
+          "r": 0.291,
+          "p": 0.042349548616888416,
+          "max_lost": 0.353,
+          "range": 0.347,
+          "windows": 49,
+          "rate_drop": 0.743
+        },
+        "depth": {
+          "rho": 0.654,
+          "p": 3.390152766588402e-07,
+          "range_um": 31.6
+        },
+        "stable_fraction": 0.898,
+        "stable_epochs": [
+          [
+            0.0,
+            1150.966
+          ],
+          [
+            1211.543,
+            1635.583
+          ],
+          [
+            1696.16,
+            1756.737
+          ],
+          [
+            1817.314,
+            1877.891
+          ],
+          [
+            1938.468,
+            2180.777
+          ],
+          [
+            2241.354,
+            2968.279
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        772
+      ],
+      "message": "unit 772: rate follows depth (rho=-0.66, moved 10 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.86,
+          "p": 2.4777750255293173e-15,
+          "rel_change": 0.036
+        },
+        "completeness": {
+          "r": 0.007,
+          "p": 0.9615734434359985,
+          "max_lost": 0.488,
+          "range": 0.281,
+          "windows": 49,
+          "rate_drop": 0.791
+        },
+        "depth": {
+          "rho": -0.656,
+          "p": 3.1000058914460506e-07,
+          "range_um": 10.3
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        774
+      ],
+      "message": "unit 774: rate follows amplitude (rho=0.83, amplitude range 21%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.832,
+          "p": 2.0041727671864815e-09,
+          "rel_change": 0.206
+        },
+        "completeness": {
+          "r": 0.403,
+          "p": 0.04584662107222781,
+          "max_lost": 0.375,
+          "range": 0.314,
+          "windows": 25,
+          "rate_drop": 0.902
+        },
+        "depth": {
+          "rho": 0.844,
+          "p": 7.031967790018026e-10,
+          "range_um": 7.7
+        },
+        "stable_fraction": 0.061
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        777
+      ],
+      "message": "unit 777: rate follows amplitude (rho=0.61, amplitude range 23%); rate follows detection loss (r=0.62; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.613,
+          "p": 2.782749668580612e-06,
+          "rel_change": 0.226
+        },
+        "completeness": {
+          "r": 0.621,
+          "p": 1.951801342942739e-06,
+          "max_lost": 0.5,
+          "range": 0.379,
+          "windows": 49,
+          "rate_drop": 0.944
+        },
+        "depth": {
+          "rho": -0.162,
+          "p": 0.2654825495822525,
+          "range_um": 11.4
+        },
+        "stable_fraction": 0.0
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "warning",
+      "units": [
+        474,
+        749
+      ],
+      "message": "units 474 and 749 fire within \u00b10.5 ms 44% as often as expected from the 2-10 ms flanks (126 vs 288, p=4.6e-27)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 126,
+        "expected": 288.06,
+        "ratio": 0.437,
+        "p_value": 4.613135048575929e-27,
+        "alpha_bonferroni": 5.963029218843172e-07,
+        "distance_um": 38.2,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "warning",
+      "units": [
+        750,
+        634
+      ],
+      "message": "units 750 and 634 fire within \u00b10.5 ms 55% as often as expected from the 2-10 ms flanks (65 vs 118, p=6.5e-08)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 65,
+        "expected": 118.19,
+        "ratio": 0.55,
+        "p_value": 6.46011359491143e-08,
+        "alpha_bonferroni": 5.963029218843172e-07,
+        "distance_um": 27.9,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        180,
+        629
+      ],
+      "message": "units 180 and 629 look like one neuron: one fades out as the other fades in (rate r=-0.78, overlapping in 2 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 629 into unit 180 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.7786495627284767,
+          "p": 5.2513992582921254e-05,
+          "windows_both_active": 2,
+          "windows_active": [
+            13,
+            9
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.2807226420954554,
+          "window_s": 148.4,
+          "amplitude_ratio": 1.1251553553194373
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        380,
+        160
+      ],
+      "message": "units 380 and 160 look like one neuron: one fades out as the other fades in (rate r=-0.76, overlapping in 0 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 160 into unit 380 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.7580377047351263,
+          "p": 0.00010780824502519091,
+          "windows_both_active": 0,
+          "windows_active": [
+            12,
+            7
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.1498445009895393,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.8087369176229858
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        434,
+        377
+      ],
+      "message": "units 434 and 377 look like one neuron: one fades out as the other fades in (rate r=-0.80, overlapping in 3 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 377 into unit 434 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.7959966476510238,
+          "p": 2.697860273421983e-05,
+          "windows_both_active": 3,
+          "windows_active": [
+            12,
+            11
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 0.8115029737090766,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.9071530204379756
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        462,
+        613
+      ],
+      "message": "units 462 and 613 look like one neuron: one fades out as the other fades in (rate r=-0.63, overlapping in 0 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 613 into unit 462 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.632708788690244,
+          "p": 0.0027545985786417,
+          "windows_both_active": 0,
+          "windows_active": [
+            15,
+            5
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 0.8806497175141241,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.8231294291892501
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        478,
+        428
+      ],
+      "message": "units 478 and 428 look like one neuron: one fades out as the other fades in (rate r=-0.87, overlapping in 2 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 428 into unit 478 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.8749355548396578,
+          "p": 4.476547892140154e-07,
+          "windows_both_active": 2,
+          "windows_active": [
+            13,
+            9
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.0190928153625427,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.9280643583195644
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        492,
+        62
+      ],
+      "message": "units 492 and 62 look like one neuron: one fades out as the other fades in (rate r=-0.71, overlapping in 1 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 62 into unit 492 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.7116877643785817,
+          "p": 0.00043286540180518347,
+          "windows_both_active": 1,
+          "windows_active": [
+            14,
+            7
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.9134615384615383,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.864311040578977
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        504,
+        437
+      ],
+      "message": "units 504 and 437 look like one neuron: one fades out as the other fades in (rate r=-0.87, overlapping in 0 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 437 into unit 504 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.8710432096692814,
+          "p": 5.81181963756013e-07,
+          "windows_both_active": 0,
+          "windows_active": [
+            12,
+            8
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.1394432126139444,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.9994523161611935
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        583,
+        611
+      ],
+      "message": "units 583 and 611 look like one neuron: one fades out as the other fades in (rate r=-0.91, overlapping in 1 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 611 into unit 583 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.9106608211531906,
+          "p": 2.480716994272737e-08,
+          "windows_both_active": 1,
+          "windows_active": [
+            8,
+            13
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.0787037037037035,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.899285357294979
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        614,
+        618
+      ],
+      "message": "units 614 and 618 look like one neuron: one fades out as the other fades in (rate r=-0.87, overlapping in 2 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 618 into unit 614 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.8676323797549189,
+          "p": 7.256238194199077e-07,
+          "windows_both_active": 2,
+          "windows_active": [
+            10,
+            12
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.1113757039420755,
+          "window_s": 148.4,
+          "amplitude_ratio": 1.0365654512000555
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        638,
+        601
+      ],
+      "message": "units 638 and 601 look like one neuron: one fades out as the other fades in (rate r=-0.79, overlapping in 0 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 601 into unit 638 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.7899416924930303,
+          "p": 3.427604102584366e-05,
+          "windows_both_active": 0,
+          "windows_active": [
+            7,
+            12
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.1760892885673202,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.8910382050428145
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        665,
+        619
+      ],
+      "message": "units 665 and 619 look like one neuron: one fades out as the other fades in (rate r=-0.84, overlapping in 2 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 619 into unit 665 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.839706078878067,
+          "p": 3.651291085589915e-06,
+          "windows_both_active": 2,
+          "windows_active": [
+            13,
+            9
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.7600811948980517,
+          "window_s": 148.4,
+          "amplitude_ratio": 1.2338920096739558
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        717,
+        280
+      ],
+      "message": "units 717 and 280 look like one neuron: one fades out as the other fades in (rate r=-0.59, overlapping in 0 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 280 into unit 717 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.593462200749745,
+          "p": 0.0058081649448348295,
+          "windows_both_active": 0,
+          "windows_active": [
+            9,
+            6
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 1.900905349794238,
+          "window_s": 148.4,
+          "amplitude_ratio": 0.8312341812284405
+        },
+        "mode": "handoff"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        769,
+        632
+      ],
+      "message": "units 769 and 632 look like one neuron: one fades out as the other fades in (rate r=-0.58, overlapping in 0 of 20 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 632 into unit 769 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.5822944283221454,
+          "p": 0.007063062377923569,
+          "windows_both_active": 0,
+          "windows_active": [
+            16,
+            4
+          ],
+          "blocks": [
+            1,
+            1
+          ],
+          "rate_ratio": 0.7015604681404422,
+          "window_s": 148.4,
+          "amplitude_ratio": 1.007005528257836
+        },
+        "mode": "handoff"
+      }
+    }
+  ],
+  "not_checked": [
+    {
+      "code": "SPLIT_UNIT",
+      "reason": "3282 of 6194 nearby pairs had too few spikes for the refractory test (expected < 10 within \u00b11.5 ms); small fragments of a split neuron can hide here, and longer recordings make them testable",
+      "partial": true
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "reason": "4517 of 6194 candidate pairs had too few coincidences to test (expected < 10 near zero lag)",
+      "partial": true
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "reason": "63 unit(s) had too few spikes for the detection-loss test (< 6 x 100); only amplitude/depth trends were tested",
+      "partial": true
+    }
+  ],
+  "finding": {
+    "name": "condition_contrast (0-0.5 s after each event)",
+    "baseline": {
+      "mean_contrast_hz": 0.042089920844092146,
+      "frac_units_enhanced": 0.14942528735632185,
+      "frac_units_suppressed": 0.12452107279693486
+    },
+    "audit": [
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "CONTAMINATION",
+        "n_dropped": 113,
+        "baseline": 0.042089920844092146,
+        "value": 0.07105457062078248,
+        "rel_change": 0.6881611843362706,
+        "control_q": 2.2084618335539044,
+        "control_flip_rate": 0.15,
+        "verdict": "nonspecific",
+        "note": "",
+        "action": "remove 113"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "CONTAMINATION",
+        "n_dropped": 113,
+        "baseline": 0.14942528735632185,
+        "value": 0.13691931540342298,
+        "rel_change": 0.0836938123001694,
+        "control_q": 0.1142937746849726,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "remove 113"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "CONTAMINATION",
+        "n_dropped": 113,
+        "baseline": 0.12452107279693486,
+        "value": 0.11246943765281174,
+        "rel_change": 0.09678390069588107,
+        "control_q": 0.0792514575888659,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "remove 113"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "OVERLAP_HOLE",
+        "n_dropped": 3,
+        "baseline": 0.042089920844092146,
+        "value": 0.049811885351695145,
+        "rel_change": 0.18346350747976933,
+        "control_q": 0.2341038856818327,
+        "control_flip_rate": 0.0,
+        "verdict": "nonspecific",
+        "note": "",
+        "action": "remove 3"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "OVERLAP_HOLE",
+        "n_dropped": 3,
+        "baseline": 0.14942528735632185,
+        "value": 0.15028901734104047,
+        "rel_change": 0.005780346820809224,
+        "control_q": 0.008403734993330522,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "remove 3"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "OVERLAP_HOLE",
+        "n_dropped": 3,
+        "baseline": 0.12452107279693486,
+        "value": 0.1233140655105973,
+        "rel_change": 0.00969319697643395,
+        "control_q": 0.010466874166296124,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "remove 3"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "SPLIT_UNIT",
+        "n_dropped": 15,
+        "baseline": 0.042089920844092146,
+        "value": 0.043207934026792606,
+        "rel_change": 0.026562491928691458,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 15"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "SPLIT_UNIT",
+        "n_dropped": 15,
+        "baseline": 0.14942528735632185,
+        "value": 0.15384615384615385,
+        "rel_change": 0.02958579881656802,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 15"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "SPLIT_UNIT",
+        "n_dropped": 15,
+        "baseline": 0.12452107279693486,
+        "value": 0.1242603550295858,
+        "rel_change": 0.002093764223941737,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 15"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "DRIFT_CONFOUND",
+        "n_dropped": 65,
+        "baseline": 0.042089920844092146,
+        "value": 0.05480258754582097,
+        "rel_change": 0.30203588998940134,
+        "control_q": 1.5580444285534496,
+        "control_flip_rate": 0.2,
+        "verdict": "nonspecific",
+        "note": "",
+        "action": "restrict 17, remove 48"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "DRIFT_CONFOUND",
+        "n_dropped": 65,
+        "baseline": 0.14942528735632185,
+        "value": 0.15644820295983086,
+        "rel_change": 0.04699951211579107,
+        "control_q": 0.07448376831606139,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "restrict 17, remove 48"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "DRIFT_CONFOUND",
+        "n_dropped": 65,
+        "baseline": 0.12452107279693486,
+        "value": 0.1331923890063425,
+        "rel_change": 0.06963733940478138,
+        "control_q": 0.07089940828402369,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "restrict 17, remove 48"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "ALL_FLAGS",
+        "n_dropped": 184,
+        "baseline": 0.042089920844092146,
+        "value": 0.08693186903275157,
+        "rel_change": 1.0653844742251057,
+        "control_q": 2.465264292288406,
+        "control_flip_rate": 0.2,
+        "verdict": "nonspecific",
+        "note": "",
+        "action": "merge 15, restrict 17, remove 152"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "ALL_FLAGS",
+        "n_dropped": 184,
+        "baseline": 0.14942528735632185,
+        "value": 0.14689265536723164,
+        "rel_change": 0.016949152542372916,
+        "control_q": 0.14453671328671316,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "merge 15, restrict 17, remove 152"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "ALL_FLAGS",
+        "n_dropped": 184,
+        "baseline": 0.12452107279693486,
+        "value": 0.11864406779661017,
+        "rel_change": 0.04719687092568443,
+        "control_q": 0.15119045174023685,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "merge 15, restrict 17, remove 152"
+      }
+    ]
+  },
+  "thresholds": {
+    "min_spikes": 100,
+    "max_pairs": 2000000,
+    "max_spike_pairs": 3000000000.0,
+    "dup_window_ms": 0.25,
+    "dup_fraction_warn": 0.2,
+    "dup_fraction_error": 0.5,
+    "dup_min_ratio": 10.0,
+    "dup_max_distance_um": 100.0,
+    "dup_max_lag_ms": 1.0,
+    "overlap_center_ms": 0.5,
+    "overlap_flank_lo_ms": 2.0,
+    "overlap_flank_hi_ms": 10.0,
+    "overlap_ratio_warn": 0.6,
+    "overlap_ratio_error": 0.3,
+    "overlap_min_expected": 10.0,
+    "overlap_alpha": 0.001,
+    "overlap_max_distance_um": 100.0,
+    "split_max_distance_um": 100.0,
+    "split_ratio": 0.3,
+    "split_outer_ms": 1.0,
+    "split_outer_ratio": 0.25,
+    "split_max_merged_contamination": 0.1,
+    "split_handoff_windows": 20,
+    "split_min_window_s": 20.0,
+    "split_active_fraction": 0.2,
+    "split_handoff_r": 0.5,
+    "split_max_ratio": 2.0,
+    "split_max_amp_ratio": 1.25,
+    "contam_warn": 0.1,
+    "contam_error": 0.2,
+    "contam_min_violations": 5,
+    "drift_window_s": 60.0,
+    "drift_min_windows": 6,
+    "drift_min_window_s": 10.0,
+    "drift_min_spikes_per_window": 5,
+    "drift_rho": 0.6,
+    "drift_alpha": 0.01,
+    "drift_min_amp_change": 0.15,
+    "drift_min_depth_change_um": 10.0,
+    "drift_min_completeness_change": 0.15,
+    "drift_loss_slack": 0.25,
+    "drift_completeness_spikes": 100,
+    "drift_confound_r": 0.3,
+    "drift_rho_time": 0.8,
+    "drift_min_fade": 0.3,
+    "drift_vanish": 0.3,
+    "drift_stable_loss": 0.1,
+    "drift_stable_amp_drop": 0.15,
+    "drift_min_stable": 0.3,
+    "mv_min_units": 5,
+    "mv_sign_agreement": 0.9,
+    "mv_spread": 0.5,
+    "cmp_delta_ms": 0.4,
+    "cmp_min_agreement": 0.5,
+    "cmp_spread": 0.25,
+    "audit_robust": 0.1,
+    "audit_sensitive": 0.25,
+    "audit_controls": 20,
+    "audit_control_quantile": 0.95,
+    "audit_seed": 0,
+    "audit_controls_when_robust": 0
+  }
+}

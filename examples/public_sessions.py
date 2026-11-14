@@ -5,15 +5,17 @@ and one session of a public DANDI dataset (by default the Steinmetz et
 al. 2019 Neuropixels dataset, dandiset 000017). For each, it runs
 
 * ``ayar scan`` with a finding (feedback: correct vs error trials, when the
-  session has trials) and the finding audit,
+  session has trials) and the finding audit, on all units and again on the units
+  the dataset's own curation keeps (IBL: ``label>=1``; Steinmetz et al.:
+  ``phy_annotations>=2``),
 * ``ayar multiverse`` over the default curation grid (plus IBL's own quality
-  label for the IBL session),
+  label for the IBL session), on all units,
 
 and writes, in ``--out``:
 
 * ``RESULTS.md``: a summary of everything below, ready to read or to paste,
-* ``<session>_scan.html`` / ``_multiverse.html``: the reports with the evidence,
-* ``<session>_scan.json`` / ``_multiverse.json`` / ``_curation.json``.
+* ``<session>.html``: one report per session (both scans and the multiverse),
+* ``<session>_scan.json`` / ``_kept_scan.json`` / ``_multiverse.json`` / ``_curation.json``.
 
 Needs internet access to openalyx.internationalbrainlab.org and dandiarchive.org.
 IBL's public server now needs a free personal account (register at
@@ -52,6 +54,11 @@ from ayar.multiverse import DEFAULT_GRID, Rule
 IBL_PID = "da8dfec1-d265-44e8-84ce-6ae9c109b8bd"
 DANDISET = "000017"  # Steinmetz et al. 2019, Nature: Neuropixels, units + trials
 OPENALYX = "https://openalyx.internationalbrainlab.org"
+# the units each dataset's authors analyse
+KEEP = {
+    "ibl": "label>=1",  # IBL: passes all three single-unit quality criteria
+    "dandi": "phy_annotations>=2",  # Steinmetz et al.: 2 = good, 3 = unsorted; 1 (MUA) not analysed
+}
 
 
 # ------------------------------------------------------------------ loading
@@ -192,6 +199,7 @@ def load_dandi(dandiset: str, asset_path: str | None, max_gb: float, cache: Path
         kw.update(trial_label=label, event_time_column=tcol)
     b = ayar.from_nwb(local, **kw)
     info = {
+        "nwb_columns": b.meta.get("nwb_columns"),
         "title": f"DANDI {dandiset}: {name}",
         "source": f"DANDI Archive, dandiset {dandiset}, file {name}",
         "link": f"https://dandiarchive.org/dandiset/{dandiset}",
@@ -207,6 +215,8 @@ def rate_finding(bundle):
 
 
 def analyse(key: str, bundle, metrics: dict, info: dict, out: Path, multiverse: bool) -> dict:
+    from ayar.keep import metric_table
+
     two_conditions = bundle.events is not None and bundle.events.labels is not None and \
         bundle.events.label_values.size == 2
     finding = condition_contrast if two_conditions else rate_finding
@@ -221,10 +231,25 @@ def analyse(key: str, bundle, metrics: dict, info: dict, out: Path, multiverse: 
     rep = ayar.scan(bundle, finding, finding_name=fname)
     res["scan_s"] = round(time.time() - t, 1)
     (out / f"{key}_scan.json").write_text(rep.to_json())
-    html.write(out / f"{key}_scan.html", html.scan_html(rep, bundle))
     write_spikeinterface(rep, bundle, out / f"{key}_curation.json")
     res["scan"] = rep.to_dict()
+    scans = [("all units", rep, bundle)]
 
+    rule = KEEP.get(key)
+    if rule and rule.split(">")[0].split("<")[0].split("=")[0] in metric_table(bundle, metrics):
+        kept = ayar.keep(bundle, [rule], metrics=metrics)
+        t = time.time()
+        krep = ayar.scan(kept, finding, finding_name=fname)
+        res["kept_scan_s"] = round(time.time() - t, 1)
+        (out / f"{key}_kept_scan.json").write_text(krep.to_json())
+        res["kept"] = kept.meta["kept"]
+        res["kept_scan"] = krep.to_dict()
+        k = kept.meta["kept"]
+        scans.append((f"kept units ({rule}: {k['units_after']} of {k['units_before']})", krep, kept))
+    elif rule:
+        res["kept_note"] = f"{rule}: metric not in this file"
+
+    mv = None
     if multiverse:
         grid = list(DEFAULT_GRID)
         if "label" in metrics:
@@ -233,9 +258,12 @@ def analyse(key: str, bundle, metrics: dict, info: dict, out: Path, multiverse: 
         mv = ayar.multiverse(bundle, finding, grid, metrics=metrics, finding_name=fname)
         res["multiverse_s"] = round(time.time() - t, 1)
         (out / f"{key}_multiverse.json").write_text(mv.to_json())
-        html.write(out / f"{key}_multiverse.html", html.multiverse_html(mv))
         res["multiverse"] = mv.to_dict()
-    info_path.write_text(json.dumps({k: v for k, v in res.items() if k not in ("scan", "multiverse")},
+    for old in (f"{key}_scan.html", f"{key}_multiverse.html"):  # one page per session since 0.5
+        (out / old).unlink(missing_ok=True)
+    page = html.session_html(title=f"ayar: {info['title']}", subtitle=info["source"], scans=scans, multiverse=mv)
+    html.write(out / f"{key}.html", page)
+    info_path.write_text(json.dumps({k: v for k, v in res.items() if k not in ("scan", "kept_scan", "multiverse")},
                                     indent=2, default=float))
     return res
 
@@ -251,13 +279,20 @@ def rebuild(out: Path) -> list[dict]:
         if not (info_p.exists() and scan_p.exists()):
             continue
         res = json.loads(info_p.read_text())
-        sc = json.loads(scan_p.read_text())
-        if sc.get("finding") and sc["finding"].get("audit") is not None:
-            rows = [AuditRow(**{k: v for k, v in a.items() if k in AuditRow.__dataclass_fields__})
-                    for a in sc["finding"]["audit"]]
-            rep = Report(sc["bundle"], [], [], {}, rows, sc["finding"]["name"], sc["finding"]["baseline"])
-            sc["summary"]["finding_verdicts"] = rep.finding_verdicts
-        res["scan"] = sc
+
+        def read(path):
+            sc = json.loads(path.read_text())
+            if sc.get("finding") and sc["finding"].get("audit") is not None:
+                rows = [AuditRow(**{k: v for k, v in a.items() if k in AuditRow.__dataclass_fields__})
+                        for a in sc["finding"]["audit"]]
+                rep = Report(sc["bundle"], [], [], {}, rows, sc["finding"]["name"], sc["finding"]["baseline"])
+                sc["summary"]["finding_verdicts"] = rep.finding_verdicts
+            return sc
+
+        res["scan"] = read(scan_p)
+        kept_p = out / f"{key}_kept_scan.json"
+        if kept_p.exists():
+            res["kept_scan"] = read(kept_p)
         mv_p = out / f"{key}_multiverse.json"
         if mv_p.exists():
             res["multiverse"] = json.loads(mv_p.read_text())
@@ -276,31 +311,22 @@ def _f(x):
     return str(x)
 
 
-def session_md(r: dict) -> str:
-    s, sc = r["summary"], r["scan"]
-    L = [f"## {r['title']}", "", f"- **Source:** {r['source']} ([link]({r['link']}))",
-         f"- **Data:** {s['n_units']} units, {s['n_spikes']:,} spikes, {s['duration_s']:g} s, tier {s['tier']} "
-         f"({'amplitudes' if s['amplitudes'] else 'no amplitudes'}, {'depths' if s['depths'] else 'no depths'})",
-         f"- **Events:** {r['events'] or 'none (the finding is firing rates)'}"
-         + (f"; {', '.join(f'{k}: {v}' for k, v in r['condition_counts'].items())} trials"
-            if r.get("condition_counts") else ""),
-         f"- **Run time:** scan + audit {r['scan_s']} s" + (f", multiverse {r['multiverse_s']} s" if "multiverse_s" in r else ""),
-         ""]
+def _flags_md(sc: dict, n_units: int, examples: bool = True) -> list[str]:
     flags = sc["flags"]
-    L += ["### Sorting artifacts flagged", ""]
     if not flags:
-        L += ["None.", ""]
-    else:
-        codes = sorted({f["code"] for f in flags})
-        L += ["| detector | errors | warnings | units involved |", "|---|---|---|---|"]
-        for c in codes:
-            fl = [f for f in flags if f["code"] == c]
-            units = {u for f in fl for u in f["units"]}
-            L.append(f"| `{c}` | {sum(f['severity'] == 'error' for f in fl)} | "
-                     f"{sum(f['severity'] == 'warning' for f in fl)} | {len(units)} |")
-        n_flagged = len({u for f in flags for u in f["units"]})
-        L += ["", f"{n_flagged} of {s['n_units']} units are involved in at least one flag.", "",
-              "Examples (up to three per detector):", ""]
+        return ["None.", ""]
+    L = []
+    codes = sorted({f["code"] for f in flags})
+    L += ["| detector | errors | warnings | units involved |", "|---|---|---|---|"]
+    for c in codes:
+        fl = [f for f in flags if f["code"] == c]
+        units = {u for f in fl for u in f["units"]}
+        L.append(f"| `{c}` | {sum(f['severity'] == 'error' for f in fl)} | "
+                 f"{sum(f['severity'] == 'warning' for f in fl)} | {len(units)} |")
+    n_flagged = len({u for f in flags for u in f["units"]})
+    L += ["", f"{n_flagged} of {n_units} units are involved in at least one flag.", ""]
+    if examples:
+        L += ["Examples (up to three per detector):", ""]
         for c in codes:
             for f in [f for f in flags if f["code"] == c][:3]:
                 msg = f["message"]
@@ -313,35 +339,73 @@ def session_md(r: dict) -> str:
         L += ["Not checked, or only partly:", ""]
         L += [f"- `{n['code']}`: {n['reason']}" for n in sc["not_checked"]]
         L.append("")
+    return L
 
+
+def _audit_md(sc: dict, title: str) -> list[str]:
     fd = sc.get("finding")
-    if fd and fd.get("audit") is not None:
-        L += [f"### Finding audit: {r['finding']}", ""]
-        verdicts = sc["summary"]["finding_verdicts"]
-        if not fd["audit"]:
-            L += ["Nothing to repair.", ""]
-        else:
-            order = ["flipped", "sensitive", "shifted", "uncontrolled", "nonspecific", "robust", "failed"]
-            L += ["| number | baseline | verdict | repair that sets the verdict: change (random 95th pct) | "
-                  "not comparable with random repairs |", "|---|---|---|---|---|"]
-            for key, base in fd["baseline"].items():
-                rows = [a for a in fd["audit"] if a["key"] == key and a["rel_change"] is not None]
-                ctrl = [a for a in rows if a["verdict"] != "uncontrolled"] or rows
-                worst = min(ctrl, key=lambda a: (order.index(a["verdict"]),
-                                                 -(a["rel_change"] if np.isfinite(a["rel_change"]) else 0)),
-                            default=None)
-                eff = ""
-                if worst is not None:
-                    cq = "no controls" if worst["control_q"] is None else f"random {worst['control_q']:.0%}"
-                    eff = f"{worst['ablation']} ({worst['action']}): {worst['rel_change']:.0%} ({cq})"
-                unc = [a for a in rows if a["verdict"] == "uncontrolled"]
-                unc_txt = "; ".join(f"{a['ablation']}: {a['rel_change']:.0%}" for a in unc) or "-"
-                L.append(f"| `{key}` | {_f(base)} | **{verdicts.get(key, 'n/a')}** | {eff} | {unc_txt} |")
-            L.append("")
+    if not fd or fd.get("audit") is None:
+        return []
+    L = [title, ""]
+    verdicts = sc["summary"]["finding_verdicts"]
+    if not fd["audit"]:
+        return L + ["Nothing to repair.", ""]
+    order = ["flipped", "sensitive", "shifted", "uncontrolled", "nonspecific", "robust", "failed"]
+    L += ["| number | baseline | verdict | repair that sets the verdict: change (random 95th pct) | "
+          "not comparable with random repairs |", "|---|---|---|---|---|"]
+    for key, base in fd["baseline"].items():
+        rows = [a for a in fd["audit"] if a["key"] == key and a["rel_change"] is not None]
+        ctrl = [a for a in rows if a["verdict"] != "uncontrolled"] or rows
+        worst = min(ctrl, key=lambda a: (order.index(a["verdict"]),
+                                         -(a["rel_change"] if np.isfinite(a["rel_change"]) else 0)),
+                    default=None)
+        eff = ""
+        if worst is not None:
+            cq = "no controls" if worst["control_q"] is None else f"random {worst['control_q']:.0%}"
+            eff = f"{worst['ablation']} ({worst['action']}): {worst['rel_change']:.0%} ({cq})"
+        unc = [a for a in rows if a["verdict"] == "uncontrolled"]
+        unc_txt = "; ".join(f"{a['ablation']}: {a['rel_change']:.0%}" for a in unc) or "-"
+        L.append(f"| `{key}` | {_f(base)} | **{verdicts.get(key, 'n/a')}** | {eff} | {unc_txt} |")
+    return L + [""]
+
+
+def session_md(r: dict) -> str:
+    s, sc = r["summary"], r["scan"]
+    has = [x for x, on in (("amplitudes", s["amplitudes"]), ("depths", s["depths"])) if on]
+    probes = f", {s['probes']} probes" if s.get("probes") else ""
+    runtime = f"scan + audit {r['scan_s']} s"
+    if "kept_scan_s" in r:
+        runtime += f", on kept units {r['kept_scan_s']} s"
+    if "multiverse_s" in r:
+        runtime += f", multiverse {r['multiverse_s']} s"
+    L = [f"## {r['title']}", "", f"- **Source:** {r['source']} ([link]({r['link']}))",
+         f"- **Data:** {s['n_units']} units, {s['n_spikes']:,} spikes, {s['duration_s']:g} s, tier {s['tier']} "
+         f"({', '.join(has) or 'spike times only'}{probes})",
+         f"- **Events:** {r['events'] or 'none (the finding is firing rates)'}"
+         + (f"; {', '.join(f'{k}: {v}' for k, v in r['condition_counts'].items())} trials"
+            if r.get("condition_counts") else ""),
+         f"- **Run time:** {runtime}"]
+    if r.get("nwb_columns"):
+        L.append("- **Read from the NWB units table:** " + ", ".join(f"{k} from `{v}`" for k, v in r["nwb_columns"].items()))
+    L.append("")
+    L += ["### Sorting artifacts flagged: all units", ""] + _flags_md(sc, s["n_units"])
+    ks = r.get("kept_scan")
+    if ks:
+        k = ks["bundle"]["kept"]
+        L += [f"### Sorting artifacts flagged: kept units (`{' and '.join(k['rules'])}`)", "",
+              f"The units the dataset's authors analyse: {k['units_after']} of {k['units_before']}. "
+              "The scan runs on these units alone, so a flag needs both of its units kept, and "
+              "the audit's random controls come from kept units.", ""]
+        L += _flags_md(ks, k["units_after"], examples=False)
+    elif r.get("kept_note"):
+        L += [f"Kept units not scanned: {r['kept_note']}.", ""]
+    L += _audit_md(sc, f"### Finding audit: {r['finding']}, all units")
+    if ks:
+        L += _audit_md(ks, f"### Finding audit: {r['finding']}, kept units")
 
     mv = r.get("multiverse")
     if mv:
-        L += ["### Curation multiverse", "",
+        L += ["### Curation multiverse (all units)", "",
               f"{mv['counts']['evaluated']} of {mv['counts']['universes']} universes evaluated "
               f"(grid: `{'  '.join(mv['grid'])}`).", "",
               "| number | all units | min | median | max | same sign | verdict | most influential threshold |",
@@ -352,11 +416,12 @@ def session_md(r: dict) -> str:
                      f"{_f(k['maximum'])} | {k['sign_agreement']:.0%} | **{k['verdict']}** | {infl} |")
         L += [""] + [f"- note: {n}" for n in mv["notes"]] + ([""] if mv["notes"] else [])
 
-    L += ["### Files", "", f"- [{r['key']}_scan.html]({r['key']}_scan.html): every flag with its evidence plot",
-          f"- [{r['key']}_curation.json]({r['key']}_curation.json): the repairs as a SpikeInterface curation"]
-    if mv:
-        L.append(f"- [{r['key']}_multiverse.html]({r['key']}_multiverse.html): the specification curves")
-    L.append("")
+    key = r["key"]
+    L += ["### Files", "", f"- [{key}.html]({key}.html): the session report: every flag with its evidence plot, "
+          "the audits and the specification curves",
+          f"- [{key}_curation.json]({key}_curation.json): the repairs as a SpikeInterface curation",
+          f"- `{key}_scan.json`" + (f", `{key}_kept_scan.json`" if ks else "")
+          + (f", `{key}_multiverse.json`" if mv else "") + ": everything above, machine-readable", ""]
     return "\n".join(L)
 
 
@@ -372,16 +437,19 @@ def write_md(results: list[dict], failures: dict, out: Path, argv: str) -> Path:
          f"`examples/public_sessions.py` with ayar {ayar.__version__}.", "",
          "## Summary", ""]
     if results:
-        L += ["| session | units | flags (errors / warnings) | finding audit | curation multiverse |",
-              "|---|---|---|---|---|"]
+        L += ["| session | units | flags (errors / warnings) | kept units: flags | finding audit | curation multiverse |",
+              "|---|---|---|---|---|---|"]
         for r in results:
             sc = r["scan"]
             fv = ", ".join(f"{k}: {v}" for k, v in sc["summary"]["finding_verdicts"].items()) or "nothing to repair"
             if any(a["verdict"] == "uncontrolled" for a in (sc.get("finding") or {}).get("audit") or []):
                 fv += " (combined repair not comparable: too few unflagged units)"
             mv = ", ".join(f"{k['key']}: {k['verdict']}" for k in r["multiverse"]["summaries"]) if r.get("multiverse") else "not run"
+            ks = r.get("kept_scan")
+            kt = (f"{ks['bundle']['kept']['units_after']} units (`{' and '.join(ks['bundle']['kept']['rules'])}`): "
+                  f"{ks['summary']['errors']} / {ks['summary']['warnings']}") if ks else "n/a"
             L.append(f"| {r['title']} | {r['summary']['n_units']} | {sc['summary']['errors']} / "
-                     f"{sc['summary']['warnings']} | {fv} | {mv} |")
+                     f"{sc['summary']['warnings']} | {kt} | {fv} | {mv} |")
         L.append("")
     for k, err in failures.items():
         L += [f"- **{k} failed:** `{err.strip().splitlines()[-1]}`", ""]

@@ -110,7 +110,8 @@ def _direct(bundle, a, b, wins) -> dict[Window, int]:
 
 
 def _bands(bundle: Bundle, units: np.ndarray, max_distance_um: float):
-    depth = np.array([bundle.depth(int(u)) if bundle.depth(int(u)) is not None else np.nan for u in units])
+    pos = [bundle.position(int(u)) for u in units]
+    depth = np.array([np.nan if v is None else v for v in pos])
     ok = np.isfinite(depth)
     band = np.full(units.size, -1, dtype=np.int64)
     if ok.any():

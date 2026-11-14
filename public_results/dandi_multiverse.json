@@ -1,14 +1,15 @@
 {
-  "ayar_version": "0.5.0.dev0",
+  "ayar_version": "0.5.0",
   "finding": "condition_contrast (0-0.5 s after each event)",
   "grid": [
     "firing_rate>=0,0.1,0.5,1",
     "presence_ratio>=0,0.5,0.9",
-    "isi_contamination<=1,0.25,0.1"
+    "isi_contamination<=1,0.25,0.1",
+    "amplitude_cutoff<=0.5,0.1"
   ],
   "counts": {
-    "universes": 36,
-    "evaluated": 36,
+    "universes": 72,
+    "evaluated": 72,
     "skipped_too_few_units": 0,
     "failed": 0,
     "units_total": 778
@@ -17,54 +18,57 @@
     {
       "key": "mean_contrast_hz",
       "baseline": 0.06612981668956461,
-      "n": 36,
-      "median": -0.01907942505605157,
-      "minimum": -0.13206996115036557,
+      "n": 72,
+      "median": -0.07340780307311474,
+      "minimum": -0.3969398808108486,
       "maximum": 0.07871441075999702,
-      "q05": -0.11582967234778427,
-      "q95": 0.06678410660628568,
-      "sign_agreement": 0.5555555555555556,
-      "spread": 9.571241188745827,
+      "q05": -0.32850493622343735,
+      "q95": 0.06143888284606005,
+      "sign_agreement": 0.7361111111111112,
+      "spread": 5.312021375726369,
       "influence": {
-        "firing_rate": 2.0776464708524958,
-        "presence_ratio": 1.52519390262283,
-        "isi_contamination": 8.208406077599067
+        "firing_rate": 1.1437682083264735,
+        "presence_ratio": 0.9945734126074856,
+        "isi_contamination": 2.448177029137628,
+        "amplitude_cutoff": 2.281337113239047
       },
       "verdict": "sign_unstable"
     },
     {
       "key": "frac_units_enhanced",
       "baseline": 0.16066838046272494,
-      "n": 36,
-      "median": 0.13500261146846995,
+      "n": 72,
+      "median": 0.15977344256781106,
       "minimum": 0.11498257839721254,
-      "maximum": 0.17964071856287425,
-      "q05": 0.1164079822616408,
-      "q95": 0.17496730601569313,
+      "maximum": 0.24731182795698925,
+      "q05": 0.11926406926406927,
+      "q95": 0.22508865248226956,
       "sign_agreement": 1.0,
-      "spread": 0.4337643777189373,
+      "spread": 0.6623415100622008,
       "influence": {
-        "firing_rate": 0.08302429885180236,
-        "presence_ratio": 0.05515847643560148,
-        "isi_contamination": 0.2872149153308759
+        "firing_rate": 0.1884394269845941,
+        "presence_ratio": 0.0812631923269503,
+        "isi_contamination": 0.2657895239688959,
+        "amplitude_cutoff": 0.29430970520905536
       },
-      "verdict": "stable"
+      "verdict": "threshold_dependent"
     },
     {
       "key": "frac_units_suppressed",
       "baseline": 0.10282776349614396,
-      "n": 36,
-      "median": 0.15882463178644307,
+      "n": 72,
+      "median": 0.1688167902185424,
       "minimum": 0.09268292682926829,
-      "maximum": 0.21393034825870647,
-      "q05": 0.10166862623967904,
-      "q95": 0.20201342281879195,
+      "maximum": 0.25,
+      "q05": 0.10661733374996449,
+      "q95": 0.2284011627906977,
       "sign_agreement": 1.0,
-      "spread": 0.631796185833677,
+      "spread": 0.7213964255751901,
       "influence": {
-        "firing_rate": 0.5438245846290397,
-        "presence_ratio": 0.12586959018070823,
-        "isi_contamination": 0.1275570785418744
+        "firing_rate": 0.3771264793765177,
+        "presence_ratio": 0.2468303501599148,
+        "isi_contamination": 0.12771045490669578,
+        "amplitude_cutoff": 0.18869885110227538
       },
       "verdict": "threshold_dependent"
     }
@@ -74,7 +78,8 @@
       "levels": {
         "firing_rate": 0.0,
         "presence_ratio": 0.0,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 778,
       "values": {
@@ -87,7 +92,22 @@
       "levels": {
         "firing_rate": 0.0,
         "presence_ratio": 0.0,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 204,
+      "values": {
+        "mean_contrast_hz": 0.0029132548107880557,
+        "frac_units_enhanced": 0.17647058823529413,
+        "frac_units_suppressed": 0.12254901960784313
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 470,
       "values": {
@@ -100,7 +120,22 @@
       "levels": {
         "firing_rate": 0.0,
         "presence_ratio": 0.0,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 149,
+      "values": {
+        "mean_contrast_hz": -0.17590875135798278,
+        "frac_units_enhanced": 0.14093959731543623,
+        "frac_units_suppressed": 0.1476510067114094
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 410,
       "values": {
@@ -112,8 +147,23 @@
     {
       "levels": {
         "firing_rate": 0.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 132,
+      "values": {
+        "mean_contrast_hz": -0.1528691448046286,
+        "frac_units_enhanced": 0.12121212121212122,
+        "frac_units_suppressed": 0.14393939393939395
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
         "presence_ratio": 0.5,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 749,
       "values": {
@@ -126,7 +176,22 @@
       "levels": {
         "firing_rate": 0.0,
         "presence_ratio": 0.5,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 190,
+      "values": {
+        "mean_contrast_hz": -0.025063093653925568,
+        "frac_units_enhanced": 0.18421052631578946,
+        "frac_units_suppressed": 0.13157894736842105
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 446,
       "values": {
@@ -139,7 +204,22 @@
       "levels": {
         "firing_rate": 0.0,
         "presence_ratio": 0.5,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 138,
+      "values": {
+        "mean_contrast_hz": -0.20638801494341466,
+        "frac_units_enhanced": 0.14492753623188406,
+        "frac_units_suppressed": 0.15942028985507245
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 387,
       "values": {
@@ -151,8 +231,23 @@
     {
       "levels": {
         "firing_rate": 0.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 122,
+      "values": {
+        "mean_contrast_hz": -0.17778619444404742,
+        "frac_units_enhanced": 0.12295081967213115,
+        "frac_units_suppressed": 0.1557377049180328
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
         "presence_ratio": 0.9,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 541,
       "values": {
@@ -165,7 +260,22 @@
       "levels": {
         "firing_rate": 0.0,
         "presence_ratio": 0.9,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 133,
+      "values": {
+        "mean_contrast_hz": -0.09078056955815865,
+        "frac_units_enhanced": 0.21804511278195488,
+        "frac_units_suppressed": 0.18045112781954886
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 287,
       "values": {
@@ -178,7 +288,22 @@
       "levels": {
         "firing_rate": 0.0,
         "presence_ratio": 0.9,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 95,
+      "values": {
+        "mean_contrast_hz": -0.32214319582740636,
+        "frac_units_enhanced": 0.18947368421052632,
+        "frac_units_suppressed": 0.22105263157894736
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 231,
       "values": {
@@ -189,9 +314,24 @@
     },
     {
       "levels": {
+        "firing_rate": 0.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 80,
+      "values": {
+        "mean_contrast_hz": -0.3192967160709096,
+        "frac_units_enhanced": 0.1625,
+        "frac_units_suppressed": 0.225
+      }
+    },
+    {
+      "levels": {
         "firing_rate": 0.1,
         "presence_ratio": 0.0,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 677,
       "values": {
@@ -204,7 +344,22 @@
       "levels": {
         "firing_rate": 0.1,
         "presence_ratio": 0.0,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 199,
+      "values": {
+        "mean_contrast_hz": 0.0030434065123641886,
+        "frac_units_enhanced": 0.18090452261306533,
+        "frac_units_suppressed": 0.12562814070351758
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 387,
       "values": {
@@ -217,7 +372,22 @@
       "levels": {
         "firing_rate": 0.1,
         "presence_ratio": 0.0,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 144,
+      "values": {
+        "mean_contrast_hz": -0.1819379863734703,
+        "frac_units_enhanced": 0.14583333333333334,
+        "frac_units_suppressed": 0.1527777777777778
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 327,
       "values": {
@@ -229,8 +399,23 @@
     {
       "levels": {
         "firing_rate": 0.1,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 127,
+      "values": {
+        "mean_contrast_hz": -0.15879837165079733,
+        "frac_units_enhanced": 0.12598425196850394,
+        "frac_units_suppressed": 0.14960629921259844
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
         "presence_ratio": 0.5,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 663,
       "values": {
@@ -243,7 +428,22 @@
       "levels": {
         "firing_rate": 0.1,
         "presence_ratio": 0.5,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 187,
+      "values": {
+        "mean_contrast_hz": -0.025434093745289182,
+        "frac_units_enhanced": 0.18716577540106952,
+        "frac_units_suppressed": 0.13368983957219252
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 376,
       "values": {
@@ -256,7 +456,22 @@
       "levels": {
         "firing_rate": 0.1,
         "presence_ratio": 0.5,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 135,
+      "values": {
+        "mean_contrast_hz": -0.210931361468996,
+        "frac_units_enhanced": 0.14814814814814814,
+        "frac_units_suppressed": 0.16296296296296298
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 317,
       "values": {
@@ -268,8 +483,23 @@
     {
       "levels": {
         "firing_rate": 0.1,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 119,
+      "values": {
+        "mean_contrast_hz": -0.18221935679241175,
+        "frac_units_enhanced": 0.12605042016806722,
+        "frac_units_suppressed": 0.15966386554621848
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
         "presence_ratio": 0.9,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 541,
       "values": {
@@ -282,7 +512,22 @@
       "levels": {
         "firing_rate": 0.1,
         "presence_ratio": 0.9,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 133,
+      "values": {
+        "mean_contrast_hz": -0.09078056955815865,
+        "frac_units_enhanced": 0.21804511278195488,
+        "frac_units_suppressed": 0.18045112781954886
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 287,
       "values": {
@@ -295,7 +540,22 @@
       "levels": {
         "firing_rate": 0.1,
         "presence_ratio": 0.9,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 95,
+      "values": {
+        "mean_contrast_hz": -0.32214319582740636,
+        "frac_units_enhanced": 0.18947368421052632,
+        "frac_units_suppressed": 0.22105263157894736
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 231,
       "values": {
@@ -306,9 +566,24 @@
     },
     {
       "levels": {
+        "firing_rate": 0.1,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 80,
+      "values": {
+        "mean_contrast_hz": -0.3192967160709096,
+        "frac_units_enhanced": 0.1625,
+        "frac_units_suppressed": 0.225
+      }
+    },
+    {
+      "levels": {
         "firing_rate": 0.5,
         "presence_ratio": 0.0,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 508,
       "values": {
@@ -321,7 +596,22 @@
       "levels": {
         "firing_rate": 0.5,
         "presence_ratio": 0.0,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 146,
+      "values": {
+        "mean_contrast_hz": 0.009136401093979538,
+        "frac_units_enhanced": 0.2191780821917808,
+        "frac_units_suppressed": 0.1643835616438356
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 284,
       "values": {
@@ -334,7 +624,22 @@
       "levels": {
         "firing_rate": 0.5,
         "presence_ratio": 0.0,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 108,
+      "values": {
+        "mean_contrast_hz": -0.21667904463603394,
+        "frac_units_enhanced": 0.18518518518518517,
+        "frac_units_suppressed": 0.19444444444444445
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 224,
       "values": {
@@ -346,8 +651,23 @@
     {
       "levels": {
         "firing_rate": 0.5,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 91,
+      "values": {
+        "mean_contrast_hz": -0.1908753844237715,
+        "frac_units_enhanced": 0.16483516483516483,
+        "frac_units_suppressed": 0.1978021978021978
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
         "presence_ratio": 0.5,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 502,
       "values": {
@@ -360,7 +680,22 @@
       "levels": {
         "firing_rate": 0.5,
         "presence_ratio": 0.5,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 141,
+      "values": {
+        "mean_contrast_hz": -0.03548160377261267,
+        "frac_units_enhanced": 0.2198581560283688,
+        "frac_units_suppressed": 0.1702127659574468
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 280,
       "values": {
@@ -373,7 +708,22 @@
       "levels": {
         "firing_rate": 0.5,
         "presence_ratio": 0.5,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 105,
+      "values": {
+        "mean_contrast_hz": -0.25698232795006987,
+        "frac_units_enhanced": 0.18095238095238095,
+        "frac_units_suppressed": 0.2
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 221,
       "values": {
@@ -385,8 +735,23 @@
     {
       "levels": {
         "firing_rate": 0.5,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 89,
+      "values": {
+        "mean_contrast_hz": -0.22687094488471804,
+        "frac_units_enhanced": 0.15730337078651685,
+        "frac_units_suppressed": 0.20224719101123595
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
         "presence_ratio": 0.9,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 444,
       "values": {
@@ -399,7 +764,22 @@
       "levels": {
         "firing_rate": 0.5,
         "presence_ratio": 0.9,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 114,
+      "values": {
+        "mean_contrast_hz": -0.10532688885829801,
+        "frac_units_enhanced": 0.23684210526315788,
+        "frac_units_suppressed": 0.20175438596491227
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 237,
       "values": {
@@ -412,7 +792,22 @@
       "levels": {
         "firing_rate": 0.5,
         "presence_ratio": 0.9,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 86,
+      "values": {
+        "mean_contrast_hz": -0.33646249400187883,
+        "frac_units_enhanced": 0.20930232558139536,
+        "frac_units_suppressed": 0.23255813953488372
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 181,
       "values": {
@@ -423,9 +818,24 @@
     },
     {
       "levels": {
+        "firing_rate": 0.5,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 71,
+      "values": {
+        "mean_contrast_hz": -0.3362803967074752,
+        "frac_units_enhanced": 0.18309859154929578,
+        "frac_units_suppressed": 0.23943661971830985
+      }
+    },
+    {
+      "levels": {
         "firing_rate": 1.0,
         "presence_ratio": 0.0,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 372,
       "values": {
@@ -438,7 +848,22 @@
       "levels": {
         "firing_rate": 1.0,
         "presence_ratio": 0.0,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 108,
+      "values": {
+        "mean_contrast_hz": -0.026930155962414052,
+        "frac_units_enhanced": 0.23148148148148148,
+        "frac_units_suppressed": 0.18518518518518517
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 232,
       "values": {
@@ -451,7 +876,22 @@
       "levels": {
         "firing_rate": 1.0,
         "presence_ratio": 0.0,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 89,
+      "values": {
+        "mean_contrast_hz": -0.28009887379224097,
+        "frac_units_enhanced": 0.19101123595505617,
+        "frac_units_suppressed": 0.21348314606741572
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 177,
       "values": {
@@ -463,8 +903,23 @@
     {
       "levels": {
         "firing_rate": 1.0,
+        "presence_ratio": 0.0,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 74,
+      "values": {
+        "mean_contrast_hz": -0.24965636953431203,
+        "frac_units_enhanced": 0.16216216216216217,
+        "frac_units_suppressed": 0.21621621621621623
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
         "presence_ratio": 0.5,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 370,
       "values": {
@@ -477,7 +932,22 @@
       "levels": {
         "firing_rate": 1.0,
         "presence_ratio": 0.5,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 107,
+      "values": {
+        "mean_contrast_hz": -0.03428420883952992,
+        "frac_units_enhanced": 0.2336448598130841,
+        "frac_units_suppressed": 0.18691588785046728
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 230,
       "values": {
@@ -490,7 +960,22 @@
       "levels": {
         "firing_rate": 1.0,
         "presence_ratio": 0.5,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 88,
+      "values": {
+        "mean_contrast_hz": -0.29191765078861853,
+        "frac_units_enhanced": 0.19318181818181818,
+        "frac_units_suppressed": 0.2159090909090909
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 176,
       "values": {
@@ -502,8 +987,23 @@
     {
       "levels": {
         "firing_rate": 1.0,
+        "presence_ratio": 0.5,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 74,
+      "values": {
+        "mean_contrast_hz": -0.24965636953431203,
+        "frac_units_enhanced": 0.16216216216216217,
+        "frac_units_suppressed": 0.21621621621621623
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
         "presence_ratio": 0.9,
-        "isi_contamination": 1.0
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 334,
       "values": {
@@ -516,7 +1016,22 @@
       "levels": {
         "firing_rate": 1.0,
         "presence_ratio": 0.9,
-        "isi_contamination": 0.25
+        "isi_contamination": 1.0,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 93,
+      "values": {
+        "mean_contrast_hz": -0.13245399405649147,
+        "frac_units_enhanced": 0.24731182795698925,
+        "frac_units_suppressed": 0.21505376344086022
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 201,
       "values": {
@@ -529,7 +1044,22 @@
       "levels": {
         "firing_rate": 1.0,
         "presence_ratio": 0.9,
-        "isi_contamination": 0.1
+        "isi_contamination": 0.25,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 77,
+      "values": {
+        "mean_contrast_hz": -0.3969398808108486,
+        "frac_units_enhanced": 0.2077922077922078,
+        "frac_units_suppressed": 0.24675324675324675
+      }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.5
       },
       "n_units": 149,
       "values": {
@@ -537,9 +1067,21 @@
         "frac_units_enhanced": 0.1342281879194631,
         "frac_units_suppressed": 0.2080536912751678
       }
+    },
+    {
+      "levels": {
+        "firing_rate": 1.0,
+        "presence_ratio": 0.9,
+        "isi_contamination": 0.1,
+        "amplitude_cutoff": 0.1
+      },
+      "n_units": 64,
+      "values": {
+        "mean_contrast_hz": -0.39190551438535315,
+        "frac_units_enhanced": 0.171875,
+        "frac_units_suppressed": 0.25
+      }
     }
   ],
-  "notes": [
-    "dropped rule amplitude_cutoff<=0.5,0.1: metric 'amplitude_cutoff' unavailable (have: firing_rate, isi_contamination, isi_violations, n_spikes, presence_ratio)"
-  ]
+  "notes": []
 }

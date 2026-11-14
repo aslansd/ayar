@@ -205,16 +205,36 @@ The default grid has 72 universes:
 firing_rate>=0,0.1,0.5,1  presence_ratio>=0,0.5,0.9  isi_contamination<=1,0.25,0.1  amplitude_cutoff<=0.5,0.1
 ```
 
-`ayar` computes these metrics itself (`ayar.metrics.compute`). You can add or override metrics
-with a CSV/TSV table (`--metrics`: SpikeInterface `quality_metrics`, Bombcell, your own; one
-row per unit) or `ayar.metrics.from_spikeinterface(analyzer)`, and use any column in a rule.
-Units missing a metric are not curated on it.
+`ayar` computes these metrics itself (`ayar.metrics.compute`), and readers add the ones the
+data carries (IBL's `label`; an NWB file's numeric unit columns, such as `phy_annotations` or
+`quality`). You can add or override metrics with a CSV/TSV table (`--metrics`: SpikeInterface
+`quality_metrics`, Bombcell, your own; one row per unit) or
+`ayar.metrics.from_spikeinterface(analyzer)`, and use any column in a rule. Units missing a
+metric are not curated on it.
 
 | verdict | meaning |
 |---|---|
 | `stable` | the 5-95 % range is under 50 % of the median and the sign never changes |
 | `threshold_dependent` | the sign holds, but the size depends on the thresholds |
 | `sign_unstable` | the number changes sign, or vanishes, in more than 10 % of universes |
+
+## Only the units you analyse: `--keep`
+
+Most labs curate before they analyse, so the question they have is about *their* units.
+`--keep RULE` (on `scan`, `multiverse`, `compare` and `session`; repeatable) drops every other
+unit and its spikes before anything runs: the detectors, the finding, the audit and its random
+controls see only the kept units.
+
+```bash
+ayar scan ibl_session/ --finding my_analysis.py:main --keep "label>=1"          # IBL: passes all 3 criteria
+ayar scan steinmetz.nwb --finding my_analysis.py:main --keep "phy_annotations>=2"
+ayar scan ks4_output/ --keep "presence_ratio>=0.9" --keep "isi_contamination<=0.1"
+ayar scan ks4_output/ --metrics bombcell.tsv --keep "bc_unitType>=1"
+```
+
+A rule is `metric op value` with `>=`, `<=`, `>`, `<`, `==` or `!=`, on any metric the
+multiverse knows (above). A unit without the metric is dropped. Every report says how many units
+were kept and by which rules. In Python: `ayar.keep(bundle, ["label>=1"])`.
 
 ## Across sorters
 
@@ -251,6 +271,15 @@ second.
 
 ## Reports and provenance
 
+`ayar session` runs it all for one session and writes **one page**: the scan of all units,
+with `--keep` a second scan of the kept units, the multiverse, and with `--compare` the other
+sortings, under a summary table that links to each part:
+
+```bash
+ayar session ks4_output/ --finding my_analysis.py:main --keep "label>=1" \
+    --compare ms5_output/ --names kilosort4 mountainsort5 --html session.html
+```
+
 `--html report.html` on `scan`, `multiverse` or `compare` writes one self-contained file: no
 internet, no plotting library, light and dark themes, a tooltip on every mark, and the data
 table behind every chart. The scan report plots the evidence for each flag (cross-correlograms
@@ -260,7 +289,7 @@ charts. The multiverse report draws a specification curve per number; the compar
 each number across sorters and the agreement of matched units.
 
 Samples, made from the synthetic session above with the current version:
-[scan](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/scan.html), [multiverse](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/multiverse.html),
+[session](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/session.html) (all of the below on one page), [scan](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/scan.html), [multiverse](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/multiverse.html),
 [compare](https://htmlpreview.github.io/?https://github.com/aslansd/ayar/blob/main/docs/reports/compare.html) (files in
 [`docs/reports/`](https://github.com/aslansd/ayar/tree/main/docs/reports); regenerate them with
 `python examples/sample_reports.py`). Reports on real data are in
@@ -291,9 +320,17 @@ b.save("session.npz")                             # plain npz, readable with num
 * **SpikeInterface**: amplitudes from `spike_amplitudes`, depths from `spike_locations` and
   `unit_locations`, duration from the recording. String unit ids are mapped to integers
   (`bundle.meta["unit_id_map"]`).
-* **NWB**: the units table (`spike_times`, optional `spike_amplitudes`, depth from a `depth`
-  column or the unit's electrode) and the trials table for events; `shift_negative=True` for
-  sessions whose spike times start before zero.
+* **NWB**: the units table and the trials table for events. Found automatically: per-spike
+  amplitudes (`spike_amplitudes`, `amplitudes`, `spike_amps`), per-spike depths
+  (`spike_depths`), unit depths (`depth`, `peak_channel_depth`, `cluster_depths`, ..., or the
+  y coordinate of the unit's peak channel or electrode), the probe of each unit
+  (`electrode_group`, `probe`, ...) and numeric unit columns as metrics for `--keep`. The
+  Steinmetz et al. 2019 files on DANDI (000017) read at tier 1 this way. Name a column with
+  `from_nwb(..., amplitude_column=, depth_column=, spike_depth_column=, probe_column=)`;
+  `ayar info file.nwb` lists the units table's columns and what ayar reads from each.
+  `shift_negative=True` for sessions whose spike times start before zero.
+* **Several probes**: `Bundle(..., unit_probes=[...])` (the NWB reader fills it). Units on
+  different probes are never compared as neighbours, whatever their depths.
 
 ## Acting on the flags: curation export
 
@@ -351,7 +388,8 @@ answer and are not scored.
 * **Tier 0: spike times.** Duplicate, split, overlap and contamination detectors run on all
   pairs (counted in one sweep over the spike train; see `max_pairs` and `max_spike_pairs`).
 * **Tier 1: plus amplitudes and/or depths.** Pair tests are restricted to neighbouring units
-  (100 µm), handoff splits check amplitude continuity, and the drift detector runs.
+  (100 µm, on the same probe), handoff splits check amplitude continuity, and the drift
+  detector runs.
 * **Tier 2: plus the raw recording.** `ayar hybrid` injects units with a known answer into the
   recording and scores `ayar` against them (below).
 
@@ -445,11 +483,12 @@ The full report is in [docs/public_sessions.md](https://github.com/aslansd/ayar/
 
 | | IBL insertion `da8dfec1` (probe00) | DANDI 000017 (Steinmetz et al. 2019), `sub-Richards` 2017-10-31 |
 |---|---|---|
-| data | 1143 units, 39.8 M spikes, 72 min; amplitudes and depths (tier 1) | 778 units, 4.7 M spikes, 49 min; spike times only (tier 0) |
-| flags | 456 contamination, 80 duplicates, 15 splits, 136 drift (warnings), 628 overlap holes; 746 units in at least one flag | 192 contamination, 7 duplicates, 112 splits (85 of them weak handoff warnings), 240 overlap holes; drift not run (no amplitudes or depths); 428 units in at least one flag |
-| finding audit (feedback: correct vs error) | `nonspecific`, `robust`, `nonspecific` | `nonspecific` for the mean contrast; `shifted` for the fractions of enhanced and suppressed units |
-| curation multiverse | the mean contrast is `threshold_dependent` (-0.20 Hz with all units, -0.69 median, down to -0.95), driven most by IBL's quality label | the mean contrast is `sign_unstable` (+0.07 Hz with all units, negative in 20 of 36 universes), driven most by the ISI-contamination threshold |
-| run time (laptop, 0.5.0.dev0) | scan + audit 5 min (24 min with 0.4.0), multiverse 8 min | 54 s and 8 s |
+| data | 1143 units, 39.8 M spikes, 72 min; amplitudes and depths (tier 1) | 778 units, 4.7 M spikes, 49 min; amplitudes, depths and 2 probes (tier 1) |
+| flags, all units | 456 contamination, 80 duplicates, 15 splits, 136 drift (warnings), 628 overlap holes; 746 units in at least one flag | 192 contamination, 20 splits (18 of them handoff warnings), 9 overlap holes, 78 drift (warnings); 299 units in at least one flag |
+| flags, the authors' units | `label>=1`: 298 units, 14 errors and 43 warnings (no contamination errors; 8 duplicate pairs); 64 units flagged | `phy_annotations>=2`: 522 units, 108 errors and 88 warnings (105 contamination); 198 units flagged |
+| finding audit (feedback: correct vs error) | all units: `nonspecific`, `robust`, `nonspecific`; good units: the mean contrast `shifted` | all units: `nonspecific`, `shifted`, `shifted`; kept units: `nonspecific`, `robust`, `robust` |
+| curation multiverse | the mean contrast is `threshold_dependent` (-0.20 Hz with all units, -0.69 median, down to -0.95), driven most by IBL's quality label | the mean contrast is `sign_unstable` (+0.07 Hz with all units, negative in a quarter of 72 universes), driven most by the ISI-contamination threshold |
+| run time (laptop, 0.5.0) | scan + audit 4.3 min (24 min with 0.4.0), good units 69 s, multiverse 6 min | 35 s, 27 s and 12 s |
 
 What it shows:
 
@@ -458,13 +497,21 @@ What it shows:
   the sorter (template duplicates, and overlap holes from its removal of near-simultaneous
   spikes). There is no ground truth here, so these are hypotheses, with the evidence for each
   in the HTML report.
+* **Among curated units the flags are few, and one of them matters.** Of IBL's 298 good
+  units, 64 are flagged, none for contamination (IBL's label already requires a clean
+  refractory period), but 8 pairs of good units look like one neuron counted twice. On the good
+  units, repairing the flags moves the mean contrast by 20 %, more than the same repair on
+  random good units (15 %): `shifted`.
+* **Knowing where units are removes most pair flags.** Read at tier 0, the DANDI session had
+  240 overlap holes and 112 splits; with its depths and two probes (0.5.0 reads them), 9 and 20
+  remain. Pair flags without depths are leads, not verdicts.
 * **The finding audit holds back where it should.** In the IBL session, removing the 456
   contaminated units moves the mean contrast by 139 %, but so does removing 456 random units
   (141 %): the number is fragile to *any* change of unit set, not to contamination as such, and
   the verdict is `nonspecific`, not `sensitive`. The combined repair (600 units removed) had too
   few clean units left to compare with, and is reported as not comparable.
 * **The multiverse finds the fragility.** Both mean contrasts depend on curation thresholds;
-  in the DANDI session its sign does.
+  in the DANDI session even their sign does.
 * **Real data found two bugs**, fixed in 0.4.0: a truncated download that the script
   reused, and audit verdicts reported as `sensitive` when no random controls were possible.
 
@@ -473,11 +520,14 @@ What it shows:
 * Research prototype. Thresholds are calibrated on synthetic sessions; on public data (above)
   ayar has run, but without ground truth its flags there are unverified.
 * Speed: since 0.5 the pair detectors count coincidences for all pairs in one sweep. The IBL
-  insertion above (1143 units, 40 M spikes) scans with the finding audit in 5 minutes on a
+  insertion above (1143 units, 40 M spikes) scans with the finding audit in 4-5 minutes on a
   laptop, where 0.4 took 24, with identical flags; the drift detector is now the slowest part.
-* Without depths (tier 0), the pair detectors test every pair (the DANDI session above: 302,253
-  pairs), but cannot tell neighbours from units far apart or on another probe, and handoff
-  splits get no amplitude check. Treat tier-0 pair flags as leads to check. The detectors
+* Units on different probes are never compared, so ayar does not look for near-simultaneous
+  spikes shared across probes (electrical noise, say).
+* Without depths (tier 0), the pair detectors test every pair, but cannot tell neighbours from
+  units far apart or on another probe, and handoff splits get no amplitude check. Treat tier-0
+  pair flags as leads to check: read at tier 0, the DANDI session above had 240 overlap holes;
+  with depths and probes, 9. The detectors
   refuse, and say so under *not checked*, only beyond `max_pairs` (2,000,000 unit pairs) or
   `max_spike_pairs` (3e9 coincident spike pairs within 10 ms).
 * Units with few spikes (fewer than ~600) get only the weaker drift trend test, and
@@ -498,10 +548,11 @@ What it shows:
 
 ## Roadmap
 
-Done in 0.5.0.dev0: pair statistics for all units at once (a large session scans in minutes,
-and sessions without spike depths get the pair detectors). Next, in
-[ROADMAP.md](https://github.com/aslansd/ayar/blob/main/ROADMAP.md): scanning only curated units, unit depths from more NWB layouts, and one report per session; later,
-`ayar hybrid` on a public raw recording for a first accuracy number on real tissue.
+Done in 0.5: pair statistics for all units at once (a large session scans in minutes), scans of
+curated units only (`--keep`), depths, amplitudes and probes from more NWB layouts, and one
+report per session (`ayar session`). Next, in
+[ROADMAP.md](https://github.com/aslansd/ayar/blob/main/ROADMAP.md): `ayar hybrid` on a public
+raw recording, for a first accuracy number on real tissue.
 
 ## More documentation
 

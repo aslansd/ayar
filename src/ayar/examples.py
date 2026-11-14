@@ -82,7 +82,7 @@ def zero_lag_synchrony(bundle: Bundle, max_distance_um: float = 100.0, window_ms
     w = window_ms / 1000.0
     f1, f2 = 0.002, 0.010
     units = [int(u) for u in bundle.unit_ids if bundle.train(u).size >= 100]
-    depth = {u: bundle.depth(u) for u in units}
+    depth = {u: bundle.position(u) for u in units}
     ratios = []
     for i, a in enumerate(units):
         for b in units[i + 1:]:

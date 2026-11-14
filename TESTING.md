@@ -7,12 +7,12 @@ pip install -e ".[dev]"
 pytest -q
 ```
 
-**93 tests are collected in every environment**; what changes is how many run:
+**105 tests are collected in every environment**; what changes is how many run:
 
 | Environment | Result | Time |
 |---|---|---|
-| `pip install ayar pytest` (numpy and scipy only) | **82 passed, 11 skipped** | about 1 minute |
-| `pip install -e ".[dev]"` (SpikeInterface, pynwb, daftar) | **93 passed** | about 4 minutes |
+| `pip install ayar pytest` (numpy and scipy only) | **91 passed, 14 skipped** | about 1 minute |
+| `pip install -e ".[dev]"` (SpikeInterface, pynwb, daftar) | **105 passed** | about 4 minutes |
 
 Both were measured on 11 November 2026 with Python 3.13, against ayar 0.4.0.
 
@@ -39,6 +39,7 @@ pytest -q -rs
 | `test_bundle.py` | 6 (+4 parametrised) | nothing | the bundle: sorting, indexing, save and load, validation errors |
 | `test_stats.py` | 2 | nothing | coincidence counts against brute force; the amplitude-cutoff estimate |
 | `test_pairstats.py` | 10 | nothing | all-pairs counts equal pair-by-pair counts for every ordered pair (also on a 30 kHz grid, where lags sit on window bounds); tier-0 sessions beyond the old 20,000-pair cap; the spike-pair budget; skipped controls keep verdicts |
+| `test_v05.py` | 12 | pynwb for 3 | `--keep` rules, recorded and shown in reports; units on different probes never paired; the Steinmetz NWB layout read at tier 1 with probes and `phy_annotations`; `ayar info` on NWB; depth from a peak channel; `ayar session` (API, CLI, one HTML page); `python -m ayar` |
 | `test_version.py` | 3 | nothing | one version number: installed metadata equals `ayar.__version__`, none in `pyproject.toml` |
 | `test_detectors.py` | 7 | nothing | every planted artifact found with no false flags; controls never flagged; drift severity; tier 0; thresholds |
 | `test_split_contamination.py` | 9 | nothing | split modes, contamination sources, time-shifted duplicates, merges, one report per cause |
@@ -157,7 +158,7 @@ the change is what needs fixing.
 ## Before a release
 
 ```bash
-pytest -q                                   # 93 passed with [dev]
+pytest -q                                   # 105 passed with [dev]
 ayar validate --sessions 20 --seed 100      # PASS, table as above
 ayar doctor                                 # self-check ok
 python -m build && python -m twine check dist/*

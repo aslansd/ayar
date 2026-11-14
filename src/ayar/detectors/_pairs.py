@@ -18,7 +18,7 @@ def candidate_pairs(
     unit pairs or the all-pairs sweep would visit more than ``max_spike_pairs`` spike pairs.
     """
     if bundle.has_depths:
-        depths = {u: bundle.depth(u) for u in units}
+        depths = {u: bundle.position(u) for u in units}
         known = [u for u in units if depths[u] is not None and np.isfinite(depths[u])]
         known.sort(key=lambda u: depths[u])
         pairs: list[tuple[int, int]] = []

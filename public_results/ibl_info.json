@@ -11,6 +11,7 @@
     "tier": 1,
     "amplitudes": true,
     "depths": true,
+    "probes": null,
     "events": {
       "n": 528,
       "labels": [
@@ -26,6 +27,21 @@
     "-1": 85,
     "1": 443
   },
-  "scan_s": 300.7,
-  "multiverse_s": 483.2
+  "scan_s": 258.6,
+  "kept_scan_s": 68.9,
+  "kept": {
+    "rules": [
+      "label>=1"
+    ],
+    "units_before": 1143,
+    "units_after": 298,
+    "steps": [
+      {
+        "rule": "label>=1",
+        "removed": 845,
+        "missing": 0
+      }
+    ]
+  },
+  "multiverse_s": 375.3
 }

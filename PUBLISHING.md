@@ -25,7 +25,7 @@ change matters to someone checking a finding, the change is probably not finishe
 **3. Verify.**
 
 ```bash
-pytest -q                                   # 93 passed with [dev]; see TESTING.md
+pytest -q                                   # 105 passed with [dev]; see TESTING.md
 ayar validate --sessions 20 --seed 100      # must print PASS
 ayar doctor                                 # self-check ok
 grep -rn "^<<<<<<<\|^>>>>>>>\|^=======$" --include="*.py" --include="*.md" --include="*.toml" .

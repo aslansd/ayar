@@ -26,6 +26,19 @@ def _load_kwargs(args) -> dict:
     return kw
 
 
+def _apply_keep(args, bundle, table=None):
+    """``--keep`` rules (and ``--metrics`` for them) applied to a freshly loaded bundle."""
+    if not getattr(args, "keep", None):
+        return bundle
+    from .keep import keep
+
+    if table is None and getattr(args, "metrics", None):
+        from .metrics import read_table
+
+        table = read_table(args.metrics, unit_column=getattr(args, "unit_column", None), bundle=bundle)
+    return keep(bundle, args.keep, metrics=table)
+
+
 def _events_from(path):
     import numpy as np
 
@@ -97,12 +110,13 @@ def cmd_scan(args) -> int:
             from .curation import apply as apply_curation
 
             bundle = apply_curation(bundle, args.curation)
+        bundle = _apply_keep(args, bundle)
         finding, name = None, None
         if args.finding:
             name, finding = load_finding(args.finding)
-        inputs = [args.bundle] + [x for x in (args.events, args.curation) if x]
+        inputs = [args.bundle] + [x for x in (args.events, args.curation, args.metrics) if x]
         with provenance.tracked("ayar scan", {"bundle": str(args.bundle), "finding": name,
-                                              "detectors": args.only, **th.to_dict()},
+                                              "detectors": args.only, "keep": args.keep, **th.to_dict()},
                                 inputs, enabled=track) as run:
             report = scan(bundle, finding, thresholds=th, detectors=args.only, finding_name=name)
             written = _outputs(args, report, lambda: __import__("ayar.html").html.scan_html(report, bundle))
@@ -148,14 +162,66 @@ def cmd_multiverse(args) -> int:
             from .metrics import read_table
 
             table = read_table(args.metrics, unit_column=args.unit_column, bundle=bundle)
+        bundle = _apply_keep(args, bundle, table)
         inputs = [args.bundle] + [x for x in (args.events, args.metrics) if x]
         with provenance.tracked("ayar multiverse", {"bundle": str(args.bundle), "finding": name,
-                                                    "grid": args.grid, **th.to_dict()},
+                                                    "grid": args.grid, "keep": args.keep, **th.to_dict()},
                                 inputs, enabled=track) as run:
             rep = multiverse(bundle, finding, args.grid or None, metrics=table, thresholds=th,
                              finding_name=name)
             written = _outputs(args, rep, lambda: __import__("ayar.html").html.multiverse_html(rep))
             provenance.log_multiverse(run, rep)
+            provenance.add_outputs(run, written)
+    except _ERRORS as e:
+        print(f"ayar: error: {e}", file=sys.stderr)
+        return 2
+    print(rep.to_json() if args.format == "json" else rep.format_text())
+    if args.format != "json":
+        for w in written:
+            print(f"report written to {w}")
+    return rep.exit_code(args.fail_on)
+
+
+def cmd_session(args) -> int:
+    from . import provenance
+    from .audit import load_finding
+    from .io import load
+    from .session import session
+
+    track = _daftar_check(args)
+    try:
+        th = _thresholds(args)
+        bundle = load(args.bundle, **_load_kwargs(args))
+        if args.events is not None:
+            bundle.events = _events_from(args.events)
+        table = None
+        if args.metrics:
+            from .metrics import read_table
+
+            table = read_table(args.metrics, unit_column=args.unit_column, bundle=bundle)
+        finding, name = None, None
+        if args.finding:
+            name, finding = load_finding(args.finding)
+        others = {}
+        if args.compare:
+            names = args.names or []
+            if names and len(names) != len(args.compare) + 1:
+                raise ValueError(f"--names needs {len(args.compare) + 1} names: this sorting and each --compare")
+            if not names:
+                names = ["main"] + [Path(p).stem or Path(p).name for p in args.compare]
+            for n, p in zip(names[1:], args.compare):
+                others[n] = load(p, **_load_kwargs(args))
+                if args.events is not None:
+                    others[n].events = bundle.events
+        main_name = (args.names or ["main"])[0]
+        inputs = [args.bundle, *(args.compare or [])] + [x for x in (args.events, args.metrics) if x]
+        with provenance.tracked("ayar session", {"bundle": str(args.bundle), "finding": name, "keep": args.keep,
+                                                 "grid": args.grid, **th.to_dict()}, inputs, enabled=track) as run:
+            rep = session(bundle, finding, keep=args.keep, metrics=table, grid=args.grid or None,
+                          multiverse=not args.no_multiverse, others=others, name=main_name, thresholds=th,
+                          finding_name=name, title=args.title or f"ayar session: {Path(args.bundle).name}")
+            written = _outputs(args, rep, rep.html)
+            provenance.log_scan(run, rep.main)
             provenance.add_outputs(run, written)
     except _ERRORS as e:
         print(f"ayar: error: {e}", file=sys.stderr)
@@ -183,7 +249,7 @@ def cmd_compare(args) -> int:
             names = [Path(p).stem if Path(p).suffix else Path(p).name for p in args.sortings]
             if len(set(names)) < len(names):
                 names = [f"{n}_{i + 1}" for i, n in enumerate(names)]
-        sortings = {n: load(p, **_load_kwargs(args)) for n, p in zip(names, args.sortings)}
+        sortings = {n: _apply_keep(args, load(p, **_load_kwargs(args))) for n, p in zip(names, args.sortings)}
         if args.events is not None:
             ev = _events_from(args.events)
             for b in sortings.values():
@@ -258,8 +324,28 @@ def cmd_validate(args) -> int:
 def cmd_info(args) -> int:
     from .io import load
 
-    b = load(args.bundle)
-    print(json.dumps(b.summary(), indent=2))
+    from .keep import unit_metrics
+
+    try:
+        b = load(args.bundle)
+    except _ERRORS as e:
+        b = None
+        err = e
+    out = {} if b is None else dict(b.summary())
+    if b is not None:
+        out["reader_metrics"] = sorted(unit_metrics(b))  # usable in --keep and --grid
+        if b.meta.get("nwb_columns") is not None:
+            out["nwb_columns_read"] = b.meta["nwb_columns"]
+    if str(args.bundle).endswith(".nwb"):
+        from .io import nwb_layout
+
+        out["nwb_layout"] = nwb_layout(args.bundle)  # what the file holds, even if it did not load
+    if b is None and "nwb_layout" not in out:
+        print(f"ayar: error: {err}", file=sys.stderr)
+        return 2
+    if b is None:
+        out["error"] = str(err)
+    print(json.dumps(out, indent=2, default=str))
     return 0
 
 
@@ -307,6 +393,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--sample-rate", type=float, help="for Phy folders without params.py")
     s.add_argument("--trial-label", help="NWB: trials-table column holding the condition label")
     s.add_argument("--only", nargs="+", metavar="CODE", help="run only these detectors")
+    s.add_argument("--keep", action="append", metavar="RULE",
+                   help="scan only units passing RULE, e.g. 'label>=1' (IBL) or 'phy_annotations>=2'; repeatable")
+    s.add_argument("--metrics", help="CSV/TSV of per-unit metrics for --keep")
+    s.add_argument("--unit-column", help="unit id column in --metrics (auto-detected)")
     s.add_argument("--set", action="append", metavar="NAME=VALUE", help="override a threshold")
     s.add_argument("--format", choices=["text", "json"], default="text")
     s.add_argument("--json", metavar="PATH", help="also write the JSON report here")
@@ -342,6 +432,8 @@ def build_parser() -> argparse.ArgumentParser:
     m.add_argument("--trial-label", help="NWB: trials-table column holding the condition label")
     m.add_argument("--metrics", help="CSV/TSV of per-unit metrics (SpikeInterface, Bombcell, ...)")
     m.add_argument("--unit-column", help="unit id column in --metrics (auto-detected)")
+    m.add_argument("--keep", action="append", metavar="RULE",
+                   help="scan only units passing RULE, e.g. 'label>=1' (IBL) or 'phy_annotations>=2'; repeatable")
     m.add_argument("--set", action="append", metavar="NAME=VALUE")
     m.add_argument("--format", choices=["text", "json"], default="text")
     m.add_argument("--json", metavar="PATH", help="also write the JSON report (with every universe)")
@@ -359,6 +451,8 @@ def build_parser() -> argparse.ArgumentParser:
     c.add_argument("--reference", help="the sorting to match the others against (default: the first)")
     c.add_argument("--events", help=".npz with 'times' and optional 'labels', applied to every sorting")
     c.add_argument("--trial-label", help="NWB: trials-table column holding the condition label")
+    c.add_argument("--keep", action="append", metavar="RULE",
+                   help="use only units in every sorting passing RULE, e.g. 'label>=1' (IBL) or 'phy_annotations>=2'; repeatable")
     c.add_argument("--set", action="append", metavar="NAME=VALUE")
     c.add_argument("--format", choices=["text", "json"], default="text")
     c.add_argument("--json", metavar="PATH")
@@ -407,8 +501,32 @@ def build_parser() -> argparse.ArgumentParser:
     v.add_argument("--format", choices=["text", "json"], default="text")
     v.set_defaults(fn=cmd_validate)
 
+    se = sub.add_parser("session", help="scan (all and curated units), multiverse and comparison: one report")
+    se.add_argument("bundle", help="a .npz bundle, .nwb file, Phy/Kilosort or SortingAnalyzer folder")
+    se.add_argument("--finding", help="your analysis: file.py:func or module:func")
+    se.add_argument("--keep", action="append", metavar="RULE",
+                    help="also scan only units passing RULE, e.g. 'label>=1'; the multiverse and comparison use them")
+    se.add_argument("--metrics", help="CSV/TSV of per-unit metrics (for --keep and --grid)")
+    se.add_argument("--unit-column", help="unit id column in --metrics (auto-detected)")
+    se.add_argument("--grid", action="append", metavar="RULE", help="multiverse rule, e.g. 'presence_ratio>=0.5,0.9'")
+    se.add_argument("--no-multiverse", action="store_true", help="skip the multiverse")
+    se.add_argument("--compare", nargs="+", metavar="SORTING", help="other sortings of the same recording")
+    se.add_argument("--names", nargs="+", help="names: this sorting, then each --compare sorting")
+    se.add_argument("--events", help=".npz with 'times' (s) and optional 'labels' arrays")
+    se.add_argument("--trial-label", help="NWB: trials-table column holding the condition label")
+    se.add_argument("--sample-rate", type=float, help="for Phy folders without params.py")
+    se.add_argument("--title", help="page title")
+    se.add_argument("--set", action="append", metavar="NAME=VALUE")
+    se.add_argument("--format", choices=["text", "json"], default="text")
+    se.add_argument("--json", metavar="PATH", help="also write everything as JSON")
+    se.add_argument("--html", metavar="PATH", help="write the session report here")
+    se.add_argument("--daftar", action="store_true", help="record the run with daftar (provenance)")
+    se.add_argument("--fail-on", choices=["error", "warning", "never"], default="error",
+                    help="judged on the curated scan when --keep is given")
+    se.set_defaults(fn=cmd_session)
+
     i = sub.add_parser("info", help="summarise a bundle")
-    i.add_argument("bundle")
+    i.add_argument("bundle", help="anything ayar loads; for .nwb files also lists the units table's columns")
     i.set_defaults(fn=cmd_info)
 
     d = sub.add_parser("doctor", help="check the installation")

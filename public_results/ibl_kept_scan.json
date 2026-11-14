@@ -1,0 +1,2233 @@
+{
+  "ayar_version": "0.5.0",
+  "bundle": {
+    "n_units": 298,
+    "n_spikes": 13705503,
+    "duration_s": 4295.954,
+    "tier": 1,
+    "amplitudes": true,
+    "depths": true,
+    "probes": null,
+    "events": {
+      "n": 528,
+      "labels": [
+        "-1",
+        "1"
+      ]
+    },
+    "units_with_epochs": 0,
+    "source": "ibl",
+    "kept": {
+      "rules": [
+        "label>=1"
+      ],
+      "units_before": 1143,
+      "units_after": 298,
+      "steps": [
+        {
+          "rule": "label>=1",
+          "removed": 845,
+          "missing": 0
+        }
+      ]
+    }
+  },
+  "summary": {
+    "errors": 14,
+    "warnings": 43,
+    "finding_verdicts": {
+      "mean_contrast_hz": "shifted",
+      "frac_units_enhanced": "robust",
+      "frac_units_suppressed": "robust"
+    },
+    "uncontrolled": {}
+  },
+  "flags": [
+    {
+      "code": "DUPLICATE_UNIT",
+      "severity": "error",
+      "units": [
+        131,
+        124
+      ],
+      "message": "95% of unit 124's spikes have a unit 131 spike within \u00b10.25 ms (34x chance): likely one neuron counted twice",
+      "consequence": "inflates the number of neurons, doubles this neuron's weight in population averages and decoders, and creates a fake zero-lag correlation",
+      "fix": "merge unit 124 into unit 131 (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis",
+      "evidence": {
+        "shared_fraction": 0.9502,
+        "ratio_to_chance": 34.07,
+        "window_ms": 0.25,
+        "lag_ms": -0.025,
+        "n_spikes": {
+          "131": 243011,
+          "124": 19431
+        },
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "DUPLICATE_UNIT",
+      "severity": "error",
+      "units": [
+        131,
+        133
+      ],
+      "message": "93% of unit 133's spikes have a unit 131 spike within \u00b10.25 ms (33x chance): likely one neuron counted twice",
+      "consequence": "inflates the number of neurons, doubles this neuron's weight in population averages and decoders, and creates a fake zero-lag correlation",
+      "fix": "merge unit 133 into unit 131 (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis",
+      "evidence": {
+        "shared_fraction": 0.9277,
+        "ratio_to_chance": 33.27,
+        "window_ms": 0.25,
+        "lag_ms": -0.025,
+        "n_spikes": {
+          "131": 243011,
+          "133": 33905
+        },
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "DUPLICATE_UNIT",
+      "severity": "error",
+      "units": [
+        151,
+        153
+      ],
+      "message": "100% of unit 153's spikes have a unit 151 spike within \u00b10.25 ms (100x chance): likely one neuron counted twice",
+      "consequence": "inflates the number of neurons, doubles this neuron's weight in population averages and decoders, and creates a fake zero-lag correlation",
+      "fix": "merge unit 153 into unit 151 (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis",
+      "evidence": {
+        "shared_fraction": 0.9987,
+        "ratio_to_chance": 100.36,
+        "window_ms": 0.25,
+        "lag_ms": -0.225,
+        "n_spikes": {
+          "151": 85922,
+          "153": 19728
+        },
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "DUPLICATE_UNIT",
+      "severity": "error",
+      "units": [
+        657,
+        656
+      ],
+      "message": "99% of unit 656's spikes have a unit 657 spike within \u00b10.25 ms (262x chance): likely one neuron counted twice",
+      "consequence": "inflates the number of neurons, doubles this neuron's weight in population averages and decoders, and creates a fake zero-lag correlation",
+      "fix": "merge unit 656 into unit 657 (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis",
+      "evidence": {
+        "shared_fraction": 0.9886,
+        "ratio_to_chance": 262.22,
+        "window_ms": 0.25,
+        "lag_ms": 0.025,
+        "n_spikes": {
+          "657": 32454,
+          "656": 6317
+        },
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "DUPLICATE_UNIT",
+      "severity": "error",
+      "units": [
+        679,
+        674
+      ],
+      "message": "100% of unit 674's spikes have a unit 679 spike within \u00b10.25 ms (503x chance): likely one neuron counted twice",
+      "consequence": "inflates the number of neurons, doubles this neuron's weight in population averages and decoders, and creates a fake zero-lag correlation",
+      "fix": "merge unit 674 into unit 679 (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis",
+      "evidence": {
+        "shared_fraction": 0.9998,
+        "ratio_to_chance": 503.08,
+        "window_ms": 0.25,
+        "lag_ms": 0.075,
+        "n_spikes": {
+          "679": 17092,
+          "674": 4746
+        },
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "DUPLICATE_UNIT",
+      "severity": "error",
+      "units": [
+        753,
+        749
+      ],
+      "message": "96% of unit 749's spikes have a unit 753 spike within \u00b10.25 ms (172x chance): likely one neuron counted twice",
+      "consequence": "inflates the number of neurons, doubles this neuron's weight in population averages and decoders, and creates a fake zero-lag correlation",
+      "fix": "merge unit 749 into unit 753 (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis",
+      "evidence": {
+        "shared_fraction": 0.9579,
+        "ratio_to_chance": 172.06,
+        "window_ms": 0.25,
+        "lag_ms": 0.025,
+        "n_spikes": {
+          "753": 47965,
+          "749": 12037
+        },
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "DUPLICATE_UNIT",
+      "severity": "error",
+      "units": [
+        754,
+        755
+      ],
+      "message": "100% of unit 755's spikes have a unit 754 spike within \u00b10.25 ms (655x chance): likely one neuron counted twice",
+      "consequence": "inflates the number of neurons, doubles this neuron's weight in population averages and decoders, and creates a fake zero-lag correlation",
+      "fix": "merge unit 755 into unit 754 (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis",
+      "evidence": {
+        "shared_fraction": 0.9981,
+        "ratio_to_chance": 654.71,
+        "window_ms": 0.25,
+        "lag_ms": 0.025,
+        "n_spikes": {
+          "754": 13109,
+          "755": 9178
+        },
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "DUPLICATE_UNIT",
+      "severity": "error",
+      "units": [
+        808,
+        812
+      ],
+      "message": "89% of unit 812's spikes have a unit 808 spike within \u00b10.25 ms (226x chance): likely one neuron counted twice",
+      "consequence": "inflates the number of neurons, doubles this neuron's weight in population averages and decoders, and creates a fake zero-lag correlation",
+      "fix": "merge unit 812 into unit 808 (Phy merge, or SpikeInterface remove_redundant_units) and re-run the analysis",
+      "evidence": {
+        "shared_fraction": 0.8896,
+        "ratio_to_chance": 225.97,
+        "window_ms": 0.25,
+        "lag_ms": -0.225,
+        "n_spikes": {
+          "808": 33891,
+          "812": 13585
+        },
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "error",
+      "units": [
+        34,
+        36
+      ],
+      "message": "units 34 and 36 fire within \u00b10.5 ms 28% as often as expected from the 2-10 ms flanks (162 vs 573, p=9.2e-92)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 162,
+        "expected": 573.19,
+        "ratio": 0.283,
+        "p_value": 9.245818023529066e-92,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 9.5,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "error",
+      "units": [
+        44,
+        48
+      ],
+      "message": "units 44 and 48 fire within \u00b10.5 ms 25% as often as expected from the 2-10 ms flanks (125 vs 509, p=1.1e-92)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 125,
+        "expected": 509.25,
+        "ratio": 0.245,
+        "p_value": 1.1196726916891446e-92,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 14.2,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "error",
+      "units": [
+        830,
+        1069
+      ],
+      "message": "units 830 and 1069 fire within \u00b10.5 ms 6% as often as expected from the 2-10 ms flanks (3 vs 51, p=1.7e-18)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 3,
+        "expected": 51.0,
+        "ratio": 0.059,
+        "p_value": 1.6646691932136179e-18,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 14.1,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "error",
+      "units": [
+        950,
+        44
+      ],
+      "message": "units 950 and 44 fire within \u00b10.5 ms 24% as often as expected from the 2-10 ms flanks (263 vs 1108, p=5.9e-205)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 263,
+        "expected": 1108.06,
+        "ratio": 0.237,
+        "p_value": 5.947956861861244e-205,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 4.0,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "error",
+      "units": [
+        1040,
+        734
+      ],
+      "message": "units 1040 and 734 fire within \u00b10.5 ms 23% as often as expected from the 2-10 ms flanks (18 vs 78, p=2.4e-16)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 18,
+        "expected": 78.31,
+        "ratio": 0.23,
+        "p_value": 2.4171179993171493e-16,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 4.8,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "error",
+      "units": [
+        36,
+        44
+      ],
+      "message": "units 36 and 44 look like one neuron: they almost never fire within \u00b11.5 ms of each other (75 vs 372 expected, plus 102 double detections) and the merged train has 4% refractory contamination",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 44 into unit 36 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "refractory": {
+          "n_refractory": 75,
+          "expected": 372.1875,
+          "ratio": 0.20151133501259447,
+          "p": 7.428655150930493e-79,
+          "outer_ratio": 0.12762384550797648,
+          "double_detections": 102,
+          "merged_contamination": 0.04169495319711469
+        },
+        "mode": "refractory"
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        66
+      ],
+      "message": "unit 66: 58 refractory violations (<1.5 ms) imply 11% of its spikes come from other neurons; likely source: unit 69 (shared refractory dip, ratio 0.86)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 58,
+        "contamination": 0.1092,
+        "p": 6.775588212425835e-07,
+        "n_spikes": 29221,
+        "likely_source": 69,
+        "source_ratio": 0.86
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        107
+      ],
+      "message": "unit 107: 30 refractory violations (<1.5 ms) imply 16% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 30,
+        "contamination": 0.1574,
+        "p": 1.0671752927446371e-06,
+        "n_spikes": 17999
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        169
+      ],
+      "message": "unit 169: 8 refractory violations (<1.5 ms) imply 17% of its spikes come from other neurons; likely source: unit 168 (shared refractory dip, ratio 0.66)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 8,
+        "contamination": 0.1693,
+        "p": 0.00664600730092092,
+        "n_spikes": 9025,
+        "likely_source": 168,
+        "source_ratio": 0.66
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        442
+      ],
+      "message": "unit 442: 258 refractory violations (<1.5 ms) imply 11% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 258,
+        "contamination": 0.1066,
+        "p": 8.13242040973701e-24,
+        "n_spikes": 62284
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        696
+      ],
+      "message": "unit 696: 56 refractory violations (<1.5 ms) imply 13% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 56,
+        "contamination": 0.1314,
+        "p": 6.725362075095968e-09,
+        "n_spikes": 26505
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        778
+      ],
+      "message": "unit 778: 47 refractory violations (<1.5 ms) imply 11% of its spikes come from other neurons; likely source: unit 1055 (shared refractory dip, ratio 0.66)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 47,
+        "contamination": 0.1084,
+        "p": 8.418457015494963e-06,
+        "n_spikes": 26392,
+        "likely_source": 1055,
+        "source_ratio": 0.657
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        1078
+      ],
+      "message": "unit 1078: 54 refractory violations (<1.5 ms) imply 17% of its spikes come from other neurons",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 54,
+        "contamination": 0.169,
+        "p": 1.0069709948572502e-11,
+        "n_spikes": 23464
+      }
+    },
+    {
+      "code": "CONTAMINATION",
+      "severity": "warning",
+      "units": [
+        1123
+      ],
+      "message": "unit 1123: 30 refractory violations (<1.5 ms) imply 11% of its spikes come from other neurons; likely source: unit 807 (shared refractory dip, ratio 0.83)",
+      "consequence": "the unit mixes several neurons, so its tuning, rate changes and correlations are partly another neuron's",
+      "fix": "re-curate the unit (split it in Phy, or exclude it); if a source unit is named, check whether the two should be re-sorted together",
+      "evidence": {
+        "isi_violations": 30,
+        "contamination": 0.1086,
+        "p": 0.00030930511453258866,
+        "n_spikes": 21065,
+        "likely_source": 807,
+        "source_ratio": 0.827
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        9
+      ],
+      "message": "unit 9: rate follows depth (rho=-0.73, moved 12 \u00b5m)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.498,
+          "p": 1.801531219993092e-05,
+          "rel_change": 0.355
+        },
+        "completeness": {
+          "r": 0.465,
+          "p": 0.00020522648077674947,
+          "max_lost": 0.498,
+          "range": 0.475,
+          "windows": 59,
+          "rate_drop": 0.917
+        },
+        "depth": {
+          "rho": -0.726,
+          "p": 3.795185885195294e-12,
+          "range_um": 11.9
+        },
+        "stable_fraction": 0.083
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        45
+      ],
+      "message": "unit 45: rate follows amplitude (rho=0.67, amplitude range 47%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.666,
+          "p": 2.368202548689153e-10,
+          "rel_change": 0.468
+        },
+        "completeness": {
+          "r": 0.356,
+          "p": 0.00211981263696655,
+          "max_lost": 0.5,
+          "range": 0.437,
+          "windows": 72,
+          "rate_drop": 0.814
+        },
+        "depth": {
+          "rho": 0.659,
+          "p": 3.9949423942809735e-10,
+          "range_um": 6.0
+        },
+        "stable_fraction": 0.056
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        63
+      ],
+      "message": "unit 63: rate follows amplitude (rho=0.61, amplitude range 19%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.606,
+          "p": 2.0788533185804037e-08,
+          "rel_change": 0.187
+        },
+        "completeness": {
+          "r": -0.043,
+          "p": 0.7192269682094269,
+          "max_lost": 0.165,
+          "range": 0.16,
+          "windows": 72,
+          "rate_drop": 0.192
+        },
+        "depth": {
+          "rho": -0.468,
+          "p": 3.9355962025168984e-05,
+          "range_um": 3.5
+        },
+        "stable_fraction": 0.972,
+        "stable_epochs": [
+          [
+            0.0,
+            1610.983
+          ],
+          [
+            1670.649,
+            2386.641
+          ],
+          [
+            2446.307,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        69
+      ],
+      "message": "unit 69: rate follows amplitude (rho=0.91, amplitude range 104%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.911,
+          "p": 7.232002132844112e-23,
+          "rel_change": 1.035
+        },
+        "completeness": {
+          "r": 0.149,
+          "p": 0.30320029636853024,
+          "max_lost": 0.426,
+          "range": 0.406,
+          "windows": 50,
+          "rate_drop": 0.956
+        },
+        "depth": {
+          "rho": -0.403,
+          "p": 0.001881618261399428,
+          "range_um": 5.3
+        },
+        "stable_fraction": 0.111
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        133
+      ],
+      "message": "unit 133: rate follows amplitude (rho=0.93, amplitude range 27%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.933,
+          "p": 2.0809961349997844e-32,
+          "rel_change": 0.275
+        },
+        "completeness": {
+          "r": -0.097,
+          "p": 0.4501983035743684,
+          "max_lost": 0.5,
+          "range": 0.478,
+          "windows": 63,
+          "rate_drop": 0.967
+        },
+        "depth": {
+          "rho": -0.085,
+          "p": 0.48331462306536827,
+          "range_um": 6.3
+        },
+        "stable_fraction": 0.042
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        153
+      ],
+      "message": "unit 153: rate follows amplitude (rho=0.93, amplitude range 68%); amplitude fell steadily (42%, rho=-0.90 over time) and the unit vanished (last window at 0% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.925,
+          "p": 1.473138413622183e-20,
+          "rel_change": 0.682
+        },
+        "completeness": {
+          "r": 0.535,
+          "p": 0.001922125382388488,
+          "max_lost": 0.5,
+          "range": 0.455,
+          "windows": 31,
+          "rate_drop": 0.879
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9003237742830712,
+          "p": 7.216388890104476e-18,
+          "amp_change": 0.4167908535124986,
+          "edge_rate_ratio": 0.001183431952662722
+        },
+        "depth": {
+          "rho": 0.199,
+          "p": 0.17920078844747234,
+          "range_um": 19.9
+        },
+        "stable_fraction": 0.223
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        173
+      ],
+      "message": "unit 173: rate follows amplitude (rho=0.77, amplitude range 22%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.774,
+          "p": 2.564994630509294e-15,
+          "rel_change": 0.22
+        },
+        "completeness": {
+          "r": 0.171,
+          "p": 0.15011611594709653,
+          "max_lost": 0.104,
+          "range": 0.093,
+          "windows": 72,
+          "rate_drop": 0.304
+        },
+        "depth": {
+          "rho": -0.449,
+          "p": 8.701766541586275e-05,
+          "range_um": 1.7
+        },
+        "stable_fraction": 0.986,
+        "stable_epochs": [
+          [
+            0.0,
+            3818.626
+          ],
+          [
+            3878.292,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        191
+      ],
+      "message": "unit 191: rate follows amplitude (rho=0.70, amplitude range 42%); rate follows detection loss (r=0.65; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.705,
+          "p": 5.7158255672534053e-11,
+          "rel_change": 0.425
+        },
+        "completeness": {
+          "r": 0.649,
+          "p": 1.5776571645446625e-08,
+          "max_lost": 0.5,
+          "range": 0.456,
+          "windows": 61,
+          "rate_drop": 0.987
+        },
+        "depth": {
+          "rho": -0.171,
+          "p": 0.1720842815132789,
+          "range_um": 1.8
+        },
+        "stable_fraction": 0.042
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        218
+      ],
+      "message": "unit 218: rate follows amplitude (rho=0.69, amplitude range 40%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.688,
+          "p": 3.4050274225778087e-11,
+          "rel_change": 0.399
+        },
+        "completeness": {
+          "r": 0.311,
+          "p": 0.00792001727554657,
+          "max_lost": 0.5,
+          "range": 0.47,
+          "windows": 72,
+          "rate_drop": 0.755
+        },
+        "depth": {
+          "rho": 0.125,
+          "p": 0.29739642802907656,
+          "range_um": 4.0
+        },
+        "stable_fraction": 0.042
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        257
+      ],
+      "message": "unit 257: rate follows amplitude (rho=0.75, amplitude range 32%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.747,
+          "p": 7.818147019151306e-14,
+          "rel_change": 0.321
+        },
+        "completeness": {
+          "r": 0.416,
+          "p": 0.00028259650526472055,
+          "max_lost": 0.312,
+          "range": 0.292,
+          "windows": 72,
+          "rate_drop": 0.564
+        },
+        "depth": {
+          "rho": -0.326,
+          "p": 0.005497940849759577,
+          "range_um": 5.7
+        },
+        "stable_fraction": 0.514,
+        "stable_epochs": [
+          [
+            0.0,
+            59.666
+          ],
+          [
+            298.33,
+            357.996
+          ],
+          [
+            536.994,
+            715.992
+          ],
+          [
+            835.324,
+            894.99
+          ],
+          [
+            954.656,
+            1014.322
+          ],
+          [
+            1133.655,
+            1193.321
+          ],
+          [
+            1252.987,
+            1312.653
+          ],
+          [
+            1431.985,
+            1551.317
+          ],
+          [
+            1610.983,
+            1670.649
+          ],
+          [
+            1789.981,
+            1849.647
+          ],
+          [
+            2088.311,
+            2147.977
+          ],
+          [
+            2207.643,
+            2267.309
+          ],
+          [
+            2505.973,
+            2625.305
+          ],
+          [
+            2744.637,
+            2983.301
+          ],
+          [
+            3042.967,
+            3818.626
+          ],
+          [
+            4057.29,
+            4116.956
+          ],
+          [
+            4176.622,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        322
+      ],
+      "message": "unit 322: rate follows amplitude (rho=0.84, amplitude range 42%); amplitude rose steadily (37%, rho=0.90 over time) and the unit appeared (first window at 1% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.838,
+          "p": 1.4709814451620275e-19,
+          "rel_change": 0.42
+        },
+        "completeness": {
+          "r": 0.069,
+          "p": 0.6577270836405185,
+          "max_lost": 0.402,
+          "range": 0.382,
+          "windows": 44,
+          "rate_drop": 0.966
+        },
+        "fade": {
+          "direction": "in",
+          "rho_time": 0.9033855305747528,
+          "p": 1.0523796000252117e-26,
+          "amp_change": 0.3662792936991104,
+          "edge_rate_ratio": 0.013910355486862442
+        },
+        "depth": {
+          "rho": 0.067,
+          "p": 0.5791082095664226,
+          "range_um": 5.3
+        },
+        "stable_fraction": 0.196
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        337
+      ],
+      "message": "unit 337: rate follows amplitude (rho=0.91, amplitude range 64%); rate follows detection loss (r=0.65; up to 50% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.911,
+          "p": 2.816611281426375e-28,
+          "rel_change": 0.638
+        },
+        "completeness": {
+          "r": 0.655,
+          "p": 1.3761285274555818e-09,
+          "max_lost": 0.5,
+          "range": 0.456,
+          "windows": 68,
+          "rate_drop": 0.953
+        },
+        "depth": {
+          "rho": 0.086,
+          "p": 0.47456248228844344,
+          "range_um": 3.6
+        },
+        "stable_fraction": 0.056
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        433
+      ],
+      "message": "unit 433: amplitude fell steadily (31%, rho=-0.98 over time) and the unit vanished (last window at 0% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": -0.052,
+          "p": 0.6875005235113311,
+          "rel_change": 0.28
+        },
+        "completeness": {
+          "r": -0.203,
+          "p": 0.11394577547818902,
+          "max_lost": 0.2,
+          "range": 0.192,
+          "windows": 62,
+          "rate_drop": 0.414
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.9756624423963135,
+          "p": 6.584687452324777e-42,
+          "amp_change": 0.31117835420909185,
+          "edge_rate_ratio": 0.0
+        },
+        "depth": {
+          "rho": 0.061,
+          "p": 0.6367525941405545,
+          "range_um": 2.6
+        },
+        "stable_fraction": 0.824,
+        "stable_epochs": [
+          [
+            0.0,
+            1320.0
+          ],
+          [
+            1380.0,
+            3600.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        461
+      ],
+      "message": "unit 461: rate follows amplitude (rho=0.66, amplitude range 19%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.657,
+          "p": 1.2302622176181498e-08,
+          "rel_change": 0.187
+        },
+        "completeness": {
+          "r": 0.056,
+          "p": 0.6886400395849116,
+          "max_lost": 0.438,
+          "range": 0.425,
+          "windows": 54,
+          "rate_drop": 0.796
+        },
+        "depth": {
+          "rho": 0.262,
+          "p": 0.043544268207053025,
+          "range_um": 2.9
+        },
+        "stable_fraction": 0.208
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        465
+      ],
+      "message": "unit 465: rate follows amplitude (rho=0.76, amplitude range 40%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.763,
+          "p": 1.0568672402682921e-14,
+          "rel_change": 0.403
+        },
+        "completeness": {
+          "r": 0.461,
+          "p": 4.597130679009619e-05,
+          "max_lost": 0.174,
+          "range": 0.171,
+          "windows": 72,
+          "rate_drop": 0.494
+        },
+        "depth": {
+          "rho": -0.084,
+          "p": 0.48610167837492646,
+          "range_um": 0.9
+        },
+        "stable_fraction": 0.986,
+        "stable_epochs": [
+          [
+            0.0,
+            3937.958
+          ],
+          [
+            3997.624,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        469
+      ],
+      "message": "unit 469: rate follows amplitude (rho=0.78, amplitude range 34%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.781,
+          "p": 9.96433520950906e-16,
+          "rel_change": 0.335
+        },
+        "completeness": {
+          "r": 0.446,
+          "p": 0.0010423212653326215,
+          "max_lost": 0.414,
+          "range": 0.376,
+          "windows": 51,
+          "rate_drop": 0.669
+        },
+        "depth": {
+          "rho": -0.15,
+          "p": 0.21162760695957072,
+          "range_um": 3.7
+        },
+        "stable_fraction": 0.113
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        528
+      ],
+      "message": "unit 528: rate follows amplitude (rho=0.74, amplitude range 82%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.743,
+          "p": 1.2138837429498776e-13,
+          "rel_change": 0.824
+        },
+        "completeness": {
+          "r": 0.165,
+          "p": 0.16633601223962333,
+          "max_lost": 0.186,
+          "range": 0.178,
+          "windows": 72,
+          "rate_drop": 0.37
+        },
+        "depth": {
+          "rho": 0.768,
+          "p": 5.232349613477112e-15,
+          "range_um": 1.3
+        },
+        "stable_fraction": 0.958,
+        "stable_epochs": [
+          [
+            0.0,
+            894.99
+          ],
+          [
+            954.656,
+            1252.987
+          ],
+          [
+            1372.319,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        533
+      ],
+      "message": "unit 533: rate follows amplitude (rho=0.85, amplitude range 48%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.851,
+          "p": 5.2973451119112176e-17,
+          "rel_change": 0.481
+        },
+        "completeness": {
+          "r": 0.489,
+          "p": 0.0006555742188540282,
+          "max_lost": 0.5,
+          "range": 0.408,
+          "windows": 45,
+          "rate_drop": 0.843
+        },
+        "depth": {
+          "rho": 0.08,
+          "p": 0.5557924541568326,
+          "range_um": 5.1
+        },
+        "stable_fraction": 0.014
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        535
+      ],
+      "message": "unit 535: amplitude fell steadily (38%, rho=-0.89 over time) and the unit vanished (last window at 19% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.552,
+          "p": 6.107763119006588e-07,
+          "rel_change": 0.402
+        },
+        "completeness": {
+          "r": 0.257,
+          "p": 0.04024232610671068,
+          "max_lost": 0.5,
+          "range": 0.46,
+          "windows": 64,
+          "rate_drop": 0.529
+        },
+        "fade": {
+          "direction": "out",
+          "rho_time": -0.892823608316566,
+          "p": 1.340765907547586e-25,
+          "amp_change": 0.38281921376472033,
+          "edge_rate_ratio": 0.19135802469135804
+        },
+        "depth": {
+          "rho": 0.233,
+          "p": 0.05095548138560666,
+          "range_um": 2.0
+        },
+        "stable_fraction": 0.545,
+        "stable_epochs": [
+          [
+            0.0,
+            300.0
+          ],
+          [
+            360.0,
+            780.0
+          ],
+          [
+            840.0,
+            1500.0
+          ],
+          [
+            1680.0,
+            1740.0
+          ],
+          [
+            1980.0,
+            2280.0
+          ],
+          [
+            2340.0,
+            2580.0
+          ],
+          [
+            2640.0,
+            2760.0
+          ],
+          [
+            3060.0,
+            3120.0
+          ],
+          [
+            3300.0,
+            3360.0
+          ],
+          [
+            3420.0,
+            3480.0
+          ],
+          [
+            3540.0,
+            3600.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        656
+      ],
+      "message": "unit 656: rate follows amplitude (rho=0.69, amplitude range 61%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.691,
+          "p": 2.161870319333677e-06,
+          "rel_change": 0.607
+        },
+        "completeness": {
+          "r": 0.183,
+          "p": 0.49800027107512534,
+          "max_lost": 0.5,
+          "range": 0.48,
+          "windows": 16,
+          "rate_drop": 0.933
+        },
+        "depth": {
+          "rho": 0.398,
+          "p": 0.014605738084058897,
+          "range_um": 10.1
+        },
+        "stable_fraction": 0.032
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        687
+      ],
+      "message": "unit 687: rate follows amplitude (rho=0.81, amplitude range 26%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.812,
+          "p": 8.994290118245888e-18,
+          "rel_change": 0.259
+        },
+        "completeness": {
+          "r": 0.514,
+          "p": 3.92102069173361e-06,
+          "max_lost": 0.49,
+          "range": 0.475,
+          "windows": 72,
+          "rate_drop": 0.735
+        },
+        "depth": {
+          "rho": 0.133,
+          "p": 0.26725630423970625,
+          "range_um": 0.8
+        },
+        "stable_fraction": 0.569,
+        "stable_epochs": [
+          [
+            178.998,
+            238.664
+          ],
+          [
+            656.326,
+            715.992
+          ],
+          [
+            1073.989,
+            1133.655
+          ],
+          [
+            1252.987,
+            1431.985
+          ],
+          [
+            1491.651,
+            1551.317
+          ],
+          [
+            1610.983,
+            1730.315
+          ],
+          [
+            1849.647,
+            2147.977
+          ],
+          [
+            2207.643,
+            2267.309
+          ],
+          [
+            2326.975,
+            2565.639
+          ],
+          [
+            2625.305,
+            2684.971
+          ],
+          [
+            2744.637,
+            2983.301
+          ],
+          [
+            3221.966,
+            3520.296
+          ],
+          [
+            3579.962,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        692
+      ],
+      "message": "unit 692: amplitude rose steadily (65%, rho=0.81 over time) and the unit appeared (first window at 3% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": -0.562,
+          "p": 3.376923156075947e-07,
+          "rel_change": 0.727
+        },
+        "completeness": {
+          "r": -0.539,
+          "p": 1.4952075706719451e-06,
+          "max_lost": 0.229,
+          "range": 0.218,
+          "windows": 70,
+          "rate_drop": 0.527
+        },
+        "fade": {
+          "direction": "in",
+          "rho_time": 0.8071093226022802,
+          "p": 1.905437360317141e-17,
+          "amp_change": 0.6516428130352103,
+          "edge_rate_ratio": 0.029940119760479042
+        },
+        "depth": {
+          "rho": 0.128,
+          "p": 0.2861676868157915,
+          "range_um": 0.8
+        },
+        "stable_fraction": 0.936,
+        "stable_epochs": [
+          [
+            180.0,
+            3060.0
+          ],
+          [
+            3120.0,
+            4260.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        808
+      ],
+      "message": "unit 808: rate follows amplitude (rho=0.61, amplitude range 27%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.615,
+          "p": 1.185960629514847e-08,
+          "rel_change": 0.272
+        },
+        "completeness": {
+          "r": 0.152,
+          "p": 0.20231534189029662,
+          "max_lost": 0.064,
+          "range": 0.061,
+          "windows": 72,
+          "rate_drop": 0.505
+        },
+        "depth": {
+          "rho": 0.182,
+          "p": 0.1288208213898945,
+          "range_um": 1.5
+        },
+        "stable_fraction": 1.0,
+        "stable_epochs": [
+          [
+            0.0,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        812
+      ],
+      "message": "unit 812: rate follows amplitude (rho=0.80, amplitude range 35%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.797,
+          "p": 4.050251589267546e-16,
+          "rel_change": 0.345
+        },
+        "completeness": {
+          "r": 0.192,
+          "p": 0.2127411314767899,
+          "max_lost": 0.344,
+          "range": 0.321,
+          "windows": 44,
+          "rate_drop": 0.855
+        },
+        "depth": {
+          "rho": -0.294,
+          "p": 0.014788599936708087,
+          "range_um": 6.5
+        },
+        "stable_fraction": 0.181
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        880
+      ],
+      "message": "unit 880: rate follows amplitude (rho=0.71, amplitude range 54%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.712,
+          "p": 3.4025645825384085e-12,
+          "rel_change": 0.536
+        },
+        "completeness": {
+          "r": 0.464,
+          "p": 4.01715997340637e-05,
+          "max_lost": 0.484,
+          "range": 0.476,
+          "windows": 72,
+          "rate_drop": 0.476
+        },
+        "depth": {
+          "rho": -0.654,
+          "p": 6.105947964741457e-10,
+          "range_um": 4.2
+        },
+        "stable_fraction": 0.694,
+        "stable_epochs": [
+          [
+            0.0,
+            298.33
+          ],
+          [
+            536.994,
+            596.66
+          ],
+          [
+            1073.989,
+            1133.655
+          ],
+          [
+            1312.653,
+            1372.319
+          ],
+          [
+            1431.985,
+            1670.649
+          ],
+          [
+            1849.647,
+            2147.977
+          ],
+          [
+            2207.643,
+            2386.641
+          ],
+          [
+            2446.307,
+            2625.305
+          ],
+          [
+            2684.971,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        913
+      ],
+      "message": "unit 913: amplitude rose steadily (35%, rho=0.85 over time) and the unit appeared (first window at 0% of its usual rate)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.474,
+          "p": 3.928088861444951e-05,
+          "rel_change": 0.49
+        },
+        "completeness": {
+          "r": 0.231,
+          "p": 0.08639263525567313,
+          "max_lost": 0.433,
+          "range": 0.409,
+          "windows": 56,
+          "rate_drop": 0.856
+        },
+        "fade": {
+          "direction": "in",
+          "rho_time": 0.8501644135915236,
+          "p": 2.4549587494030608e-20,
+          "amp_change": 0.3492496577691334,
+          "edge_rate_ratio": 0.0038910505836575876
+        },
+        "depth": {
+          "rho": -0.363,
+          "p": 0.002145563879339926,
+          "range_um": 0.5
+        },
+        "stable_fraction": 0.377,
+        "stable_epochs": [
+          [
+            240.0,
+            360.0
+          ],
+          [
+            1200.0,
+            1260.0
+          ],
+          [
+            2700.0,
+            2760.0
+          ],
+          [
+            2820.0,
+            2940.0
+          ],
+          [
+            3000.0,
+            4260.0
+          ]
+        ]
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        961
+      ],
+      "message": "unit 961: rate follows detection loss (r=0.75; up to 49% of spikes below threshold in the worst window)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.26,
+          "p": 0.030756675728378164,
+          "rel_change": 0.147
+        },
+        "completeness": {
+          "r": 0.75,
+          "p": 2.17567655451957e-07,
+          "max_lost": 0.494,
+          "range": 0.47,
+          "windows": 35,
+          "rate_drop": 0.473
+        },
+        "depth": {
+          "rho": 0.042,
+          "p": 0.7316941387446491,
+          "range_um": 2.8
+        },
+        "stable_fraction": 0.135
+      }
+    },
+    {
+      "code": "DRIFT_CONFOUND",
+      "severity": "warning",
+      "units": [
+        994
+      ],
+      "message": "unit 994: rate follows amplitude (rho=0.81, amplitude range 29%)",
+      "consequence": "the unit's rate changes over the session because spikes are lost below the detection threshold, not because the neuron changed",
+      "fix": "apply motion correction before sorting (SpikeInterface correct_motion, Kilosort drift correction), restrict the unit to the epoch where its amplitude is stable, or exclude it; interleave conditions in future designs",
+      "evidence": {
+        "amplitude": {
+          "rho": 0.808,
+          "p": 1.527132293760586e-17,
+          "rel_change": 0.29
+        },
+        "completeness": {
+          "r": 0.075,
+          "p": 0.5298314799373054,
+          "max_lost": 0.477,
+          "range": 0.461,
+          "windows": 72,
+          "rate_drop": 0.524
+        },
+        "depth": {
+          "rho": 0.779,
+          "p": 1.2627063504830653e-15,
+          "range_um": 6.1
+        },
+        "stable_fraction": 0.556,
+        "stable_epochs": [
+          [
+            59.666,
+            119.332
+          ],
+          [
+            298.33,
+            357.996
+          ],
+          [
+            477.328,
+            536.994
+          ],
+          [
+            656.326,
+            715.992
+          ],
+          [
+            775.658,
+            894.99
+          ],
+          [
+            1014.322,
+            1491.651
+          ],
+          [
+            1551.317,
+            1610.983
+          ],
+          [
+            1670.649,
+            1730.315
+          ],
+          [
+            1849.647,
+            2028.645
+          ],
+          [
+            2207.643,
+            2744.637
+          ],
+          [
+            2804.303,
+            2863.969
+          ],
+          [
+            2923.635,
+            2983.301
+          ],
+          [
+            3042.967,
+            3162.3
+          ],
+          [
+            3221.966,
+            3341.298
+          ],
+          [
+            3579.962,
+            3639.628
+          ],
+          [
+            3997.624,
+            4295.954
+          ]
+        ]
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "warning",
+      "units": [
+        113,
+        115
+      ],
+      "message": "units 113 and 115 fire within \u00b10.5 ms 60% as often as expected from the 2-10 ms flanks (1661 vs 2789, p=1.9e-118)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 1661,
+        "expected": 2789.38,
+        "ratio": 0.595,
+        "p_value": 1.9461015802438547e-118,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 14.6,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "warning",
+      "units": [
+        115,
+        128
+      ],
+      "message": "units 115 and 128 fire within \u00b10.5 ms 44% as often as expected from the 2-10 ms flanks (1257 vs 2850, p=2.9e-247)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 1257,
+        "expected": 2849.5,
+        "ratio": 0.441,
+        "p_value": 2.947738243068574e-247,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 32.9,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "warning",
+      "units": [
+        123,
+        124
+      ],
+      "message": "units 123 and 124 fire within \u00b10.5 ms 53% as often as expected from the 2-10 ms flanks (70 vs 132, p=2.9e-09)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 70,
+        "expected": 131.5,
+        "ratio": 0.532,
+        "p_value": 2.8790154166071083e-09,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 2.5,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "warning",
+      "units": [
+        703,
+        708
+      ],
+      "message": "units 703 and 708 fire within \u00b10.5 ms 52% as often as expected from the 2-10 ms flanks (104 vs 200, p=5.1e-14)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 104,
+        "expected": 200.19,
+        "ratio": 0.52,
+        "p_value": 5.128348456899627e-14,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 29.9,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "warning",
+      "units": [
+        808,
+        815
+      ],
+      "message": "units 808 and 815 fire within \u00b10.5 ms 52% as often as expected from the 2-10 ms flanks (84 vs 160, p=2.4e-11)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 84,
+        "expected": 160.38,
+        "ratio": 0.524,
+        "p_value": 2.3845215123851043e-11,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 8.3,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "severity": "warning",
+      "units": [
+        1031,
+        687
+      ],
+      "message": "units 1031 and 687 fire within \u00b10.5 ms 35% as often as expected from the 2-10 ms flanks (17 vs 49, p=1.2e-07)",
+      "consequence": "zero-lag synchrony between these units is underestimated; either the sorter missed overlapping spikes, or the two units are one neuron split in two",
+      "fix": "inspect the pair's cross-correlogram and templates; if the templates match, merge them, otherwise exclude this pair from synchrony and correlation analyses",
+      "evidence": {
+        "center_count": 17,
+        "expected": 49.0,
+        "ratio": 0.347,
+        "p_value": 1.2031315044165011e-07,
+        "alpha_bonferroni": 3.6284470246734397e-07,
+        "distance_um": 0.5,
+        "scope": "pairs within 100 \u00b5m"
+      }
+    },
+    {
+      "code": "SPLIT_UNIT",
+      "severity": "warning",
+      "units": [
+        91,
+        107
+      ],
+      "message": "units 91 and 107 look like one neuron: one fades out as the other fades in (rate r=-0.65, overlapping in 1 of 19 windows)",
+      "consequence": "one neuron is counted twice; a handoff also looks like one neuron switching off while another switches on (fake remapping, plasticity or cell loss)",
+      "fix": "merge unit 107 into unit 91 if their templates match, and re-run",
+      "evidence": {
+        "scope": "pairs within 100 \u00b5m",
+        "handoff": {
+          "r": -0.6515085286581225,
+          "p": 0.0018582899481361793,
+          "windows_both_active": 1,
+          "windows_active": [
+            17,
+            3
+          ],
+          "blocks": [
+            1,
+            2
+          ],
+          "rate_ratio": 1.2423277460895121,
+          "window_s": 214.8,
+          "amplitude_ratio": 1.2190568915660889
+        },
+        "mode": "handoff"
+      }
+    }
+  ],
+  "not_checked": [
+    {
+      "code": "SPLIT_UNIT",
+      "reason": "32 of 2895 nearby pairs had too few spikes for the refractory test (expected < 10 within \u00b11.5 ms); small fragments of a split neuron can hide here, and longer recordings make them testable",
+      "partial": true
+    },
+    {
+      "code": "OVERLAP_HOLE",
+      "reason": "139 of 2895 candidate pairs had too few coincidences to test (expected < 10 near zero lag)",
+      "partial": true
+    }
+  ],
+  "finding": {
+    "name": "condition_contrast (0-0.5 s after each event)",
+    "baseline": {
+      "mean_contrast_hz": -0.8822823604270135,
+      "frac_units_enhanced": 0.19798657718120805,
+      "frac_units_suppressed": 0.35570469798657717
+    },
+    "audit": [
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "DUPLICATE_UNIT",
+        "n_dropped": 8,
+        "baseline": -0.8822823604270135,
+        "value": -0.9181437643945256,
+        "rel_change": 0.04064617584574135,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 8"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "DUPLICATE_UNIT",
+        "n_dropped": 8,
+        "baseline": 0.19798657718120805,
+        "value": 0.19310344827586207,
+        "rel_change": 0.024663939216832236,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 8"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "DUPLICATE_UNIT",
+        "n_dropped": 8,
+        "baseline": 0.35570469798657717,
+        "value": 0.35517241379310344,
+        "rel_change": 0.0014964216005204892,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 8"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "OVERLAP_HOLE",
+        "n_dropped": 11,
+        "baseline": -0.8822823604270135,
+        "value": -0.8623317234177708,
+        "rel_change": 0.022612530754425212,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "remove 11"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "OVERLAP_HOLE",
+        "n_dropped": 11,
+        "baseline": 0.19798657718120805,
+        "value": 0.18815331010452963,
+        "rel_change": 0.04966633201440965,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "remove 11"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "OVERLAP_HOLE",
+        "n_dropped": 11,
+        "baseline": 0.35570469798657717,
+        "value": 0.3623693379790941,
+        "rel_change": 0.018736440733679673,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "remove 11"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "SPLIT_UNIT",
+        "n_dropped": 2,
+        "baseline": -0.8822823604270135,
+        "value": -0.8876350723316596,
+        "rel_change": 0.006066892125164444,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 2"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "SPLIT_UNIT",
+        "n_dropped": 2,
+        "baseline": 0.19798657718120805,
+        "value": 0.19256756756756757,
+        "rel_change": 0.027370590929912904,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 2"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "SPLIT_UNIT",
+        "n_dropped": 2,
+        "baseline": 0.35570469798657717,
+        "value": 0.3547297297297297,
+        "rel_change": 0.0027409484956654804,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "merge 2"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "CONTAMINATION",
+        "n_dropped": 8,
+        "baseline": -0.8822823604270135,
+        "value": -0.8732089432643921,
+        "rel_change": 0.010284028752688554,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "remove 8"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "CONTAMINATION",
+        "n_dropped": 8,
+        "baseline": 0.19798657718120805,
+        "value": 0.2,
+        "rel_change": 0.010169491525423827,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "remove 8"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "CONTAMINATION",
+        "n_dropped": 8,
+        "baseline": 0.35570469798657717,
+        "value": 0.3482758620689655,
+        "rel_change": 0.020884840598568676,
+        "control_q": null,
+        "control_flip_rate": null,
+        "verdict": "robust",
+        "note": "random controls not run: no change reaches audit_robust (0.1)",
+        "action": "remove 8"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "DRIFT_CONFOUND",
+        "n_dropped": 28,
+        "baseline": -0.8822823604270135,
+        "value": -0.7567971323135477,
+        "rel_change": 0.1422279688927845,
+        "control_q": 0.0884681115649833,
+        "control_flip_rate": 0.0,
+        "verdict": "shifted",
+        "note": "",
+        "action": "restrict 13, remove 15"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "DRIFT_CONFOUND",
+        "n_dropped": 28,
+        "baseline": 0.19798657718120805,
+        "value": 0.19434628975265017,
+        "rel_change": 0.01838653650356351,
+        "control_q": 0.038018805773492245,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "restrict 13, remove 15"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "DRIFT_CONFOUND",
+        "n_dropped": 28,
+        "baseline": 0.35570469798657717,
+        "value": 0.35335689045936397,
+        "rel_change": 0.006600440029335215,
+        "control_q": 0.02696513100873384,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "restrict 13, remove 15"
+      },
+      {
+        "key": "mean_contrast_hz",
+        "ablation": "ALL_FLAGS",
+        "n_dropped": 57,
+        "baseline": -0.8822823604270135,
+        "value": -0.705268759038133,
+        "rel_change": 0.2006314637223486,
+        "control_q": 0.15445883508934707,
+        "control_flip_rate": 0.0,
+        "verdict": "shifted",
+        "note": "",
+        "action": "merge 10, restrict 13, remove 34"
+      },
+      {
+        "key": "frac_units_enhanced",
+        "ablation": "ALL_FLAGS",
+        "n_dropped": 57,
+        "baseline": 0.19798657718120805,
+        "value": 0.1839080459770115,
+        "rel_change": 0.07110851353984023,
+        "control_q": 0.09368744161217142,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "merge 10, restrict 13, remove 34"
+      },
+      {
+        "key": "frac_units_suppressed",
+        "ablation": "ALL_FLAGS",
+        "n_dropped": 57,
+        "baseline": 0.35570469798657717,
+        "value": 0.3524904214559387,
+        "rel_change": 0.009036362321983689,
+        "control_q": 0.04868890209478526,
+        "control_flip_rate": 0.0,
+        "verdict": "robust",
+        "note": "",
+        "action": "merge 10, restrict 13, remove 34"
+      }
+    ]
+  },
+  "thresholds": {
+    "min_spikes": 100,
+    "max_pairs": 2000000,
+    "max_spike_pairs": 3000000000.0,
+    "dup_window_ms": 0.25,
+    "dup_fraction_warn": 0.2,
+    "dup_fraction_error": 0.5,
+    "dup_min_ratio": 10.0,
+    "dup_max_distance_um": 100.0,
+    "dup_max_lag_ms": 1.0,
+    "overlap_center_ms": 0.5,
+    "overlap_flank_lo_ms": 2.0,
+    "overlap_flank_hi_ms": 10.0,
+    "overlap_ratio_warn": 0.6,
+    "overlap_ratio_error": 0.3,
+    "overlap_min_expected": 10.0,
+    "overlap_alpha": 0.001,
+    "overlap_max_distance_um": 100.0,
+    "split_max_distance_um": 100.0,
+    "split_ratio": 0.3,
+    "split_outer_ms": 1.0,
+    "split_outer_ratio": 0.25,
+    "split_max_merged_contamination": 0.1,
+    "split_handoff_windows": 20,
+    "split_min_window_s": 20.0,
+    "split_active_fraction": 0.2,
+    "split_handoff_r": 0.5,
+    "split_max_ratio": 2.0,
+    "split_max_amp_ratio": 1.25,
+    "contam_warn": 0.1,
+    "contam_error": 0.2,
+    "contam_min_violations": 5,
+    "drift_window_s": 60.0,
+    "drift_min_windows": 6,
+    "drift_min_window_s": 10.0,
+    "drift_min_spikes_per_window": 5,
+    "drift_rho": 0.6,
+    "drift_alpha": 0.01,
+    "drift_min_amp_change": 0.15,
+    "drift_min_depth_change_um": 10.0,
+    "drift_min_completeness_change": 0.15,
+    "drift_loss_slack": 0.25,
+    "drift_completeness_spikes": 100,
+    "drift_confound_r": 0.3,
+    "drift_rho_time": 0.8,
+    "drift_min_fade": 0.3,
+    "drift_vanish": 0.3,
+    "drift_stable_loss": 0.1,
+    "drift_stable_amp_drop": 0.15,
+    "drift_min_stable": 0.3,
+    "mv_min_units": 5,
+    "mv_sign_agreement": 0.9,
+    "mv_spread": 0.5,
+    "cmp_delta_ms": 0.4,
+    "cmp_min_agreement": 0.5,
+    "cmp_spread": 0.25,
+    "audit_robust": 0.1,
+    "audit_sensitive": 0.25,
+    "audit_controls": 20,
+    "audit_control_quantile": 0.95,
+    "audit_seed": 0,
+    "audit_controls_when_robust": 0
+  }
+}
