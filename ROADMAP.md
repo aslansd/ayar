@@ -1,6 +1,6 @@
 # Roadmap
 
-*Last revised 14 November 2026, against ayar 0.5.0 (§3 done and confirmed on the public sessions).*
+*Last revised 16 November 2026, against ayar 0.5.0 (on PyPI; §3 done and confirmed on the public sessions).*
 
 Every number below was read from the published package, the PyPI API or a run whose output
 is in this repository. Where a number comes from synthetic data, it says so.
@@ -206,13 +206,26 @@ change. With 0.5 it should be minutes; confirm on the public sessions first.
 
 ## 5. Announcing
 
-- **IBL.** An introduction for `int-brain-lab/ibl-sorter` was drafted on 31 October,
-  written as questions about their output rather than claims about it. Record the link
-  here once it is posted, and treat any reply as the most valuable feedback available.
+- **IBL: posted.** [int-brain-lab/ibl-sorter#52](https://github.com/int-brain-lab/ibl-sorter/issues/52),
+  31 October 2026 (ayar 0.4.0), written as three questions about their output rather than
+  claims about it. No reply as of 16 November. ibl-sorter is where IBL's spike sorting
+  lives, so it stays the one place for this; no second introduction in another IBL repo.
+  - **16 November: one follow-up comment on #52**, with what 0.5.0 adds (the curated-units
+    scan) and one narrow question: 8 pairs of `label == 1` units on insertion `da8dfec1`
+    share 89-100 % of their spikes within ±0.25 ms. Is that expected, and is it handled
+    downstream? A comment with new results is not a bump; it is the last one on #52 until
+    someone replies.
+  - **If still silent on 14 December:** ask only the duplicate question in
+    [int-brain-lab/ibllib](https://github.com/int-brain-lab/ibllib), where
+    `brainbox.metrics.single_units` computes the label, as a question about the label (not
+    an introduction of ayar), linking #52. Nothing else to IBL after that.
+  - Treat any reply as the most valuable feedback available, and answer within a day.
 - **pyOpenSci** asks for three months of sustained development: from 30 October 2026,
   that is **30 January 2027**. A steady commit history from §3 is what makes that case.
-- **The wider community** (SpikeInterface, Neuromatch, SNUFA): after §3.2 and §3.3, when
-  results on public data are fast to reproduce and answer the curated-units question.
+- **The wider community** (SpikeInterface, Neuromatch, SNUFA): §3.2 and §3.3 are done, so
+  this is open now. Not in the same week as the #52 follow-up; one venue at a time, a week
+  or more apart, starting with SpikeInterface (ayar reads its output and writes its
+  curation format).
 
 The rules that held for daftar hold here: post once and never bump; never the same text in
 two places on the same day; ask moderators before posting in Slack or Discord; ask for
@@ -248,9 +261,10 @@ criticism, not stars; reply to everyone, especially the sceptical.
 
 1. ~~§3.1, the version test~~ (done).
 2. ~~§3.2, all-pairs statistics~~ (done; re-run on public data 11 November).
-3. ~~§3.3, §3.4, §3.5~~ (done in 0.5.0, confirmed on the public sessions 14 November);
-   publish 0.5.0.
-4. Post the IBL introduction, if it is not posted yet.
+3. ~~§3.3, §3.4, §3.5~~ (done in 0.5.0, confirmed on the public sessions 14 November;
+   0.5.0 on PyPI).
+4. ~~Post the IBL introduction~~ (ibl-sorter#52, 31 October); follow-up comment 16
+   November; the ibllib question only if #52 is still silent on 14 December.
 5. A faster drift detector (now the slowest part of a scan) and multiverse.
 6. §4, hybrid on a public raw recording.
 7. 30 January 2027: pyOpenSci.
